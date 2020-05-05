@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "910700144790",
+    "firebase_url": "https://test-b6c9f.firebaseio.com",
+    "project_id": "test-b6c9f",
+    "storage_bucket": "test-b6c9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:910700144790:android:a693221460a8338d273ab7",
+        "android_client_info": {
+          "package_name": "com.hungdt.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "910700144790-6t1655clmv076a0fpn0088r9e8g6tqu7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm3GOoXGmHQ9Yz2BYICilmQKVCRmoH7LE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "910700144790-6t1655clmv076a0fpn0088r9e8g6tqu7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
