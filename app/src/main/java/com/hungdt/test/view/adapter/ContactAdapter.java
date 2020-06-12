@@ -11,16 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.hungdt.test.R;
 import com.hungdt.test.model.Contact;
 import com.hungdt.test.view.DetailContactActivity;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
@@ -43,11 +47,13 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
     @Override
     public void onBindViewHolder(@NonNull ContactHolder holder, final int position) {
 
-        if(contactList.get(position).getImage()!=null){
-            holder.imgContact.setImageBitmap(getPhotoFromURI(contactList.get(position).getImage()));
-        }else {
-            holder.imgContact.setImageResource(R.drawable.ic_launcher_background);
-        }
+
+        Glide.with(layoutInflater.getContext())
+                .load(contactList.get(position).getImage())
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(holder.imgContact);
+
         holder.txtContactName.setText(contactList.get(position).getName());
         Log.e("123123", "onBindViewHolder: "+contactList.size() );
 
@@ -79,15 +85,5 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
             txtContactName = itemView.findViewById(R.id.txtContactName);
             clItem = itemView.findViewById(R.id.clItem);
         }
-    }
-    private Bitmap getPhotoFromURI(String photoUri){
-        if(photoUri !=null){
-            try {
-                return MediaStore.Images.Media.getBitmap(layoutInflater.getContext().getContentResolver(), Uri.parse(photoUri));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 }

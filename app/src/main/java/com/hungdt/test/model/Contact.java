@@ -1,8 +1,8 @@
 package com.hungdt.test.model;
 
-import android.graphics.Bitmap;
+import java.util.List;
 
-public class Contact {
+public class Contact implements Comparable<Contact>{
 
     private String image;
     private String name;
@@ -36,5 +36,10 @@ public class Contact {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    @Override
+    public int compareTo(Contact o) {
+        return this.name.compareTo(o.name);
     }
 }

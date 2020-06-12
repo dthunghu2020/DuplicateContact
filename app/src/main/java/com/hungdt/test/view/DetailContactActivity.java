@@ -1,6 +1,8 @@
 package com.hungdt.test.view;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,7 +15,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import com.bumptech.glide.Glide;
 import com.hungdt.test.R;
 
 import java.io.IOException;
@@ -21,8 +25,9 @@ import java.io.IOException;
 public class DetailContactActivity extends AppCompatActivity {
 
     private ImageView imgContact;
-    private TextView txtName,txtPhone;
-    private Button btnCall,btnSMS;
+    private TextView txtName, txtPhone;
+    private Button btnCall, btnSMS;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,16 +40,17 @@ public class DetailContactActivity extends AppCompatActivity {
         btnSMS = findViewById(R.id.btnSMS);
 
 
-        Intent intent =getIntent();
+        Intent intent = getIntent();
         String name = intent.getStringExtra("name");
         String image = intent.getStringExtra("image");
-        String phone = intent.getStringExtra("phone");
+        final String phone = intent.getStringExtra("phone");
 
-        if(image!=null){
-            imgContact.setImageBitmap(getPhotoFromURI(image));
-        }else {
-            imgContact.setImageResource(R.drawable.ic_launcher_background);
-        }
+
+        Glide.with(this)
+                .load(image)
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(imgContact);
 
         txtName.setText(name);
         txtPhone.setText(phone);
@@ -52,25 +58,30 @@ public class DetailContactActivity extends AppCompatActivity {
         btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DetailContactActivity.this, "Call", Toast.LENGTH_SHORT).show();
+                Intent intentCall = new Intent(Intent.ACTION_CALL);
+                intentCall.setData(Uri.parse("tel:" + phone));
+                if (ActivityCompat.checkSelfPermission(DetailContactActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(intentCall);
+                } else {
+                    Toast.makeText(DetailContactActivity.this, "Please Grant Permission!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         btnSMS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DetailContactActivity.this, "SMS", Toast.LENGTH_SHORT).show();
+                /*Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setData(Uri.parse("sms:"+phone));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }*/
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("smsto:" + phone)); // This ensures only SMS apps respond
+                startActivity(intent);
             }
         });
     }
-    private Bitmap getPhotoFromURI(String photoUri){
-        if(photoUri !=null){
-            try {
-                return MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(photoUri));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
+
 }

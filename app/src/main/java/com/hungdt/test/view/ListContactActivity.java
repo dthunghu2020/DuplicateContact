@@ -20,6 +20,7 @@ import com.hungdt.test.view.adapter.ContactAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListContactActivity extends AppCompatActivity {
@@ -35,18 +36,27 @@ public class ListContactActivity extends AppCompatActivity {
         rcvContactView = findViewById(R.id.rcvListContact);
 
         getContact();
-
-
+        Collections.sort(contactList);
         contactAdapter = new ContactAdapter(this, contactList);
         rcvContactView.setLayoutManager(new LinearLayoutManager(this));
         rcvContactView.setAdapter(contactAdapter);
 
     }
 
+
     private void getContact() {
+      /*  Cursor cursor = getContentResolver().query(
+                ContactsContract.RawContacts.CONTENT_URI,
+                new String[]{ContactsContract.RawContacts._ID, ContactsContract.RawContacts.ACCOUNT_TYPE},
+                ContactsContract.RawContacts.ACCOUNT_TYPE + " <> 'com.anddroid.contacts.sim' "
+                        + " AND " + ContactsContract.RawContacts.ACCOUNT_TYPE + " <> 'com.google' " //if you don't want to google contacts also
+                ,
+                null,
+                null);*/
         String[] projections = {
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.PHOTO_URI,
+                ContactsContract.CommonDataKinds.Phone.HAS_PHONE_NUMBER,
                 ContactsContract.CommonDataKinds.Phone.NUMBER
         };
         Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projections, null, null, null);
@@ -54,7 +64,8 @@ public class ListContactActivity extends AppCompatActivity {
         assert cursor != null;
         int nameIndex = cursor.getColumnIndex(projections[0]);
         int photoIndex = cursor.getColumnIndex(projections[1]);
-        int numberIndex = cursor.getColumnIndex(projections[2]);
+        int hasPhoneNumber = cursor.getColumnIndex(projections[2]);
+        int numberIndex = cursor.getColumnIndex(projections[3]);
 
         cursor.moveToFirst();
 
@@ -62,6 +73,7 @@ public class ListContactActivity extends AppCompatActivity {
             String name = cursor.getString(nameIndex);
             String image = cursor.getString(photoIndex);
             String phone = cursor.getString(numberIndex);
+
             contactList.add(new Contact(image,name,phone));
         }
         cursor.close();

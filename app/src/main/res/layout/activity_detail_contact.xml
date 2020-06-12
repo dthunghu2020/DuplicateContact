@@ -10,6 +10,7 @@
         android:layout_width="@dimen/_120sdp"
         android:layout_height="@dimen/_120sdp"
         app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
