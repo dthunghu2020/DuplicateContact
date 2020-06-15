@@ -6,7 +6,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,17 +18,27 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hungdt.test.R;
+import com.hungdt.test.database.DBHelper;
+import com.hungdt.test.model.Contact;
+import com.hungdt.test.utils.KEY;
+import com.hungdt.test.view.adapter.ContactAdapter;
+import com.hungdt.test.view.adapter.PhoneAdapter;
 
 import java.io.IOException;
+import java.util.List;
 
 public class DetailContactActivity extends AppCompatActivity {
 
     private ImageView imgContact;
-    private TextView txtName, txtPhone;
-    private Button btnCall, btnSMS;
+    private TextView txtName, txtEmail, txtAccount;
+    private Contact contact ;
+    private RecyclerView rcvPhone ;
+    private PhoneAdapter phoneAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,53 +47,46 @@ public class DetailContactActivity extends AppCompatActivity {
 
         imgContact = findViewById(R.id.imgContact);
         txtName = findViewById(R.id.txtName);
-        txtPhone = findViewById(R.id.txtPhone);
-        btnCall = findViewById(R.id.btnCall);
-        btnSMS = findViewById(R.id.btnSMS);
+        txtEmail = findViewById(R.id.txtEmail);
+        txtAccount = findViewById(R.id.txtAccount);
+        rcvPhone = findViewById(R.id.rcvPhone);
 
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        String image = intent.getStringExtra("image");
-        final String phone = intent.getStringExtra("phone");
+         contact = DBHelper.getInstance(this).getContact(intent.getStringExtra(KEY.ID));
 
 
         Glide.with(this)
-                .load(image)
+                .load(contact.getImage())
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(imgContact);
 
-        txtName.setText(name);
-        txtPhone.setText(phone);
+        Log.e("123", "onCreate: "+contact );
 
-        btnCall.setOnClickListener(new View.OnClickListener() {
+        txtName.setText(contact.getName());
+        for (int i = 0; i < contact.getAccount().size(); i++) {
+            txtAccount.append(contact.getAccount().get(i)+"\n");
+        }
+        for (int i = 0; i < contact.getEmail().size(); i++) {
+            txtEmail.append(contact.getEmail().get(i)+"\n");
+        }
+
+        phoneAdapter = new PhoneAdapter(this, contact.getPhone());
+        rcvPhone.setLayoutManager(new LinearLayoutManager(this));
+        rcvPhone.setAdapter(phoneAdapter);
+
+        imgContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentCall = new Intent(Intent.ACTION_CALL);
-                intentCall.setData(Uri.parse("tel:" + phone));
-                if (ActivityCompat.checkSelfPermission(DetailContactActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                    startActivity(intentCall);
-                } else {
-                    Toast.makeText(DetailContactActivity.this, "Please Grant Permission!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        btnSMS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setData(Uri.parse("sms:"+phone));
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }*/
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setData(Uri.parse("smsto:" + phone)); // This ensures only SMS apps respond
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI,
+                        String.valueOf(contact.getIdContact()));
+                intent.setData(uri);
                 startActivity(intent);
             }
         });
+
     }
 
 }

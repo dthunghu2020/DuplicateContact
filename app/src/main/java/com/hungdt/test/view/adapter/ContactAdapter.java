@@ -2,16 +2,12 @@ package com.hungdt.test.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -20,11 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.hungdt.test.R;
 import com.hungdt.test.model.Contact;
+import com.hungdt.test.utils.KEY;
 import com.hungdt.test.view.DetailContactActivity;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+
+import java.io.Serializable;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
@@ -55,15 +51,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                 .into(holder.imgContact);
 
         holder.txtContactName.setText(contactList.get(position).getName());
-        Log.e("123123", "onBindViewHolder: "+contactList.size() );
 
         holder.clItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(layoutInflater.getContext(), DetailContactActivity.class);
-                intent.putExtra("name",contactList.get(position).getName());
-                intent.putExtra("image",contactList.get(position).getImage());
-                intent.putExtra("phone",contactList.get(position).getPhone());
+                intent.putExtra(KEY.ID,contactList.get(position).getId());
                 layoutInflater.getContext().startActivity(intent);
             }
         });

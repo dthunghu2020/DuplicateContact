@@ -1,8 +1,9 @@
 package com.hungdt.test.view;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
-import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
@@ -13,22 +14,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.hungdt.test.R;
 
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -45,10 +40,8 @@ import java.util.List;
  */
 
 public class MainActivity extends AppCompatActivity {
-    private static final int RESULT_PICK_CONTACT = 102;
     private static final int PICK_CONTACT = 103;
-    private Button btnOpen,btnTest;
-    private TextView txtData;
+    private Button btnOpen;
     ArrayList<String> arrayList;
     final Calendar calendar = Calendar.getInstance();
 
@@ -58,26 +51,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnOpen = findViewById(R.id.btnOpen);
-        btnTest = findViewById(R.id.btnTest);
-        txtData = findViewById(R.id.txtData);
 
         arrayList = new ArrayList<>();
-        getContactFromSIM();
-        //getContactFromPhoneUse();
         btnOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"+"abc@gmail.com")); // only email apps should handle this
+                intent.putExtra(Intent.EXTRA_EMAIL, "addresses");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "mail");
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+                /*Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
+                startActivity(intent);*/
             }
         });
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-                startActivityForResult(intent, PICK_CONTACT);
-            }
-        });
+
+
 
         if (Build.VERSION.SDK_INT >= 23) {
             checkPermission();
@@ -87,28 +78,28 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case (PICK_CONTACT) :
+            case (PICK_CONTACT):
                 if (resultCode == Activity.RESULT_OK) {
 
                     Uri contactData = data.getData();
-                    Cursor c =  managedQuery(contactData, null, null, null, null);
+                    Cursor c = managedQuery(contactData, null, null, null, null);
                     if (c.moveToFirst()) {
 
 
-                        String id =c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+                        String id = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
 
-                        String hasPhone =c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                        String hasPhone = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
 
                         if (hasPhone.equalsIgnoreCase("1")) {
                             Cursor phones = getContentResolver().query(
-                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,
-                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,
+                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
                                     null, null);
                             phones.moveToFirst();
-                            Log.i("ABC","number is:"+phones.getString(phones.getColumnIndex("data1")));
+                            Log.i("ABC", "number is:" + phones.getString(phones.getColumnIndex("data1")));
                         }
                         String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                        Log.i("ABC","Name is"+name);
+                        Log.i("ABC", "Name is" + name);
 
                     }
                 }
@@ -156,9 +147,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, AskPermissionActivity.class));
         } else {
             //getContact();
-            readContacts();
-            Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
-            startActivity(intent);
+            //readDeviceAccount2();
+            readAccountContacts();
+            //Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
+           // startActivity(intent);
         }
     }
 
@@ -185,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
             arrayList.add(DISPLAY_NAME + "\n" + NAME_RAW_CONTACT_ID + "\n" + PHOTO_ID + "\n" + PHOTO_FILE_ID + "\n" + PHOTO_URI + "\n" + PHOTO_THUMBNAIL_URI +
                     "\n" + IN_DEFAULT_DIRECTORY + "\n" + IN_VISIBLE_GROUP + "\n" + HAS_PHONE_NUMBER + "\n" + LOOKUP_KEY + "\n" + CONTACT_LAST_UPDATED_TIMESTAMP
                     + "\n" + NUMBER + "\n" + NORMALIZED_NUMBER + "\n");
-            txtData.setText(arrayList.toString());
 
             Log.e("123123", "getContact: " + indexPhoneType);
             Log.e("123123", "getContact: " + label);
@@ -219,9 +210,10 @@ public class MainActivity extends AppCompatActivity {
             raws.close();
         }
         contacts.close();
-        getDefaultAccountNameAndType();
-        getContactFromSIM();
-        getContactFromPhoneUse();
+        //getDefaultAccountNameAndType();
+        //getContactFromSIM();
+        //getContactFromPhoneUse();
+
     }
 
     private void getContactFromPhoneUse() {
@@ -312,7 +304,6 @@ public class MainActivity extends AppCompatActivity {
         Log.e("Contacts", "getDefaultAccountNameAndType: accountName, " + accountName);
     }
 
-
     public void readContacts() {
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
@@ -323,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
                 String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                 String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    Log.i("ABC", "aaa\n"+id+"\n"+name+"\n");
+                    Log.i("ABC", "aaa\n" + id + "\n" + name + "\n");
 
                     // get the phone number
                     Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
@@ -427,5 +418,141 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void readDeviceAccounts() {
+        //Account[] accounts = manager.getAccountsByType("com.google");
+        /*List<String> username = new LinkedList<String>();
 
+        for (Account account : accounts) {
+            username.add(account.name);
+        }*/
+        Account[] accounts = AccountManager.get(this).getAccounts();
+        for (Account account : accounts) {
+            //val contactAccount = ContactAccount()
+            //contactAccount.id = tempDeviceAccount.size
+            //contactAccount.accountType = account.type
+            //contactAccount.accountName = account.name
+            //setContactAccountDetails(contactAccount)
+            //tempDeviceAccount.add(contactAccount)
+            Log.e("HDT123", "account name : " + account.name + " account type : " + account.type);
+        }
+    }
+
+    private void readDeviceAccount2() {
+        String[] projections = {
+                ContactsContract.RawContacts.ACCOUNT_NAME,
+                ContactsContract.RawContacts.ACCOUNT_TYPE
+        };
+        List<String> names = new ArrayList<>();
+        Cursor cursor = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, projections, null, null, null);
+        while (cursor != null && cursor.moveToNext()) {
+            String accountName = cursor.getString(cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
+            String accountType = cursor.getString(cursor.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
+            if (names.size() == 0) {
+                names.add(accountName);
+            } else {
+                boolean check = true;
+                for (int i = 0; i < names.size(); i++) {
+                    if (names.get(i).equals(accountName)) {
+                        check = false;
+                        break;
+                    }
+                }
+                if (check) {
+                    names.add(accountName);
+                }
+            }
+            Log.e("HDT123", "account : " + names);
+            //Log.e("HDT123", "accountName : " + accountName + "  accountType : " + accountType);
+        }
+        assert cursor != null;
+        cursor.close();
+
+    }
+
+    private void readAccountContacts(){
+        String[] projections = {
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.DISPLAY_NAME
+        };
+        Cursor cursorContact = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,projections,null,null,null);
+        while (cursorContact!=null && cursorContact.moveToNext()){
+            String idContact = cursorContact.getString(cursorContact.getColumnIndex(ContactsContract.Contacts._ID));
+            String nameContact = cursorContact.getString(cursorContact.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            Log.e("HDT123", "//////////////////////////////Contacts._ID: "+ idContact+ " ////////////DISPLAY_NAME: "+nameContact);
+            String[] projection2 = {
+                    ContactsContract.RawContacts._ID,
+                    ContactsContract.RawContacts.CONTACT_ID,
+                    ContactsContract.RawContacts.ACCOUNT_NAME,
+                    ContactsContract.RawContacts.ACCOUNT_TYPE
+            };
+            //val stringZalo =
+            String selection = ContactsContract.RawContacts.CONTACT_ID+" = "+idContact;
+            //val selection = "${ContactsContract.RawContacts._ID} = $idContact";
+            Cursor cursorAccount = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI,projection2,selection,null,null,null);
+            while(cursorAccount!=null && cursorAccount.moveToNext()){
+                String idRawContract = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts._ID));
+                String account = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
+                String accountType = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
+                //readDataXXX(idContact)
+                Log.e("HDT123","nameContact : "+nameContact+" -> accountName : "+account+"  accountTYpe :"+accountType);
+                String[] projectionx = {
+                        ContactsContract.Data.RAW_CONTACT_ID,
+                        ContactsContract.Data.MIMETYPE,
+                        ContactsContract.Data.DATA1,
+                        ContactsContract.Data.DATA2,
+                        ContactsContract.Data.DATA3,
+                        ContactsContract.Data.DATA4,
+                        ContactsContract.Data.DATA5
+                };
+                //val argx = arrayOf(ContactsContract.Data.CONTACT_ID,ContactsContract.Data.MIMETYPE,ContactsContract.Data.DATA1);
+                //val selectionx = "${ContactsContract.Data.CONTACT_ID} = $idContact"
+                String selectionx = ContactsContract.Data.RAW_CONTACT_ID+" = "+idRawContract;
+                Cursor cursorData = getContentResolver().query(ContactsContract.Data.CONTENT_URI,projectionx,selectionx,null,null);
+                while (cursorData != null && cursorData.moveToNext()){
+                    String a = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE));
+                    String b = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA1));
+                    String c = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA2));
+                    String d = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA3));
+                    String e = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA4));
+                    String f = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA5));
+                    Log.e("HDT123",  "DATA1: "+b+"     DATA2: "+c+"     DATA3: "+d+"     DATA4: "+e+"     DATA5: "+f+ "   MIMETYPE"+a);
+                }
+                assert cursorData != null;
+                cursorData.close();
+
+            }
+            assert cursorAccount != null;
+            cursorAccount.close();
+        }
+        assert cursorContact != null;
+        cursorContact.close();
+    }
+
+/*ctsContract
+import android.util.Log
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        //readDeviceAccounts()
+        //readDeviceAccount2()
+        readAccountContacts()
+    }
+
+
+
+    private fun readDataXXX(id:String){
+        val arg = arrayOf(ContactsContract.Data.CONTACT_ID,ContactsContract.Data.MIMETYPE,ContactsContract.Data.DATA1)
+        val selection = "${ContactsContract.Data.CONTACT_ID} = $id"
+        val cursorData = contentResolver.query(ContactsContract.Data.CONTENT_URI,arg,selection,null,null)
+        var string = ""
+        while (cursorData != null && cursorData.moveToNext()){
+            val a = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE))
+            Log.e("HVV1312", "MIMETYPE $a ")
+            string = ""
+        }
+        cursorData?.close()
+        //return string
+    }
+}*/
 }
