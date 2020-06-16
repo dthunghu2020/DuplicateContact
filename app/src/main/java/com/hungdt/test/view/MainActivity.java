@@ -8,12 +8,15 @@ import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +44,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PICK_CONTACT = 103;
-    private Button btnOpen;
+    private Button btnOpen,btnTest,btnDelete;
     ArrayList<String> arrayList;
     final Calendar calendar = Calendar.getInstance();
 
@@ -51,20 +54,77 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnOpen = findViewById(R.id.btnOpen);
+        btnTest = findViewById(R.id.btnTest);
+        btnDelete = findViewById(R.id.btnDelete);
 
         arrayList = new ArrayList<>();
         btnOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:"+"abc@gmail.com")); // only email apps should handle this
-                intent.putExtra(Intent.EXTRA_EMAIL, "addresses");
-                intent.putExtra(Intent.EXTRA_SUBJECT, "mail");
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
+
+                Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<ContentProviderOperation> cntProOper = new ArrayList<>();
+                int contactIndex = cntProOper.size();//ContactSize
+
+                cntProOper.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)//Step1
+                        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
+
+                //Display name will be inserted in ContactsContract.Data table
+                cntProOper.add(ContentProviderOperation.newInsert(android.provider.ContactsContract.Data.CONTENT_URI)//Step2
+                        .withValueBackReference(android.provider.ContactsContract.Data.RAW_CONTACT_ID, contactIndex)
+                        .withValue(android.provider.ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                        .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, "test") // Name of the contact
+                        .build());
+
+                List<String> strNumber = new ArrayList<>();
+                strNumber.add("11111111");
+                strNumber.add("13131313");
+                for (String s : strNumber) {
+                    //Mobile number will be inserted in ContactsContract.Data table
+                    cntProOper.add(ContentProviderOperation.newInsert(android.provider.ContactsContract.Data.CONTENT_URI)//Step 3
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactIndex)
+                            .withValue(android.provider.ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, s) // Number to be added
+                            .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); //Type like HOME, MOBILE etc
                 }
-                /*Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
-                startActivity(intent);*/
+
+                ContentProviderResult[] s = new ContentProviderResult[0]; //apply above data insertion into contacts list
+                try {
+                    s = getContentResolver().applyBatch(ContactsContract.AUTHORITY, cntProOper);
+                } catch (OperationApplicationException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+
+                for (ContentProviderResult r : s) {
+                    Log.i("ABCD", "addToContactList: " + r.uri);
+                }
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<ContentProviderOperation> ops = new
+                        ArrayList<ContentProviderOperation>();
+                String[] args = new String[] {"1241"};
+                ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(ContactsContract.RawContacts.CONTACT_ID + "=?", args).build());
+                try {
+                    getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

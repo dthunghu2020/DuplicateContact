@@ -29,7 +29,30 @@ public class ListContactActivity extends AppCompatActivity {
     List<String> accounts = new ArrayList<>();
     List<String> phones = new ArrayList<>();
     List<String> emails = new ArrayList<>();
+/*
+* // Câu lệnh tìm kiếm
+    @Query("SELECT * FROM phone WHERE Ten like :timKiem")
+    List<Phone> getListTimKiem(String timKiem);
+    *
+    * imgTimKiem.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View v) {
+                String srearch = String.valueOf(edtTimKiem.getText()).trim().replaceAll("\\s+", " ");
+                String timKiem = "%" + srearch + "%";
+                listphones = AppDatabasePhone.getInstance().getIDatabase().getPhoneDao().getListTimKiem(timKiem);
+                phoneAdaper.notifyDataSetChanged();
 
+                checkDataListPhone(listphones.size());
+                loadDataTrangChinh(view);
+
+                txtTraVeTimKiem.setVisibility(View.VISIBLE);
+                txtTieuDe.setVisibility(View.INVISIBLE);
+
+                txtTraVeTimKiem.setText("Kết quả tìm kiếm '" + edtTimKiem.getText() + "' là : ");
+            }
+        });
+    * */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

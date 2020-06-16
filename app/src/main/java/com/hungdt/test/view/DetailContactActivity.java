@@ -27,6 +27,7 @@ import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Contact;
 import com.hungdt.test.utils.KEY;
 import com.hungdt.test.view.adapter.ContactAdapter;
+import com.hungdt.test.view.adapter.EmailAdapter;
 import com.hungdt.test.view.adapter.PhoneAdapter;
 
 import java.io.IOException;
@@ -35,10 +36,11 @@ import java.util.List;
 public class DetailContactActivity extends AppCompatActivity {
 
     private ImageView imgContact;
-    private TextView txtName, txtEmail, txtAccount;
+    private TextView txtName, txtAccount;
     private Contact contact ;
-    private RecyclerView rcvPhone ;
+    private RecyclerView rcvPhone, rcvEmail ;
     private PhoneAdapter phoneAdapter;
+    private EmailAdapter emailAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class DetailContactActivity extends AppCompatActivity {
 
         imgContact = findViewById(R.id.imgContact);
         txtName = findViewById(R.id.txtName);
-        txtEmail = findViewById(R.id.txtEmail);
+        rcvEmail = findViewById(R.id.rcvEmail);
         txtAccount = findViewById(R.id.txtAccount);
         rcvPhone = findViewById(R.id.rcvPhone);
 
@@ -68,9 +70,10 @@ public class DetailContactActivity extends AppCompatActivity {
         for (int i = 0; i < contact.getAccount().size(); i++) {
             txtAccount.append(contact.getAccount().get(i)+"\n");
         }
-        for (int i = 0; i < contact.getEmail().size(); i++) {
-            txtEmail.append(contact.getEmail().get(i)+"\n");
-        }
+
+        emailAdapter = new EmailAdapter(this, contact.getEmail());
+        rcvEmail.setLayoutManager(new LinearLayoutManager(this));
+        rcvEmail.setAdapter(emailAdapter);
 
         phoneAdapter = new PhoneAdapter(this, contact.getPhone());
         rcvPhone.setLayoutManager(new LinearLayoutManager(this));
