@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="@dimen/_8sdp">
+    <TextView
+        android:text="Duplicate File"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp">
+
+        <ImageView
+            android:id="@+id/imgNoPhone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/ic_dup_contact" />
+
+        <TextView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgNoPhone"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="Duplicate Contacts"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtDupContact"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:minWidth="@dimen/_25sdp"
+            android:text="00"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:background="@color/light_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp">
+
+        <ImageView
+            android:id="@+id/imgDupPhone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/ic_dup_phone" />
+
+        <TextView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgDupPhone"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="Duplicate Phone"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtDupPhone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:minWidth="@dimen/_25sdp"
+            android:text="00"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:background="@color/light_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp">
+
+        <ImageView
+            android:id="@+id/imgDupEmail"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/ic_dup_email" />
+
+        <TextView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgDupEmail"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="Duplicate Email"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtDupEmail"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:minWidth="@dimen/_25sdp"
+            android:text="00"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:background="@color/light_gray"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp">
+
+        <ImageView
+            android:id="@+id/imgSimilarName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="@dimen/_36sdp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/ic_sim_name" />
+
+        <TextView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imgSimilarName"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="Similar Names"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtSimilarName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:minWidth="@dimen/_25sdp"
+            android:text="00"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

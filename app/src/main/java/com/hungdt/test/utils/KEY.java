@@ -2,8 +2,9 @@ package com.hungdt.test.utils;
 
 public interface KEY {
     String ID = "id";
-    String NAME = "name";
+    String FALSE = "false";
     String IMAGE = "image";
+    String NAME = "name";
     String PHONE = "phone";
     String ACCOUNT = "account";
     String EMAIL = "email";

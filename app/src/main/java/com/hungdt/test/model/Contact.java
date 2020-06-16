@@ -9,15 +9,19 @@ public class Contact implements Comparable<Contact> {
     private String idContact;
     private String name;
     private String image;
+    private String lastCT;
+    private String deleted;
     private List<String> phone;
-    private List<String> account;
+    private List<Account> account;
     private List<String> email;
 
-    public Contact(String id,String idContact,  String name, String image, List<String> phone, List<String> account, List<String> email) {
+    public Contact(String id, String idContact, String name, String image, String lastCT,String deleted, List<String> phone, List<Account> account, List<String> email) {
         this.id = id;
         this.idContact = idContact;
         this.image = image;
         this.name = name;
+        this.deleted = deleted;
+        this.lastCT = lastCT;
         this.phone = phone;
         this.account = account;
         this.email = email;
@@ -47,6 +51,22 @@ public class Contact implements Comparable<Contact> {
         this.image = image;
     }
 
+    public String getLastCT() {
+        return lastCT;
+    }
+
+    public void setLastCT(String lastCT) {
+        this.lastCT = lastCT;
+    }
+
+    public String getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(String deleted) {
+        this.deleted = deleted;
+    }
+
     public String getName() {
         return name;
     }
@@ -63,11 +83,11 @@ public class Contact implements Comparable<Contact> {
         this.phone = phone;
     }
 
-    public List<String> getAccount() {
+    public List<Account> getAccount() {
         return account;
     }
 
-    public void setAccount(List<String> account) {
+    public void setAccount(List<Account> account) {
         this.account = account;
     }
 

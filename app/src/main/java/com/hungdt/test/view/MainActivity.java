@@ -3,29 +3,51 @@ package com.hungdt.test.view;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.solver.widgets.Helper;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
+import com.android.billingclient.api.BillingClientStateListener;
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
+import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
+import com.hungdt.test.utils.Ads;
+import com.hungdt.test.utils.MySetting;
+import com.hungdt.test.view.adapter.ViewPageAdapter;
+import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,32 +64,157 @@ import java.util.List;
  * lenovo: "Local Phone Account: "Phone"
  */
 
-public class MainActivity extends AppCompatActivity {
-    private static final int PICK_CONTACT = 103;
-    private Button btnOpen,btnTest,btnDelete;
-    ArrayList<String> arrayList;
+public class MainActivity extends AppCompatActivity  implements  BillingProcessor.IBillingHandler{
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabItem tabContacts,tabManager,tabMerged,tabDelete,tabVIP;
+    private boolean readyToPurchase = false;
+    private ImageView imgMenu,imgRemoveAds,imgGift;
+    private ArrayList<String> arrayList;
+    private ViewPageAdapter viewPageAdapter ;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     final Calendar calendar = Calendar.getInstance();
+    private BillingProcessor bp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+            bp = BillingProcessor.newBillingProcessor(this, getString(R.string.BASE64), this); // doesn't bind
+            bp.initialize(); // binds
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        btnOpen = findViewById(R.id.btnOpen);
-        btnTest = findViewById(R.id.btnTest);
-        btnDelete = findViewById(R.id.btnDelete);
+        initView();
+        //readDeviceAccount2();
 
         arrayList = new ArrayList<>();
-        btnOpen.setOnClickListener(new View.OnClickListener() {
+
+        viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+
+        viewPager.setAdapter(viewPageAdapter);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        imgRemoveAds.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    removeAds();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                imgRemoveAds.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        imgRemoveAds.setEnabled(true);
+                    }
+                }, 1250);
+            }
+        });
+
+
+        imgGift.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Gift", Toast.LENGTH_SHORT).show();
+                /*isDailyReward = true;
+                openVideoAdsDialog();
+                imgGift.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        imgGift.setEnabled(true);
+                    }
+                }, 1250);*/
+            }
+        });
+
+        imgMenu.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RtlHardcoded")
+            @Override
+            public void onClick(View v) {
+                if (!drawerLayout.isDrawerOpen(Gravity.LEFT)) drawerLayout.openDrawer(Gravity.LEFT);
+                else drawerLayout.closeDrawer(Gravity.RIGHT);
+            }
+        });
+        navigationView.bringToFront();
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    /*case R.id.nav_upgradeToVIP:
+                        try {
+                            startActivity(new Intent(MainActivity.this, VipActivity.class));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;*/
+                    case R.id.nav_remove_add:
+                        try {
+                            removeAds();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case R.id.nav_rate_us:
+                        startActivity(new Intent(MainActivity.this, RateAppActivity.class));
+                        break;
+                    case R.id.nav_share:
+                        com.hungdt.test.utils.Helper.shareApp(MainActivity.this);
+                        break;
+                    case R.id.nav_policy:
+                        startActivity(new Intent(MainActivity.this, PolicyActivity.class));
+                        if (!showInterstitial()) {
+                            if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))
+                                UnityAds.show(MainActivity.this, getString(R.string.INTER_UNI));
+                        }
+                        break;
+                    case R.id.nav_feedback_dev:
+                        com.hungdt.test.utils.Helper.feedback(MainActivity.this);
+                        break;
+                    case R.id.nav_more_app:
+                        startActivity(new Intent(MainActivity.this, MoreAppActivity.class));
+                        if (!showInterstitial()) {
+                            if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))
+                                UnityAds.show(MainActivity.this, getString(R.string.INTER_UNI));
+                        }
+                        break;
+
+                }
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+        /*btnOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
-        btnTest.setOnClickListener(new View.OnClickListener() {
+        /*btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<ContentProviderOperation> cntProOper = new ArrayList<>();
@@ -109,9 +256,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("ABCD", "addToContactList: " + r.uri);
                 }
             }
-        });
+        });*/
 
-        btnDelete.setOnClickListener(new View.OnClickListener() {
+        /* btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<ContentProviderOperation> ops = new
@@ -126,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
 
 
@@ -135,7 +282,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    private void initView() {
+        tabLayout = findViewById(R.id.tabBar);
+        tabContacts = findViewById(R.id.tabContacts);
+        tabManager = findViewById(R.id.tabManager);
+        tabMerged = findViewById(R.id.tabMerged);
+        tabDelete = findViewById(R.id.tabDelete);
+        tabVIP = findViewById(R.id.tabVIP);
+        viewPager = findViewById(R.id.viewPager);
+        imgMenu = findViewById(R.id.imgMenu);
+        imgRemoveAds = findViewById(R.id.imgRemoveAds);
+        imgGift = findViewById(R.id.imgGift);
+        drawerLayout = findViewById(R.id.draw_layout);
+        navigationView = findViewById(R.id.nav_view);
+    }
+
+    private void removeAds() {
+        try {
+            if (readyToPurchase) {
+                bp.subscribe(this, getString(R.string.ID_REMOVE_ADS));
+            } else {
+                Toast.makeText(this, "Billing not initialized", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case (PICK_CONTACT):
@@ -165,39 +339,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
-        //////////////////////////////////////////////////////////
-        //Cái  này chọn trong danh bạ và hiển thị thông tin
-        /*Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-        startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);*/
-        ////
-        /*if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case RESULT_PICK_CONTACT:
-                    Cursor cursor = null;
-                    try {
-                        String phoneNo = null;
-                        String name = null;
 
-                        Uri uri = data.getData();
-                        cursor = getContentResolver().query(uri, null, null, null, null);
-                        cursor.moveToFirst();
-                        int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                        int nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-                        phoneNo = cursor.getString(phoneIndex);
-                        name = cursor.getString(nameIndex);
-
-                        Log.e("ABC","Name and Contact number is"+name + "," + phoneNo);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        } else {
-            Log.e("Failed", "Not able to pick contact");
-        }*/
-    }
+    }*/
 
     private void checkPermission() {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) ||
@@ -588,31 +731,107 @@ public class MainActivity extends AppCompatActivity {
         cursorContact.close();
     }
 
-/*ctsContract
-import android.util.Log
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        //readDeviceAccounts()
-        //readDeviceAccount2()
-        readAccountContacts()
-    }
+    private void openExitAppDialog() {
+        final BottomSheetDialog exitDialog = new BottomSheetDialog(this);
+        exitDialog.setContentView(R.layout.exit_app_dialog);
 
-
-
-    private fun readDataXXX(id:String){
-        val arg = arrayOf(ContactsContract.Data.CONTACT_ID,ContactsContract.Data.MIMETYPE,ContactsContract.Data.DATA1)
-        val selection = "${ContactsContract.Data.CONTACT_ID} = $id"
-        val cursorData = contentResolver.query(ContactsContract.Data.CONTENT_URI,arg,selection,null,null)
-        var string = ""
-        while (cursorData != null && cursorData.moveToNext()){
-            val a = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE))
-            Log.e("HVV1312", "MIMETYPE $a ")
-            string = ""
+        if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
+            Ads.initNativeGgFb((LinearLayout) exitDialog.findViewById(R.id.lnNative), this, false);
         }
-        cursorData?.close()
-        //return string
+
+        Button btnYes = exitDialog.findViewById(R.id.btnYes);
+        Button btnCancel = exitDialog.findViewById(R.id.btnCancel);
+
+        assert btnYes != null;
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitDialog.dismiss();
+                finish();
+            }
+        });
+        assert btnCancel != null;
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitDialog.dismiss();
+            }
+        });
+        exitDialog.show();
     }
-}*/
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails details) {
+        Toast.makeText(this, "Thank you for your purchased!", Toast.LENGTH_SHORT).show();
+        if (productId.equals(getString(R.string.ID_REMOVE_ADS))) {
+            checkRemoveAds();
+        } else if (productId.equals(getString(R.string.ID_SUBSCRIPTION))) {
+            MySetting.setSubscription(this, true);
+            MySetting.putRemoveAds(this, true);
+        }
+        Toast.makeText(this, "Thanks for your Purchased!", Toast.LENGTH_SHORT).show();
+    }
+    private void checkRemoveAds() {
+        try {
+            if (bp.isSubscribed(getString(R.string.ID_REMOVE_ADS))) {
+                MySetting.putRemoveAds(this, true);
+            } else {
+                MySetting.putRemoveAds(this, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+
+    }
+
+    @Override
+    public void onBillingError(int errorCode, Throwable error) {
+        Toast.makeText(this, "You have declined payment", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBillingInitialized() {
+        readyToPurchase = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bp != null) {
+            bp.release();
+        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
+            if (!showInterstitial()) {
+                if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))
+                    UnityAds.show(MainActivity.this, getString(R.string.INTER_UNI));
+            }
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                openExitAppDialog();
+            }
+        }, 300);
+    }
+
+    public static boolean showInterstitial() {
+        /*if (ggInterstitialAd != null && ggInterstitialAd.isLoaded()) {
+            ggInterstitialAd.show();
+            return true;
+        } else if (fbInterstitialAd != null && fbInterstitialAd.isAdLoaded()) {
+            fbInterstitialAd.show();
+            return true;
+        } else return false;*/
+        return false;
+    }
+
 }

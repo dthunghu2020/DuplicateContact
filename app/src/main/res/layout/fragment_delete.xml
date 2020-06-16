@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/_8sdp">
+
+    <LinearLayout
+        android:id="@+id/llLastContact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unused Contacts"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/imgNo3"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:src="@drawable/ic_no3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:text="Not used in last 3 months"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgNo3"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtNo3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:minWidth="@dimen/_25sdp"
+                android:text="00"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/imgNo6"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:src="@drawable/ic_no6"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:text="Not used in last 6 months"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgNo6"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtNo6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:minWidth="@dimen/_25sdp"
+                android:text="00"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/imgNo12"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:src="@drawable/ic_no12"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtNo12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:text="Not used in last 12 months"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgNo12"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:minWidth="@dimen/_25sdp"
+                android:text="00"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/imgNever"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:src="@drawable/ic_never"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:text="Never used"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgNever"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtNever"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:minWidth="@dimen/_25sdp"
+                android:text="00"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unused Contacts"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/imgNoName"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:src="@drawable/ic_no_name"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:text="No Name"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgNoName"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtNoName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:minWidth="@dimen/_25sdp"
+                android:text="00"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/imgNoPhone"
+                android:padding="@dimen/_2sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:src="@drawable/ic_no_phone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:text="No Phone"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgNoPhone"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtNoPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:minWidth="@dimen/_25sdp"
+                android:text="00"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp">
+
+            <ImageView
+                android:id="@+id/imgNoEmail"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:src="@drawable/ic_no_email"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:text="No Email"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgNoEmail"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txtNoEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:minWidth="@dimen/_25sdp"
+                android:text="00"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</LinearLayout>

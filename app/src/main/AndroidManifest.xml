@@ -10,7 +10,10 @@
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
 
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <application
+        android:name=".EnableMultiDex"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,7 +23,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <activity
+            android:name="com.facebook.ads.AudienceNetworkActivity"
+            android:hardwareAccelerated="true" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/APP_ID" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="@string/author"
@@ -30,7 +47,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".view.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,6 +58,9 @@
         <activity android:name=".view.AskPermissionActivity" />
         <activity android:name=".view.ListContactActivity" />
         <activity android:name=".view.DetailContactActivity" />
+        <activity android:name=".view.RateAppActivity" />
+        <activity android:name=".view.PolicyActivity" />
+        <activity android:name=".view.MoreAppActivity" />
     </application>
 
 

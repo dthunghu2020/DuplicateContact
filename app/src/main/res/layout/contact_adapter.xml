@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/clItem"
-    android:padding="@dimen/_8sdp">
+    android:id="@+id/clItem">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
         android:id="@+id/imgContact"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
-        android:background="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,4 +28,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imgContact"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imgContact"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:background="@color/light_gray"
+        android:layout_height="@dimen/_1sdp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

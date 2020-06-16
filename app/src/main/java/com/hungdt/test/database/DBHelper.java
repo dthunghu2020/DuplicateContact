@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.hungdt.test.model.Account;
 import com.hungdt.test.model.Contact;
 
 import java.util.ArrayList;
@@ -22,11 +23,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CONTACT_ID = "CONTACT_ID";
     public static final String COLUMN_CONTACT_NAME = "CONTACT_NAME";
     public static final String COLUMN_CONTACT_IMAGE = "CONTACT_IMAGE";
+    public static final String COLUMN_CONTACT_LAST_CONTACTED = "CONTACT_LAST_CONTACTED";
+    public static final String COLUMN_CONTACT_DELETED = "CONTACT_DELETED";
 
     public static final String TABLE_CONTACT_ACCOUNT = "TB_CONTACT_ACCOUNT";
     public static final String COLUMN_CONTACT_ACCOUNT_ID = "CONTACT_ACCOUNT_ID";
     public static final String COLUMN_ID_CONTACT_ACCOUNT = "CONTACT_ID";
     public static final String COLUMN_CONTACT_ACCOUNT_NAME = "CONTACT_ACCOUNT_NAME";
+    public static final String COLUMN_CONTACT_ACCOUNT_TYPE = "CONTACT_ACCOUNT_TYPE";
 
     public static final String TABLE_CONTACT_PHONE = "TB_CONTACT_PHONE";
     public static final String COLUMN_CONTACT_PHONE_ID = "CONTACT_PHONE_ID";
@@ -42,12 +46,15 @@ public class DBHelper extends SQLiteOpenHelper {
             + COLUMN_TABLE_CONTACT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + COLUMN_CONTACT_ID + " TEXT NOT NULL, "
             + COLUMN_CONTACT_NAME + " TEXT NOT NULL, "
-            + COLUMN_CONTACT_IMAGE + " TEXT NOT NULL " + ");";
+            + COLUMN_CONTACT_IMAGE + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_LAST_CONTACTED + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_DELETED + " TEXT NOT NULL " + ");";
 
     public static final String SQL_CREATE_TABLE_CONTACT_ACCOUNT = "CREATE TABLE " + TABLE_CONTACT_ACCOUNT + "("
             + COLUMN_CONTACT_ACCOUNT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + COLUMN_ID_CONTACT_ACCOUNT + " TEXT NOT NULL, "
-            + COLUMN_CONTACT_ACCOUNT_NAME + " TEXT NOT NULL " + ");";
+            + COLUMN_CONTACT_ACCOUNT_NAME + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_ACCOUNT_TYPE + " TEXT NOT NULL " + ");";
 
     public static final String SQL_CREATE_TABLE_CONTACT_PHONE = "CREATE TABLE " + TABLE_CONTACT_PHONE + "("
             + COLUMN_CONTACT_PHONE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -70,13 +77,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public void addContact(String idContact, String name, String image) {
+    public void addContact(String idContact, String name, String image, String lastCT, String deleted) {
         SQLiteDatabase database = instance.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_CONTACT_ID, idContact);
         values.put(COLUMN_CONTACT_NAME, name);
         values.put(COLUMN_CONTACT_IMAGE, image);
+        values.put(COLUMN_CONTACT_LAST_CONTACTED, lastCT);
+        values.put(COLUMN_CONTACT_DELETED, deleted);
         database.insert(TABLE_CONTACT, null, values);
         database.close();
     }
@@ -95,12 +104,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return lastID;
     }
 
-    public void addAccount(String id, String account) {
+    public void addAccount(String id, String account, String type) {
         SQLiteDatabase database = instance.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_ID_CONTACT_ACCOUNT, id);
         values.put(COLUMN_CONTACT_ACCOUNT_NAME, account);
+        values.put(COLUMN_CONTACT_ACCOUNT_TYPE, type);
         database.insert(TABLE_CONTACT_ACCOUNT, null, values);
         database.close();
     }
@@ -138,6 +148,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_LAST_CONTACTED)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_DELETED)),
                         getPhone(id),
                         getAccount(id),
                         getEmail(id)));
@@ -157,10 +169,12 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 if (cursor.getString(cursor.getColumnIndex(COLUMN_TABLE_CONTACT_ID)).equals(id)) {
-                    contact = new Contact(id,cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)),
+                    contact = new Contact(id, cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
-                            getPhone(id),getAccount(id),getEmail(id));
+                            cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_LAST_CONTACTED)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_DELETED)),
+                            getPhone(id), getAccount(id), getEmail(id));
                 }
                 cursor.moveToNext();
             }
@@ -170,6 +184,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return contact;
     }
+
     public List<String> getPhone(String contactID) {
         SQLiteDatabase db = instance.getWritableDatabase();
 
@@ -178,7 +193,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 if (cursor.getString(cursor.getColumnIndex(COLUMN_ID_CONTACT_PHONE)).equals(contactID)) {
-                   phones.add(cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_PHONE_NAME)));
+                    phones.add(cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_PHONE_NAME)));
                 }
                 cursor.moveToNext();
             }
@@ -188,15 +203,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return phones;
     }
-    public List<String> getAccount(String contactID) {
+
+    public List<Account> getAccount(String contactID) {
         SQLiteDatabase db = instance.getWritableDatabase();
 
         Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT_ACCOUNT), null);
-        List<String> phones = new ArrayList<>();
+        List<Account> accounts = new ArrayList<>();
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 if (cursor.getString(cursor.getColumnIndex(COLUMN_ID_CONTACT_ACCOUNT)).equals(contactID)) {
-                    phones.add(cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ACCOUNT_NAME)));
+                    accounts.add(new Account(cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ACCOUNT_NAME)),cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ACCOUNT_TYPE))));
                 }
                 cursor.moveToNext();
             }
@@ -204,8 +220,9 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        return phones;
+        return accounts;
     }
+
     public List<String> getEmail(String contactID) {
         SQLiteDatabase db = instance.getWritableDatabase();
 
@@ -235,6 +252,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
     }
+
     public void deletePhone(String id) {
         SQLiteDatabase db = instance.getWritableDatabase();
 
@@ -245,16 +263,18 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
     }
+
     public void deleteEmail(String id) {
         SQLiteDatabase db = instance.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_CONTACT_EMAIL_ID, id);
-        db.delete(TABLE_CONTACT_EMAIL, COLUMN_CONTACT_EMAIL_ID+ "='" + id + "'", new String[]{});
+        db.delete(TABLE_CONTACT_EMAIL, COLUMN_CONTACT_EMAIL_ID + "='" + id + "'", new String[]{});
 
         db.close();
 
     }
+
     public void deleteAccount(String id) {
         SQLiteDatabase db = instance.getWritableDatabase();
 
@@ -281,7 +301,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACT_PHONE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACT_EMAIL);
     }
-
 
 
 }
