@@ -120,7 +120,7 @@
                 android:id="@+id/tabVIP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="UP VIP" />
+                android:text="UPGRADE" />
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.viewpager.widget.ViewPager

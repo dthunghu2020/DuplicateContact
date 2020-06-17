@@ -1,45 +1,40 @@
 package com.hungdt.test.view.adapter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.hungdt.test.view.ContactFragment;
-import com.hungdt.test.view.DeleteFragment;
-import com.hungdt.test.view.ManageFragment;
-import com.hungdt.test.view.MergedFragment;
-import com.hungdt.test.view.VipFragment;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewPageAdapter extends FragmentPagerAdapter {
-    private int numberOfTabs;
-
-    public ViewPageAdapter(@NonNull FragmentManager fm, int numberOfTabs) {
+    private final List<Fragment> fragmentList = new ArrayList<>();
+    private final List<String> titleFrm = new ArrayList<>();
+    public ViewPageAdapter(@NonNull FragmentManager fm) {
         super(fm);
-        this.numberOfTabs = numberOfTabs;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return new ContactFragment();
-            case 1:
-                return new ManageFragment();
-            case 2:
-                return new MergedFragment();
-            case 3:
-                return new DeleteFragment();
-            case 4:
-                return new VipFragment();
-            default:
-                return null;
-        }
+        return fragmentList.get(position);
     }
 
     @Override
     public int getCount() {
-        return numberOfTabs;
+        return titleFrm.size();
+    }
+
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return titleFrm.get(position);
+    }
+
+    public void add(Fragment frm, String t){
+        fragmentList.add(frm);
+        titleFrm.add(t);
     }
 }

@@ -93,9 +93,16 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
 
         arrayList = new ArrayList<>();
 
-        viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
-
+        viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
+        viewPageAdapter.add(new ContactFragment(),"Contact");
+        viewPageAdapter.add(new  ManageFragment(),"Manager");
+        viewPageAdapter.add(new MergedFragment(),"Merged");
+        viewPageAdapter.add(new DeleteFragment(),"Delete");
+        viewPageAdapter.add(new VipFragment(),"Upgrade");
         viewPager.setAdapter(viewPageAdapter);
+
+        viewPager.setOffscreenPageLimit(5);
+        tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

@@ -34,7 +34,7 @@ public class ContactFragment extends Fragment {
     private ContactAdapter contactAdapter;
     private RecyclerView rcvContactView;
     private String idContact = null;
-    private String name = null;
+    private String name;
     private String image = null;
     private String lastCT = null;
     private List<Account> accounts = new ArrayList<>();
@@ -158,13 +158,14 @@ public class ContactFragment extends Fragment {
             assert cursorAccount != null;
             cursorAccount.close();
             boolean noPhone = false;
-            boolean noName = false;
+            boolean noName = true;
             boolean noEmail = false;
             if (phones.isEmpty()) {
                 noPhone = true;
+                Log.i("TAG", "readAccountContacts: "+name);
             }
-            if (name.equals("")||name==null) {
-                noName =true;
+            if (!name.equals("")) {
+                noName =false;
             }
             if (emails.isEmpty()) {
                 noEmail = true;
@@ -172,9 +173,9 @@ public class ContactFragment extends Fragment {
 
             contactList.add(new Contact("0", idContact, name, image, lastCT, KEY.FALSE, phones, accounts, emails));
             if (image != null) {
-                DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, "image", lastCT,KEY.TRUE,KEY.TRUE,KEY.TRUE,KEY.TRUE,String.valueOf(noName),String.valueOf(noPhone),String.valueOf(noEmail), KEY.FALSE);
+                DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, image, lastCT, KEY.FALSE,KEY.TRUE,KEY.TRUE,KEY.TRUE,KEY.TRUE,String.valueOf(noName),String.valueOf(noPhone),String.valueOf(noEmail));
             } else {
-                DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, image, lastCT,KEY.TRUE,KEY.TRUE,KEY.TRUE,KEY.TRUE,String.valueOf(noName),String.valueOf(noPhone),String.valueOf(noEmail), KEY.FALSE);
+                DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, "image", lastCT,KEY.FALSE,KEY.TRUE,KEY.TRUE,KEY.TRUE,KEY.TRUE,String.valueOf(noName),String.valueOf(noPhone),String.valueOf(noEmail));
             }
             String id = DBHelper.getInstance(getLayoutInflater().getContext()).getLastContactID();
             if (!noPhone) {

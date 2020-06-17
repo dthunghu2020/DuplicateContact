@@ -42,13 +42,13 @@ public class DeleteFragment extends Fragment {
 
         initView(view);
 
-        txtNo3.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getContactNo3());
-        txtNo6.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getContactNo6());
-        txtNo12.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getContactNo12());
-        txtNever.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getContactNever());
-        txtNoName.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getContactNoName());
-        txtNoPhone.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getContactNoPhone());
-        txtNoEmail.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getContactNoEmail());
+        txtNo3.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getNumberContactNo3());
+        txtNo6.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getNumberContactNo6());
+        txtNo12.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getNumberContactNo12());
+        txtNever.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getNumberContactNever());
+        txtNoName.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getNumberContactNoName());
+        txtNoPhone.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getNumberContactNoPhone());
+        txtNoEmail.setText(DBHelper.getInstance(getLayoutInflater().getContext()).getNumberContactNoEmail());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             llLastContact.setVisibility(View.GONE);
@@ -57,7 +57,7 @@ public class DeleteFragment extends Fragment {
         clNo3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getLayoutInflater().getContext(),DeleteDetailActivity.class);
+                Intent intent = new Intent(getLayoutInflater().getContext(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"no3");
                 startActivity(intent);
             }
@@ -65,7 +65,7 @@ public class DeleteFragment extends Fragment {
         clNo6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getLayoutInflater().getContext(),DeleteDetailActivity.class);
+                Intent intent = new Intent(getLayoutInflater().getContext(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"no6");
                 startActivity(intent);
             }
@@ -73,15 +73,23 @@ public class DeleteFragment extends Fragment {
         clNo12.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getLayoutInflater().getContext(),DeleteDetailActivity.class);
+                Intent intent = new Intent(getLayoutInflater().getContext(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"no12");
+                startActivity(intent);
+            }
+        });
+        clNever.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getLayoutInflater().getContext(), DeleteActivity.class);
+                intent.putExtra(KEY.DELETE,"never");
                 startActivity(intent);
             }
         });
         clNoName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getLayoutInflater().getContext(),DeleteDetailActivity.class);
+                Intent intent = new Intent(getLayoutInflater().getContext(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"noName");
                 startActivity(intent);
             }
@@ -89,7 +97,7 @@ public class DeleteFragment extends Fragment {
         clNoPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getLayoutInflater().getContext(),DeleteDetailActivity.class);
+                Intent intent = new Intent(getLayoutInflater().getContext(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"noPhone");
                 startActivity(intent);
             }
@@ -97,7 +105,7 @@ public class DeleteFragment extends Fragment {
         clNoEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getLayoutInflater().getContext(),DeleteDetailActivity.class);
+                Intent intent = new Intent(getLayoutInflater().getContext(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"noEmail");
                 startActivity(intent);
             }

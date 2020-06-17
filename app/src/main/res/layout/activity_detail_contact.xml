@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sdp"
                 android:gravity="center"
-                android:text="00000000000"
+                android:text="No Phone Number"
                 android:textSize="16sp"
                 app:layout_constraintTop_toBottomOf="@+id/txtAccountName" />
         </androidx.constraintlayout.widget.ConstraintLayout>

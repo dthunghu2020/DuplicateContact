@@ -14,6 +14,7 @@ public class Contact implements Comparable<Contact> {
     private List<String> phone;
     private List<Account> account;
     private List<String> email;
+    private boolean isTicked = false;
 
     public Contact(String id, String idContact, String name, String image, String lastCT,String deleted, List<String> phone, List<Account> account, List<String> email) {
         this.id = id;
@@ -97,6 +98,14 @@ public class Contact implements Comparable<Contact> {
 
     public void setEmail(List<String> email) {
         this.email = email;
+    }
+
+    public boolean isTicked() {
+        return isTicked;
+    }
+
+    public void setTicked(boolean ticked) {
+        isTicked = ticked;
     }
 
     @Override

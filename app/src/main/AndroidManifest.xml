@@ -56,11 +56,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.AskPermissionActivity" />
-        <activity android:name=".view.ListContactActivity" />
         <activity android:name=".view.DetailContactActivity" />
         <activity android:name=".view.RateAppActivity" />
         <activity android:name=".view.PolicyActivity" />
         <activity android:name=".view.MoreAppActivity" />
+        <activity android:name=".view.DeleteActivity" />
+        <activity android:name=".view.DuplicateActivity" />
     </application>
 
 
