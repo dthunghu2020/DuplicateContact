@@ -3,7 +3,9 @@ package com.hungdt.test.utils;
 public interface KEY {
     String ID = "id";
     String FALSE = "false";
+    String TRUE = "true";
     String IMAGE = "image";
+    String DELETE = "delete";
     String NAME = "name";
     String PHONE = "phone";
     String ACCOUNT = "account";

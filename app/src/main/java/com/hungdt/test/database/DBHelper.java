@@ -24,6 +24,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CONTACT_NAME = "CONTACT_NAME";
     public static final String COLUMN_CONTACT_IMAGE = "CONTACT_IMAGE";
     public static final String COLUMN_CONTACT_LAST_CONTACTED = "CONTACT_LAST_CONTACTED";
+    public static final String COLUMN_CONTACT_NOT_USE_3 = "CONTACT_NOT_USE_3";
+    public static final String COLUMN_CONTACT_NOT_USE_6 = "CONTACT_NOT_USE_6";
+    public static final String COLUMN_CONTACT_NOT_USE_12 = "CONTACT_NOT_USE_12";
+    public static final String COLUMN_CONTACT_NEVER_USE = "CONTACT_NEVER_USE";
+    public static final String COLUMN_CONTACT_NO_NAME = "CONTACT_NO_NAME";
+    public static final String COLUMN_CONTACT_NO_PHONE = "CONTACT_NO_PHONE";
+    public static final String COLUMN_CONTACT_NO_EMAIL = "CONTACT_NO_EMAIL";
     public static final String COLUMN_CONTACT_DELETED = "CONTACT_DELETED";
 
     public static final String TABLE_CONTACT_ACCOUNT = "TB_CONTACT_ACCOUNT";
@@ -48,6 +55,13 @@ public class DBHelper extends SQLiteOpenHelper {
             + COLUMN_CONTACT_NAME + " TEXT NOT NULL, "
             + COLUMN_CONTACT_IMAGE + " TEXT NOT NULL, "
             + COLUMN_CONTACT_LAST_CONTACTED + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_NOT_USE_3 + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_NOT_USE_6 + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_NOT_USE_12 + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_NEVER_USE + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_NO_NAME + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_NO_PHONE + " TEXT NOT NULL, "
+            + COLUMN_CONTACT_NO_EMAIL + " TEXT NOT NULL, "
             + COLUMN_CONTACT_DELETED + " TEXT NOT NULL " + ");";
 
     public static final String SQL_CREATE_TABLE_CONTACT_ACCOUNT = "CREATE TABLE " + TABLE_CONTACT_ACCOUNT + "("
@@ -77,7 +91,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public void addContact(String idContact, String name, String image, String lastCT, String deleted) {
+    public void addContact(String idContact, String name, String image, String lastCT, String deleted,String no3,String no6,String no12,String never,String noName,String noPhone,String noEmail) {
         SQLiteDatabase database = instance.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -85,6 +99,13 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CONTACT_NAME, name);
         values.put(COLUMN_CONTACT_IMAGE, image);
         values.put(COLUMN_CONTACT_LAST_CONTACTED, lastCT);
+        values.put(COLUMN_CONTACT_NOT_USE_3, no3);
+        values.put(COLUMN_CONTACT_NOT_USE_6, no6);
+        values.put(COLUMN_CONTACT_NOT_USE_12, no12);
+        values.put(COLUMN_CONTACT_NEVER_USE, never);
+        values.put(COLUMN_CONTACT_NO_NAME, noName);
+        values.put(COLUMN_CONTACT_NO_PHONE, noPhone);
+        values.put(COLUMN_CONTACT_NO_EMAIL, noEmail);
         values.put(COLUMN_CONTACT_DELETED, deleted);
         database.insert(TABLE_CONTACT, null, values);
         database.close();
@@ -183,6 +204,136 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return contact;
+    }
+
+    public String getContactNo3() {
+        SQLiteDatabase db = instance.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NOT_USE_3)).equals("true")) {
+                    count++;
+                }
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return String.valueOf(count);
+    }
+    public String getContactNo6() {
+        SQLiteDatabase db = instance.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NOT_USE_6)).equals("true")) {
+                    count++;
+                }
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return String.valueOf(count);
+    }
+    public String getContactNo12() {
+        SQLiteDatabase db = instance.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NOT_USE_12)).equals("true")) {
+                    count++;
+                }
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return String.valueOf(count);
+    }
+    public String getContactNever() {
+        SQLiteDatabase db = instance.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NEVER_USE)).equals("true")) {
+                    count++;
+                }
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return String.valueOf(count);
+    }
+
+    public String getContactNoName() {
+        SQLiteDatabase db = instance.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NO_NAME)).equals("true")) {
+                    count++;
+                }
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return String.valueOf(count);
+    }
+
+    public String getContactNoPhone() {
+        SQLiteDatabase db = instance.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NO_PHONE)).equals("true")) {
+                    count++;
+                }
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return String.valueOf(count);
+    }
+
+    public String getContactNoEmail() {
+        SQLiteDatabase db = instance.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NO_EMAIL)).equals("true")) {
+                    count++;
+                }
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return String.valueOf(count);
     }
 
     public List<String> getPhone(String contactID) {
@@ -301,6 +452,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACT_PHONE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACT_EMAIL);
     }
+
 
 
 }
