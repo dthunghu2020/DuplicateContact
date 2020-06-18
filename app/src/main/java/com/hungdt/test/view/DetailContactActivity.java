@@ -60,8 +60,7 @@ public class DetailContactActivity extends AppCompatActivity {
 
         Glide.with(this)
                 .load(contact.getImage())
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_id)
+                .error(R.drawable.ic_code)
                 .into(imgContact);
 
         txtAccountName.setText(contact.getName());

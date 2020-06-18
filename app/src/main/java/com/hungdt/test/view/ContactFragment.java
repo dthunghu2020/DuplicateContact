@@ -1,6 +1,10 @@
 package com.hungdt.test.view;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -10,6 +14,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,38 +64,15 @@ public class ContactFragment extends Fragment {
         calendar = Calendar.getInstance();
         Log.i("TAG", "onViewCreated: " + calendar.getTimeInMillis());
 
-    /*
-    * // Câu lệnh tìm kiếm
-        @Query("SELECT * FROM phone WHERE Ten like :timKiem")
-        List<Phone> getListTimKiem(String timKiem);
-        *
-        * imgTimKiem.setOnClickListener(new View.OnClickListener() {
-                @SuppressLint("SetTextI18n")
-                @Override
-                public void onClick(View v) {
-                    String srearch = String.valueOf(edtTimKiem.getText()).trim().replaceAll("\\s+", " ");
-                    String timKiem = "%" + srearch + "%";
-                    listphones = AppDatabasePhone.getInstance().getIDatabase().getPhoneDao().getListTimKiem(timKiem);
-                    phoneAdaper.notifyDataSetChanged();
-
-                    checkDataListPhone(listphones.size());
-                    loadDataTrangChinh(view);
-
-                    txtTraVeTimKiem.setVisibility(View.VISIBLE);
-                    txtTieuDe.setVisibility(View.INVISIBLE);
-
-                    txtTraVeTimKiem.setText("Kết quả tìm kiếm '" + edtTimKiem.getText() + "' là : ");
-                }
-            });
-        * */
-
-
         rcvContactView = view.findViewById(R.id.rcvListContact);
 
-        contactList = DBHelper.getInstance(view.getContext()).getAllContact();
+        if (Build.VERSION.SDK_INT >= 23) {
+            checkPermission();
+        }
+        contactList = DBHelper.getInstance(getLayoutInflater().getContext()).getAllContact();
         if (contactList.size() == 0) {
             readAccountContacts();
-            contactList = DBHelper.getInstance(view.getContext()).getAllContact();
+            contactList = DBHelper.getInstance(getLayoutInflater().getContext()).getAllContact();
         }
 
         Collections.sort(contactList);
@@ -100,6 +82,20 @@ public class ContactFragment extends Fragment {
 
     }
 
+    private void checkPermission() {
+        if ((ContextCompat.checkSelfPermission(getLayoutInflater().getContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(getLayoutInflater().getContext(), Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(getLayoutInflater().getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(getLayoutInflater().getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)) {
+            startActivity(new Intent(getLayoutInflater().getContext(), AskPermissionActivity.class));
+        } else {
+            contactList = DBHelper.getInstance(getLayoutInflater().getContext()).getAllContact();
+            if (contactList.size() == 0) {
+                readAccountContacts();
+                contactList = DBHelper.getInstance(getLayoutInflater().getContext()).getAllContact();
+            }
+        }
+    }
     private void readAccountContacts() {
 
         String[] projections = {
@@ -138,6 +134,16 @@ public class ContactFragment extends Fragment {
                         ContactsContract.Data.DATA2,
                 };
                 String selectionx = ContactsContract.Data.RAW_CONTACT_ID + " = " + idRawContract;
+                /**
+                 * samsung: "vnd.sec.contact.phone: "vnd.sec.contact.phone"
+                 * htc: "com.htc.android.pcsc: "pcsc"
+                 * sony: "com.sonyericsson.localcontacts: "Phone contacts"
+                 * lge: "com.lge.sync: "Phone"
+                 * lge (option 2): "com.lge.phone"
+                 * t-mobile: "vnd.tmobileus.contact.phone: "MobileLife Contacts"
+                 * huawei: "com.android.huawei.phone: "Phone"
+                 * lenovo: "Local Phone Account: "Phone"
+                 */
                 Cursor cursorData = getLayoutInflater().getContext().getContentResolver().query(ContactsContract.Data.CONTENT_URI, projectionx, selectionx, null, null);
                 while (cursorData != null && cursorData.moveToNext()) {
                     if (accountType.equals("vnd.sec.contact.phone") || accountType.equals("vnd.sec.contact.sim") || accountType.equals("vnd.sec.contact.sim2")) {
@@ -177,10 +183,11 @@ public class ContactFragment extends Fragment {
             } else {
                 DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, "image", lastCT,KEY.FALSE,KEY.TRUE,KEY.TRUE,KEY.TRUE,KEY.TRUE,String.valueOf(noName),String.valueOf(noPhone),String.valueOf(noEmail));
             }
-            String id = DBHelper.getInstance(getLayoutInflater().getContext()).getLastContactID();
+            String id = DBHelper.getInstance(getLayoutInflater().getContext()).getLastID();
+            String idContact = DBHelper.getInstance(getLayoutInflater().getContext()).getLastContactID(id);
             if (!noPhone) {
                 for (int i = 0; i < phones.size(); i++) {
-                    DBHelper.getInstance(getLayoutInflater().getContext()).addPhone(id, phones.get(i));
+                    DBHelper.getInstance(getLayoutInflater().getContext()).addPhone(id,idContact, phones.get(i));
                 }
             }
             if (!accounts.isEmpty()) {
@@ -190,7 +197,7 @@ public class ContactFragment extends Fragment {
             }
             if (!noEmail) {
                 for (int i = 0; i < emails.size(); i++) {
-                    DBHelper.getInstance(getLayoutInflater().getContext()).addEmail(id, emails.get(i));
+                    DBHelper.getInstance(getLayoutInflater().getContext()).addEmail(id, idContact,emails.get(i));
                 }
             }
             image = null;

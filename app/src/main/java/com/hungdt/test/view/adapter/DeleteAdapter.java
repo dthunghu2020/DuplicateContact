@@ -41,7 +41,7 @@ public class DeleteAdapter extends RecyclerView.Adapter<DeleteAdapter.DeleteHold
 
         Glide.with(layoutInflater.getContext())
                 .load(contacts.get(position).getImage())
-                .error(R.drawable.ic_id)
+                .error(R.drawable.ic_code)
                 .into(holder.imgContact);
 
         if(contacts.get(position).isTicked()){

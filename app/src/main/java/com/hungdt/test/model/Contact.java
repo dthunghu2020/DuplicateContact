@@ -3,7 +3,7 @@ package com.hungdt.test.model;
 import java.util.List;
 
 
-public class Contact implements Comparable<Contact> {
+public class Contact  implements Comparable<Contact> {
 
     private String id;
     private String idContact;
@@ -15,6 +15,7 @@ public class Contact implements Comparable<Contact> {
     private List<Account> account;
     private List<String> email;
     private boolean isTicked = false;
+    private int type = 0;
 
     public Contact(String id, String idContact, String name, String image, String lastCT,String deleted, List<String> phone, List<Account> account, List<String> email) {
         this.id = id;
@@ -106,6 +107,14 @@ public class Contact implements Comparable<Contact> {
 
     public void setTicked(boolean ticked) {
         isTicked = ticked;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override

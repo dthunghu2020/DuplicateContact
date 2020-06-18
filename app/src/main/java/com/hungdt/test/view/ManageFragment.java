@@ -51,97 +51,92 @@ public class ManageFragment extends Fragment {
         phones.addAll(DBHelper.getInstance(getContext()).getDupPhone());
         emails.addAll(DBHelper.getInstance(getContext()).getDupEmail());
         names.addAll(DBHelper.getInstance(getContext()).getDupName());
-        for (int i = 0; i < phones.size() - 1; i++) {
-            for (int j = i + 1; j < phones.size(); j++) {
+        List<Duplicate> emailList = new ArrayList<>(emails);
+        for (int i = 0; i < emails.size(); i++) {
+            for (int j = 0; j < emailList.size(); j++) {
                 if (i != j) {
-                    if (phones.get(i).getName().equals(phones.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phones.get(j).getContactID())) {
-                        if (phones.get(i).getType() == 0 && phones.get(j).getType() == 0) {
-                            dubPhone++;
-                            phones.get(i).setType(type);
-                            phones.get(j).setType(type);
-                            type++;
-                        }
-                        if (phones.get(i).getType() != 0 && phones.get(j).getType() == 0) {
-                            dubPhone++;
-                            phones.get(j).setType(phones.get(i).getType());
-                        }
-                        if (phones.get(i).getType() == 0 && phones.get(j).getType() != 0) {
-                            dubPhone++;
-                            phones.get(i).setType(phones.get(j).getType());
-                        }
-                    }
-                }
-            }
-        }
-
-        for (int i = 0; i < emails.size() - 1; i++) {
-            for (int j = i + 1; j < emails.size(); j++) {
-                if (i != j) {
-                    if (emails.get(i).getName().equals(emails.get(j).getName()) && Integer.parseInt(emails.get(i).getContactID()) != Integer.parseInt(emails.get(j).getContactID())) {
-                        if (emails.get(i).getType() == 0 && emails.get(j).getType() == 0) {
-                            dubEmail++;
+                    if (emails.get(i).getName().equalsIgnoreCase(emailList.get(j).getName()) && Integer.parseInt(emails.get(i).getContactID()) != Integer.parseInt(emailList.get(j).getContactID())) {
+                        if (emails.get(j).getType() == 0) {
                             emails.get(i).setType(type);
-                            emails.get(j).setType(type);
                             type++;
+                            break;
                         }
-                        if (emails.get(i).getType() != 0 && emails.get(j).getType() == 0) {
-                            dubEmail++;
-                            emails.get(j).setType(emails.get(i).getType());
-                        }
-                        if (phones.get(i).getType() == 0 && emails.get(j).getType() != 0) {
-                            dubEmail++;
+                        if (emails.get(j).getType() != 0) {
                             emails.get(i).setType(emails.get(j).getType());
+                            break;
                         }
                     }
                 }
             }
         }
+        ArrayList<Integer> idCheckEmail = new ArrayList<>();
+        for (int i = 0; i < emails.size(); i++) {
+            if (emails.get(i).getType() != 0 && !idCheckEmail.contains(emails.get(i).getType())) {
+                idCheckEmail.add(emails.get(i).getType());
+                dubEmail++;
+            }
+        }
 
-        for (int i = 0; i < names.size() - 1; i++) {
-            for (int j = i + 1; j < names.size(); j++) {
+        List<Duplicate> phoneList = new ArrayList<>(phones);
+        for (int i = 0; i < phones.size(); i++) {
+            for (int j = 0; j < phoneList.size(); j++) {
                 if (i != j) {
-                    if (names.get(i).getName().equals(names.get(j).getName()) && Integer.parseInt(names.get(i).getContactID()) != Integer.parseInt(names.get(j).getContactID())) {
-                        if (names.get(i).getType() == 0 && names.get(j).getType() == 0) {
-                            similarName++;
-                            names.get(i).setType(type);
-                            names.get(j).setType(type);
+                    if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
+                        if (phones.get(j).getType() == 0) {
+                            phones.get(i).setType(type);
                             type++;
+                            break;
                         }
-                        if (names.get(i).getType() != 0 && names.get(j).getType() == 0) {
-                            similarName++;
-                            names.get(j).setType(names.get(i).getType());
+                        if (phones.get(j).getType() != 0) {
+                            phones.get(i).setType(phones.get(j).getType());
+                            break;
                         }
-                        if (phones.get(i).getType() == 0 && names.get(j).getType() != 0) {
-                            similarName++;
+                    }
+                }
+            }
+        }
+        ArrayList<Integer> idCheckPhone = new ArrayList<>();
+        for (int i = 0; i < phones.size(); i++) {
+            if (phones.get(i).getType() != 0 && !idCheckPhone.contains(phones.get(i).getType())) {
+                idCheckPhone.add(phones.get(i).getType());
+                dubPhone++;
+            }
+        }
+
+
+        List<Duplicate> nameList = new ArrayList<>(names);
+        for (int i = 0; i < names.size(); i++) {
+            for (int j = 0; j < nameList.size(); j++) {
+                if (i != j) {
+                    if (names.get(i).getName().equalsIgnoreCase(nameList.get(j).getName()) && Integer.parseInt(names.get(i).getContactID()) != Integer.parseInt(nameList.get(j).getContactID())) {
+                        if (names.get(j).getType() == 0) {
+                            names.get(i).setType(type);
+                            type++;
+                            break;
+                        }
+                        if (names.get(j).getType() != 0) {
                             names.get(i).setType(names.get(j).getType());
+                            break;
                         }
                     }
                 }
             }
         }
-
-
-        /*for (int i = 0; i < emails.size() - 1; i++) {
-            for (int j = i + 1; j < emails.size(); j++) {
-                if (i != j) {
-                    if (emails.get(i).getName().equals(emails.get(j).getName()) && !emails.get(i).getContactID().equals(emails.get(j).getContactID())) {
-                        dubEmail++;
-                    }
-                }
+        ArrayList<Integer> idCheckName = new ArrayList<>();
+        for (int i = 0; i < names.size(); i++) {
+            if (names.get(i).getType() != 0 && !idCheckName.contains(names.get(i).getType())) {
+                idCheckName.add(names.get(i).getType());
+                similarName++;
             }
         }
-        for (int i = 0; i < names.size() - 1; i++) {
-            for (int j = i + 1; j < names.size(); j++) {
-                if (i != j) {
-                    if (names.get(i).getName().equalsIgnoreCase(names.get(j).getName()) && Integer.parseInt(names.get(i).getContactID()) != Integer.parseInt(names.get(j).getContactID())) {
-                        Log.e("123123", "onViewCreated: " + names.get(i).getName() + "/" + names.get(j).getName());
-                        break;
-                    }
-                }
+
+        final ArrayList<Integer> idCheckContact = new ArrayList<>();
+        for (int i = 0; i < idCheckName.size(); i++) {
+            if (idCheckPhone.contains(idCheckName.get(i))) {
+                idCheckContact.add(names.get(i).getType());
+                dubContact++;
             }
-            Log.e("123123", "onViewCreated: " + idNames);
-        }*/
-        //Log.e("123123", "onViewCreated: " + idNames);
+        }
 
         txtDupContact.setText(String.valueOf(dubContact));
         txtDupPhone.setText(String.valueOf(dubPhone));
@@ -153,6 +148,7 @@ public class ManageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), DuplicateActivity.class);
                 intent.putExtra(KEY.DUP, "contact");
+                intent.putIntegerArrayListExtra(KEY.LIST_ID, idCheckContact);
                 startActivity(intent);
             }
         });
@@ -161,6 +157,14 @@ public class ManageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), DuplicateActivity.class);
                 intent.putExtra(KEY.DUP, "phone");
+                ArrayList<String> id = new ArrayList<>();
+                for (int i = 0; i < phones.size(); i++) {
+                    if (phones.get(i).getType() != 0) {
+                        id.add(phones.get(i).getContactID());
+                        Log.i("123123", "onClick: " +phones.get(i).getContactID());
+                    }
+                }
+                intent.putStringArrayListExtra(KEY.LIST_ID, id);
                 startActivity(intent);
             }
         });
@@ -169,6 +173,13 @@ public class ManageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), DuplicateActivity.class);
                 intent.putExtra(KEY.DUP, "email");
+                ArrayList<String> id = new ArrayList<>();
+                for (int i = 0; i < emails.size(); i++) {
+                    if (emails.get(i).getType() != 0) {
+                        id.add(emails.get(i).getContactID());
+                    }
+                }
+                intent.putStringArrayListExtra(KEY.LIST_ID, id);
                 startActivity(intent);
             }
         });
@@ -177,6 +188,13 @@ public class ManageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), DuplicateActivity.class);
                 intent.putExtra(KEY.DUP, "name");
+                ArrayList<String> id = new ArrayList<>();
+                for (int i = 0; i < names.size(); i++) {
+                    if (names.get(i).getType() != 0) {
+                        id.add(names.get(i).getContactID());
+                    }
+                }
+                intent.putStringArrayListExtra(KEY.LIST_ID, id);
                 startActivity(intent);
             }
         });

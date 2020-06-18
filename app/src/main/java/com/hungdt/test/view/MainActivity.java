@@ -53,16 +53,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- * samsung: "vnd.sec.contact.phone: "vnd.sec.contact.phone"
- * htc: "com.htc.android.pcsc: "pcsc"
- * sony: "com.sonyericsson.localcontacts: "Phone contacts"
- * lge: "com.lge.sync: "Phone"
- * lge (option 2): "com.lge.phone"
- * t-mobile: "vnd.tmobileus.contact.phone: "MobileLife Contacts"
- * huawei: "com.android.huawei.phone: "Phone"
- * lenovo: "Local Phone Account: "Phone"
- */
+
 
 public class MainActivity extends AppCompatActivity  implements  BillingProcessor.IBillingHandler{
     private TabLayout tabLayout;
@@ -284,9 +275,7 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
 
 
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            checkPermission();
-        }
+
     }
 
     private void initView() {
@@ -349,20 +338,6 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
 
     }*/
 
-    private void checkPermission() {
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) ||
-                (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)) {
-            startActivity(new Intent(this, AskPermissionActivity.class));
-        } else {
-            //getContact();
-            //readDeviceAccount2();
-            readAccountContacts();
-            //Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
-           // startActivity(intent);
-        }
-    }
 
     private void getContact() {
         Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);

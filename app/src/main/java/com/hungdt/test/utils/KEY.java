@@ -6,4 +6,5 @@ public interface KEY {
     String ID = "id";
     String FALSE = "false";
     String TRUE = "true";
+    String LIST_ID = "ids";
 }

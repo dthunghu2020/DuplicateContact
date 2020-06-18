@@ -41,7 +41,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountH
             case "vnd.sec.contact.phone":
             case "vnd.sec.contact.sim":
             case "vnd.sec.contact.sim2":;
-                holder.imgCall.setImageResource(R.drawable.shared_folder);
+                holder.imgCall.setImageResource(R.drawable.ic_id);
                 break;
             case "com.google.android.apps.tachyon":
                 holder.imgCall.setImageResource(R.drawable.duo);
@@ -53,7 +53,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountH
                 holder.imgCall.setImageResource(R.drawable.google);
                 break;
             default:
-                holder.imgCall.setImageResource(R.drawable.shared_folder);
+                holder.imgCall.setImageResource(R.drawable.ic_code);
                 break;
 
         }

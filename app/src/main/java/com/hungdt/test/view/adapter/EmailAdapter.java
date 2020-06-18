@@ -36,7 +36,7 @@ public class EmailAdapter extends RecyclerView.Adapter<EmailAdapter.EmailHolder>
     public void onBindViewHolder(@NonNull EmailHolder holder, final int position) {
         holder.imgSMS.setVisibility(View.GONE);
         holder.txtPhone.setText(emails.get(position));
-        holder.imgCall.setImageResource(R.drawable.email);
+        holder.imgCall.setImageResource(R.drawable.ic_gmail);
         holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -46,8 +46,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 
         Glide.with(layoutInflater.getContext())
                 .load(contactList.get(position).getImage())
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.color.colorAccent)
+                .error(R.drawable.ic_code)
                 .into(holder.imgContact);
 
         holder.txtContactName.setText(contactList.get(position).getName());

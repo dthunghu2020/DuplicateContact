@@ -188,7 +188,7 @@ public class DeleteActivity extends AppCompatActivity {
         cbAll= findViewById(R.id.cbAll);
         llDelete= findViewById(R.id.llDelete);
         llButtonDelete= findViewById(R.id.llButtonDelete);
-        rcvDelete= findViewById(R.id.rcvDelete);
+        rcvDelete= findViewById(R.id.rcvList);
     }
 
     private void setDefaultTick() {

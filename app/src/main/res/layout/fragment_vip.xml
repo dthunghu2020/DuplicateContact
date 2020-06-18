@@ -52,18 +52,24 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btnVip"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@drawable/shape_topbar"
-                    android:paddingStart="@dimen/_45sdp"
-                    android:paddingEnd="@dimen/_45sdp"
-                    android:text="Start Free 7-Day Trial"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white" />
+                    android:paddingBottom="@dimen/_2sdp"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:id="@+id/btnVip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/shape_button"
+                        android:paddingStart="@dimen/_45sdp"
+                        android:paddingEnd="@dimen/_45sdp"
+                        android:paddingBottom="@dimen/_2sdp"
+                        android:text="Start Free 7-Day Trial"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/txtMoney"
