@@ -2,8 +2,11 @@ package com.hungdt.test.view;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentProviderOperation;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.OperationApplicationException;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -28,6 +31,7 @@ import com.hungdt.test.R;
 import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Contact;
 import com.hungdt.test.model.Duplicate;
+import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
 import com.hungdt.test.view.adapter.DeleteAdapter;
 import com.hungdt.test.view.adapter.DuplicateAdapter;
@@ -58,19 +62,20 @@ public class DuplicateActivity extends AppCompatActivity {
 
         initView();
 
+        Ads.initNativeGgFb((LinearLayout) findViewById(R.id.lnNative), this, true);
         imgBtnDelete.setImageResource(R.drawable.merge);
         txtBtnDelete.setText("MERGER CONTACT");
 
         Intent intent = getIntent();
         type = intent.getStringExtra(KEY.DUP);
         idContact.addAll(Objects.requireNonNull(intent.getStringArrayListExtra(KEY.LIST_ID)));
-
         for (int i = 0; i < idContact.size(); i++) {
             contacts.add(DBHelper.getInstance(this).getDubContact(String.valueOf(idContact.get(i))));
         }
+        //lay duoc contact
         setTypeContact();
-
         Collections.sort(contacts);
+        Log.e("123123", "onCreate: "+typeList+type );
         duplicateAdapter = new DuplicateAdapter(this, contacts, typeList, type);
         rcvList.setLayoutManager(new LinearLayoutManager(this));
         rcvList.setAdapter(duplicateAdapter);
@@ -84,6 +89,32 @@ public class DuplicateActivity extends AppCompatActivity {
         cbAll.setVisibility(View.GONE);
         llDelete.setVisibility(View.GONE);
 
+        IntentFilter intentFilter = new IntentFilter(MainActivity.ACTION_UPDATE_DUB);
+        registerReceiver(broadCastUpdate,intentFilter);
+    }
+
+    private BroadcastReceiver broadCastUpdate = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            List<String> ids = intent.getStringArrayListExtra(MainActivity.KEY_RELOAD_DUB);
+            List<Contact> contactss=new ArrayList<>();
+            for(int i = 0 ; i< contacts.size();i++){
+                assert ids != null;
+                if(ids.contains(contacts.get(i).getIdContact())){
+                    contactss.add(contacts.get(i));
+                }
+            }
+            contacts.removeAll(contactss);
+            setTypeContact();
+            Collections.sort(contacts);
+            duplicateAdapter.notifyDataSetChanged();
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(broadCastUpdate);
     }
 
     private void setTypeContact() {

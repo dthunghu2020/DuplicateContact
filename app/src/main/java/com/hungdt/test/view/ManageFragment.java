@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.hungdt.test.R;
 import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Duplicate;
+import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
 
 import java.util.ArrayList;
@@ -47,11 +49,13 @@ public class ManageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initView(view);
+        Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
 
         phones.addAll(DBHelper.getInstance(getContext()).getDupPhone());
         emails.addAll(DBHelper.getInstance(getContext()).getDupEmail());
         names.addAll(DBHelper.getInstance(getContext()).getDupName());
-        List<Duplicate> emailList = new ArrayList<>(emails);
+
+        /*List<Duplicate> emailList = new ArrayList<>(emails);
         for (int i = 0; i < emails.size(); i++) {
             if(!emails.get(i).getMerger().equals(KEY.FALSE)){
                 break;
@@ -102,6 +106,65 @@ public class ManageFragment extends Fragment {
             }
         }
         ArrayList<Integer> idCheckPhone = new ArrayList<>();
+        for (int i = 0; i < phones.size(); i++) {
+            if (phones.get(i).getType() != 0 && !idCheckPhone.contains(phones.get(i).getType())) {
+                idCheckPhone.add(phones.get(i).getType());
+                dubPhone++;
+            }
+        }*/
+
+        final List<Duplicate> emailList = new ArrayList<>(emails);
+        for (int i = 0; i < emails.size(); i++) {
+            if(!emails.get(i).getMerger().equals(KEY.FALSE)){
+                break;
+            }
+            for (int j = 0; j < emailList.size(); j++) {
+                if (i != j) {
+                    if (emails.get(i).getName().equalsIgnoreCase(emailList.get(j).getName()) && Integer.parseInt(emails.get(i).getContactID()) != Integer.parseInt(emailList.get(j).getContactID())) {
+                        if (emails.get(j).getType() == 0) {
+                            emails.get(i).setType(type);
+                            type++;
+                            break;
+                        }
+                        if (emails.get(j).getType() != 0) {
+                            emails.get(i).setType(emails.get(j).getType());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        ArrayList<Integer> idCheckEmail = new ArrayList<>();
+        for (int i = 0; i < emails.size(); i++) {
+            if (emails.get(i).getType() != 0 && !idCheckEmail.contains(emails.get(i).getType())) {
+                idCheckEmail.add(emails.get(i).getType());
+                dubEmail++;
+            }
+        }
+
+
+        List<Duplicate> phoneList = new ArrayList<>(phones);
+        for (int i = 0; i < phones.size(); i++) {
+            if(!phones.get(i).getMerger().equals(KEY.FALSE)){
+                break;
+            }
+            for (int j = 0; j < phoneList.size(); j++) {
+                if (i != j) {
+                    if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
+                        if (phones.get(j).getType() == 0) {
+                            phones.get(i).setType(type);
+                            type++;
+                            break;
+                        }
+                        if (phones.get(j).getType() != 0) {
+                            phones.get(i).setType(phones.get(j).getType());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        ArrayList<Integer> idCheckPhone= new ArrayList<>();
         for (int i = 0; i < phones.size(); i++) {
             if (phones.get(i).getType() != 0 && !idCheckPhone.contains(phones.get(i).getType())) {
                 idCheckPhone.add(phones.get(i).getType());
@@ -170,9 +233,9 @@ public class ManageFragment extends Fragment {
                 for (int i = 0; i < phones.size(); i++) {
                     if (phones.get(i).getType() != 0) {
                         id.add(phones.get(i).getContactID());
-                        Log.i("123123", "onClick: " +phones.get(i).getContactID());
                     }
                 }
+                Log.e("123123", "onClick: "+id );
                 intent.putStringArrayListExtra(KEY.LIST_ID, id);
                 startActivity(intent);
             }
@@ -203,10 +266,12 @@ public class ManageFragment extends Fragment {
                         id.add(names.get(i).getContactID());
                     }
                 }
+                Log.e("123123", "onClick: "+id );
                 intent.putStringArrayListExtra(KEY.LIST_ID, id);
                 startActivity(intent);
             }
         });
+
     }
 
 

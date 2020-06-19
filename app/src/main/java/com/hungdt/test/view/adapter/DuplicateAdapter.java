@@ -3,6 +3,7 @@ package com.hungdt.test.view.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,9 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull DuplicateHolder holder, final int position) {
-
+        for(int i = 0 ; i<contacts.size();i++){
+            Log.e("123123", "onBindViewHolder: "+contacts.get(i).getIdContact()+contacts.get(i).getName());
+        }
         Glide.with(layoutInflater.getContext())
                 .load(contacts.get(position).getImage())
                 .error(R.drawable.ic_code)
@@ -72,18 +75,16 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
             }
         }
         switch (type) {
-
-            case "contact":
-            case "name":
-                holder.txtContactMerger.setText("Name: " + name);
-                break;
             case "email":
                 holder.txtContactMerger.setText("Email: " + email);
                 break;
             case "phone":
                 holder.txtContactMerger.setText("Phone: " + phone);
                 break;
-            default:break;
+            case "contact":
+            case "name":
+                holder.txtContactMerger.setText("Name: " + name);
+                break;
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

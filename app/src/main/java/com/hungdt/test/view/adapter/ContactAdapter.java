@@ -60,6 +60,7 @@ private String type;
                     case KEY.CONTACT:
                         Intent intent = new Intent(layoutInflater.getContext(), DetailContactActivity.class);
                         intent.putExtra(KEY.ID,contactList.get(position).getId());
+                        intent.putExtra(KEY.TYPE,KEY.DETAIL);
                         layoutInflater.getContext().startActivity(intent);
                         break;
                     case KEY.MERGER:

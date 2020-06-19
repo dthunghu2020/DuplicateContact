@@ -5,6 +5,8 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
@@ -12,6 +14,8 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,16 +23,18 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.solver.widgets.Helper;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -38,40 +44,68 @@ import androidx.viewpager.widget.ViewPager;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.InterstitialAdListener;
+import com.google.ads.consent.ConsentInformation;
+import com.google.ads.consent.ConsentStatus;
+import com.google.ads.mediation.admob.AdMobAdapter;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
+import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.utils.Ads;
+import com.hungdt.test.utils.Helper;
 import com.hungdt.test.utils.MySetting;
 import com.hungdt.test.view.adapter.ViewPageAdapter;
+import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 
-
-public class MainActivity extends AppCompatActivity  implements  BillingProcessor.IBillingHandler{
+public class MainActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TabItem tabContacts,tabManager,tabMerged,tabDelete,tabVIP;
-    private boolean readyToPurchase = false;
-    private ImageView imgMenu,imgRemoveAds,imgGift;
-    private ArrayList<String> arrayList;
-    private ViewPageAdapter viewPageAdapter ;
+    public static final String ACTION_UPDATE_DUB = "ACTION_UPDATE_DUB";
+    public static final String KEY_RELOAD_DUB = "reload_dub";
+    private TabItem tabContacts, tabManager, tabMerged, tabDelete, tabVIP;
+
+    private ImageView imgMenu, imgRemoveAds, imgGift;
+    private ArrayList<String> arrayList = new ArrayList<>();
+    private ViewPageAdapter viewPageAdapter;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     final Calendar calendar = Calendar.getInstance();
     private BillingProcessor bp;
+    private RewardedVideoAd videoAds;
+    private boolean readyToPurchase = false;
+    private boolean rewardedVideoCompleted = false;
+    private boolean isDailyReward = false;
+    public static InterstitialAd ggInterstitialAd;
+    public static com.facebook.ads.InterstitialAd fbInterstitialAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         try {
             bp = BillingProcessor.newBillingProcessor(this, getString(R.string.BASE64), this); // doesn't bind
             bp.initialize(); // binds
@@ -80,16 +114,20 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
         }
 
         initView();
-        //readDeviceAccount2();
+        //readAccountContacts();
+        initInterstitialAd();
+        View hView = navigationView.getHeaderView(0);
+        if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
+            Ads.initNativeGg((LinearLayout) hView.findViewById(R.id.lnNative), this, true, true);
+        }
 
         arrayList = new ArrayList<>();
-
         viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
-        viewPageAdapter.add(new ContactFragment(),"Contact");
-        viewPageAdapter.add(new  ManageFragment(),"Manager");
-        viewPageAdapter.add(new MergedFragment(),"Merged");
-        viewPageAdapter.add(new DeleteFragment(),"Delete");
-        viewPageAdapter.add(new VipFragment(),"Upgrade");
+        viewPageAdapter.add(new ContactFragment(), "Contact");
+        viewPageAdapter.add(new ManageFragment(), "Manager");
+        viewPageAdapter.add(new MergedFragment(), "Merged");
+        viewPageAdapter.add(new DeleteFragment(), "Delete");
+        viewPageAdapter.add(new VipFragment(), "Upgrade");
         viewPager.setAdapter(viewPageAdapter);
 
         viewPager.setOffscreenPageLimit(5);
@@ -134,16 +172,7 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
         imgGift.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Gift", Toast.LENGTH_SHORT).show();
-                /*isDailyReward = true;
                 openVideoAdsDialog();
-                imgGift.setEnabled(false);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        imgGift.setEnabled(true);
-                    }
-                }, 1250);*/
             }
         });
 
@@ -160,13 +189,6 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    /*case R.id.nav_upgradeToVIP:
-                        try {
-                            startActivity(new Intent(MainActivity.this, VipActivity.class));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        break;*/
                     case R.id.nav_remove_add:
                         try {
                             removeAds();
@@ -203,80 +225,308 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
                 return true;
             }
         });
-        /*btnOpen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, ListContactActivity.class);
-                startActivity(intent);
-            }
-        });*/
-
-        /*btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<ContentProviderOperation> cntProOper = new ArrayList<>();
-                int contactIndex = cntProOper.size();//ContactSize
-
-                cntProOper.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)//Step1
-                        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-                        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null).build());
-
-                //Display name will be inserted in ContactsContract.Data table
-                cntProOper.add(ContentProviderOperation.newInsert(android.provider.ContactsContract.Data.CONTENT_URI)//Step2
-                        .withValueBackReference(android.provider.ContactsContract.Data.RAW_CONTACT_ID, contactIndex)
-                        .withValue(android.provider.ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                        .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, "test") // Name of the contact
-                        .build());
-
-                List<String> strNumber = new ArrayList<>();
-                strNumber.add("11111111");
-                strNumber.add("13131313");
-                for (String s : strNumber) {
-                    //Mobile number will be inserted in ContactsContract.Data table
-                    cntProOper.add(ContentProviderOperation.newInsert(android.provider.ContactsContract.Data.CONTENT_URI)//Step 3
-                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactIndex)
-                            .withValue(android.provider.ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, s) // Number to be added
-                            .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE).build()); //Type like HOME, MOBILE etc
-                }
-
-                ContentProviderResult[] s = new ContentProviderResult[0]; //apply above data insertion into contacts list
-                try {
-                    s = getContentResolver().applyBatch(ContactsContract.AUTHORITY, cntProOper);
-                } catch (OperationApplicationException e) {
-                    e.printStackTrace();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-
-                for (ContentProviderResult r : s) {
-                    Log.i("ABCD", "addToContactList: " + r.uri);
-                }
-            }
-        });*/
-
-        /* btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<ContentProviderOperation> ops = new
-                        ArrayList<ContentProviderOperation>();
-                String[] args = new String[] {"1241"};
-                ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(ContactsContract.RawContacts.CONTACT_ID + "=?", args).build());
-                try {
-                    getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (OperationApplicationException e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
-
-
-
-
     }
+
+    private void initInterstitialAd() {
+        initUnityInterstitialAd();
+        initFbInterstitialAd(false);
+        initGgInterstitialAd();
+    }
+    private void initGgInterstitialAd() {
+        try {
+            ggInterstitialAd = new InterstitialAd(this);
+            ggInterstitialAd.setAdUnitId(getString(R.string.INTER_G));
+            ggInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    try {
+                        if (fbInterstitialAd != null) fbInterstitialAd.destroy();
+                        initFbInterstitialAd(false);
+                        requestNewInterstitial();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                }
+
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    super.onAdFailedToLoad(i);
+                    try {
+                        if (fbInterstitialAd != null) fbInterstitialAd.destroy();
+                        initFbInterstitialAd(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                }
+            });
+            requestNewInterstitial();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void requestNewInterstitial() {
+        try {
+            if (!MySetting.isRemoveAds(this)) {
+                AdRequest adRequest = null;
+                if (ConsentInformation.getInstance(this).getConsentStatus().toString().equals(ConsentStatus.PERSONALIZED) ||
+                        !ConsentInformation.getInstance(this).isRequestLocationInEeaOrUnknown()) {
+                    adRequest = new AdRequest.Builder().build();
+                } else {
+                    adRequest = new AdRequest.Builder()
+                            .addNetworkExtrasBundle(AdMobAdapter.class, Ads.getNonPersonalizedAdsBundle())
+                            .build();
+                }
+                ggInterstitialAd.loadAd(adRequest);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean showInterstitial() {
+        if (ggInterstitialAd != null && ggInterstitialAd.isLoaded()) {
+            ggInterstitialAd.show();
+            return true;
+        } else if (fbInterstitialAd != null && fbInterstitialAd.isAdLoaded()) {
+            fbInterstitialAd.show();
+            return true;
+        } else return false;
+    }
+    private void initFbInterstitialAd(final boolean isLoad_ID_FB_2) {
+        try {
+            if (!isLoad_ID_FB_2)
+                fbInterstitialAd = new com.facebook.ads.InterstitialAd(this, getString(R.string.INTER_FB));
+            else
+                fbInterstitialAd = new com.facebook.ads.InterstitialAd(this, getString(R.string.INTER_FB_2));
+            fbInterstitialAd.setAdListener(new InterstitialAdListener() {
+                @Override
+                public void onInterstitialDisplayed(Ad ad) {
+                }
+
+                @Override
+                public void onInterstitialDismissed(Ad ad) {
+                    requestNewFBInterstitial();
+                }
+
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    if (!isLoad_ID_FB_2) {
+                        if (ggInterstitialAd == null) initGgInterstitialAd();
+                        else requestNewInterstitial();
+                    }
+                }
+
+                @Override
+                public void onAdLoaded(Ad ad) {
+
+                }
+
+                @Override
+                public void onAdClicked(Ad ad) {
+
+                }
+
+                @Override
+                public void onLoggingImpression(Ad ad) {
+
+                }
+            });
+            requestNewFBInterstitial();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void requestNewFBInterstitial() {
+        try {
+            if (!MySetting.isRemoveAds(this)) {
+                fbInterstitialAd.loadAd();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initUnityInterstitialAd() {
+        try {
+            if (!MySetting.isRemoveAds(this)) {
+                UnityAds.initialize(this, getString(R.string.GAME_ID), new IUnityAdsListener() {
+                    @Override
+                    public void onUnityAdsReady(String placementId) {
+                    }
+
+                    @Override
+                    public void onUnityAdsStart(String placementId) {
+                    }
+
+                    @Override
+                    public void onUnityAdsFinish(String placementId, UnityAds.FinishState result) {
+                    }
+
+                    @Override
+                    public void onUnityAdsError(UnityAds.UnityAdsError error, String message) {
+                    }
+                }, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    ProgressDialog progressDialog;
+    Dialog morePlaceDialog;
+
+    private void openVideoAdsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        assert inflater != null;
+        @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.video_ads_dialog, null);
+        Button btnYes = view.findViewById(R.id.btnYes);
+        Button btnBack = view.findViewById(R.id.btnBack);
+        TextView txtTitle = view.findViewById(R.id.txtTitle);
+        TextView txtBody = view.findViewById(R.id.txtBody);
+        txtBody.setText("What video to get free merger!");
+        txtTitle.setText("Daily Reward!");
+
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (morePlaceDialog != null) morePlaceDialog.dismiss();
+                drawerLayout.closeDrawers();
+                loadVideoAds();
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (morePlaceDialog != null) morePlaceDialog.dismiss();
+            }
+        });
+
+
+        builder.setView(view);
+        builder.setCancelable(false);
+        morePlaceDialog = builder.create();
+        Objects.requireNonNull(morePlaceDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        morePlaceDialog.show();
+    }
+
+    private void loadVideoAds() {
+        if (Helper.isConnectedInternet(this)) {
+            videoAds = MobileAds.getRewardedVideoAdInstance(this);
+            videoAds.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+                @Override
+                public void onRewarded(RewardItem reward) {
+                    MySetting.setMaxLength(MainActivity.this, MySetting.getMaxLength(MainActivity.this) + 3);
+                    rewardedVideoCompleted = true;
+                }
+
+                @Override
+                public void onRewardedVideoAdLeftApplication() {
+                }
+
+                @Override
+                public void onRewardedVideoAdClosed() {
+                    if (rewardedVideoCompleted) {
+                        //openRewardSuccessDialog(false);
+                    }
+                }
+
+                @Override
+                public void onRewardedVideoAdFailedToLoad(int errorCode) {
+                    try {
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        Toast.makeText(MainActivity.this, "Loading video failed, please try again later", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onRewardedVideoAdLoaded() {
+                    if (videoAds != null && videoAds.isLoaded()) videoAds.show();
+                    try {
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onRewardedVideoAdOpened() {
+                }
+
+                @Override
+                public void onRewardedVideoStarted() {
+                }
+
+                @Override
+                public void onRewardedVideoCompleted() {
+
+                }
+            });
+
+            AdRequest adRequest;
+            if (ConsentInformation.getInstance(this).getConsentStatus().toString().equals(ConsentStatus.PERSONALIZED) ||
+                    !ConsentInformation.getInstance(this).isRequestLocationInEeaOrUnknown()) {
+                adRequest = new AdRequest.Builder().build();
+            } else {
+                adRequest = new AdRequest.Builder()
+                        .addNetworkExtrasBundle(AdMobAdapter.class, Ads.getNonPersonalizedAdsBundle())
+                        .build();
+            }
+            videoAds.loadAd(getString(R.string.VIDEO_G), adRequest);
+
+            try {
+                progressDialog = new ProgressDialog(this);
+                progressDialog.setIcon(R.drawable.app_icon);
+                progressDialog.setMessage("Please wait, the Ad is loaded...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (videoAds != null && !videoAds.isLoaded()) {
+                            videoAds.destroy(MainActivity.this);
+                        }
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                            Toast.makeText(MainActivity.this, "Loading video failed, please try again later", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 15000);
+        } else {
+            Toast.makeText(MainActivity.this, "Please check your internet connection!!!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void initView() {
         tabLayout = findViewById(R.id.tabBar);
@@ -654,16 +904,16 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
 
     }
 
-    private void readAccountContacts(){
+    private void readAccountContacts() {
         String[] projections = {
                 ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.DISPLAY_NAME
         };
-        Cursor cursorContact = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,projections,null,null,null);
-        while (cursorContact!=null && cursorContact.moveToNext()){
+        Cursor cursorContact = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, projections, null, null, null);
+        while (cursorContact != null && cursorContact.moveToNext()) {
             String idContact = cursorContact.getString(cursorContact.getColumnIndex(ContactsContract.Contacts._ID));
             String nameContact = cursorContact.getString(cursorContact.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-            Log.e("HDT123", "//////////////////////////////Contacts._ID: "+ idContact+ " ////////////DISPLAY_NAME: "+nameContact);
+            Log.e("HDT123", "//////////////////////////////Contacts._ID: " + idContact + " ////////////DISPLAY_NAME: " + nameContact);
             String[] projection2 = {
                     ContactsContract.RawContacts._ID,
                     ContactsContract.RawContacts.CONTACT_ID,
@@ -671,15 +921,15 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
                     ContactsContract.RawContacts.ACCOUNT_TYPE
             };
             //val stringZalo =
-            String selection = ContactsContract.RawContacts.CONTACT_ID+" = "+idContact;
+            String selection = ContactsContract.RawContacts.CONTACT_ID + " = " + idContact;
             //val selection = "${ContactsContract.RawContacts._ID} = $idContact";
-            Cursor cursorAccount = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI,projection2,selection,null,null,null);
-            while(cursorAccount!=null && cursorAccount.moveToNext()){
+            Cursor cursorAccount = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, projection2, selection, null, null, null);
+            while (cursorAccount != null && cursorAccount.moveToNext()) {
                 String idRawContract = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts._ID));
                 String account = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
                 String accountType = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
                 //readDataXXX(idContact)
-                Log.e("HDT123","nameContact : "+nameContact+" -> accountName : "+account+"  accountTYpe :"+accountType);
+                Log.e("HDT123", "nameContact : " + nameContact + " -> accountName : " + account + "  accountTYpe :" + accountType);
                 String[] projectionx = {
                         ContactsContract.Data.RAW_CONTACT_ID,
                         ContactsContract.Data.MIMETYPE,
@@ -691,16 +941,16 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
                 };
                 //val argx = arrayOf(ContactsContract.Data.CONTACT_ID,ContactsContract.Data.MIMETYPE,ContactsContract.Data.DATA1);
                 //val selectionx = "${ContactsContract.Data.CONTACT_ID} = $idContact"
-                String selectionx = ContactsContract.Data.RAW_CONTACT_ID+" = "+idRawContract;
-                Cursor cursorData = getContentResolver().query(ContactsContract.Data.CONTENT_URI,projectionx,selectionx,null,null);
-                while (cursorData != null && cursorData.moveToNext()){
+                String selectionx = ContactsContract.Data.RAW_CONTACT_ID + " = " + idRawContract;
+                Cursor cursorData = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projectionx, selectionx, null, null);
+                while (cursorData != null && cursorData.moveToNext()) {
                     String a = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE));
                     String b = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA1));
                     String c = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA2));
                     String d = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA3));
                     String e = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA4));
                     String f = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA5));
-                    Log.e("HDT123",  "DATA1: "+b+"     DATA2: "+c+"     DATA3: "+d+"     DATA4: "+e+"     DATA5: "+f+ "   MIMETYPE"+a);
+                    Log.e("HDT123", "DATA1: " + b + "     DATA2: " + c + "     DATA3: " + d + "     DATA4: " + e + "     DATA5: " + f + "   MIMETYPE" + a);
                 }
                 assert cursorData != null;
                 cursorData.close();
@@ -753,6 +1003,7 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
         }
         Toast.makeText(this, "Thanks for your Purchased!", Toast.LENGTH_SHORT).show();
     }
+
     private void checkRemoveAds() {
         try {
             if (bp.isSubscribed(getString(R.string.ID_REMOVE_ADS))) {
@@ -803,17 +1054,6 @@ public class MainActivity extends AppCompatActivity  implements  BillingProcesso
                 openExitAppDialog();
             }
         }, 300);
-    }
-
-    public static boolean showInterstitial() {
-        /*if (ggInterstitialAd != null && ggInterstitialAd.isLoaded()) {
-            ggInterstitialAd.show();
-            return true;
-        } else if (fbInterstitialAd != null && fbInterstitialAd.isAdLoaded()) {
-            fbInterstitialAd.show();
-            return true;
-        } else return false;*/
-        return false;
     }
 
 }

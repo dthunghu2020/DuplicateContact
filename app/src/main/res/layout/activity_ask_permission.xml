@@ -6,13 +6,20 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <TextView
+
         android:textStyle="bold"
         android:textSize="25sp"
-        android:textColor="@color/black"
+        android:textColor="@color/appColor"
         android:text="Permission Needed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+    <ImageView
+        android:layout_marginTop="@dimen/_10sdp"
+        android:src="@drawable/img_vip1"
+        android:layout_width="@dimen/_86sdp"
+        android:layout_height="@dimen/_86sdp"/>
     <TextView
         android:layout_marginTop="@dimen/_10sdp"
         android:text="To serve your best user experience\nWe need permissions from:"
@@ -30,8 +37,10 @@
     <Button
         android:id="@+id/btnSet"
         android:text="ALLOW"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
+        android:textColor="@color/white"
+        android:background="@drawable/shape_button"
+        android:layout_marginStart="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_40sdp"
         android:layout_marginTop="@dimen/_20sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

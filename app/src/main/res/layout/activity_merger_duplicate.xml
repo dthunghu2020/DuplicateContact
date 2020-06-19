@@ -95,9 +95,18 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
-
+    <LinearLayout
+        android:id="@+id/lnNative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/llLastContact">
+    </LinearLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
-        app:layout_constraintTop_toBottomOf="@+id/llLastContact"
+        app:layout_constraintTop_toBottomOf="@+id/lnNative"
         app:layout_constraintBottom_toTopOf="@+id/llMerger"
         android:padding="@dimen/_8sdp"
         android:layout_width="match_parent"
@@ -112,7 +121,7 @@
             android:text="Duplicate that will be deleted"
             android:textColor="@color/appColor"
             android:textStyle="bold"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             app:layout_constraintTop_toBottomOf="@+id/txtTitle"

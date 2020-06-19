@@ -23,11 +23,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
 import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Contact;
+import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
 import com.hungdt.test.view.adapter.DeleteAdapter;
+import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,11 +41,12 @@ public class DeleteActivity extends AppCompatActivity {
     private ImageView imgBack;
     private TextView txtTitleDelete;
     private CheckBox cbAll;
-    private LinearLayout llDelete,llButtonDelete;
+    private LinearLayout llDelete, llButtonDelete;
     private RecyclerView rcvDelete;
     private List<Contact> contacts = new ArrayList<>();
     private DeleteAdapter deleteAdapter;
     private String type;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class DeleteActivity extends AppCompatActivity {
 
         initView();
 
+        Ads.initNativeGgFb((LinearLayout) findViewById(R.id.lnNative), this, true);
         Intent intent = getIntent();
         type = intent.getStringExtra(KEY.DELETE);
         getContactFromDB();
@@ -80,7 +85,7 @@ public class DeleteActivity extends AppCompatActivity {
             }
         });
 
-        if(contacts.size()==0){
+        if (contacts.size() == 0) {
             llDelete.setVisibility(View.GONE);
         }
 
@@ -106,26 +111,10 @@ public class DeleteActivity extends AppCompatActivity {
 
     private void getContactFromDB() {
         assert type != null;
-        switch (type){
-            case "no3":
-                txtTitleDelete.setText("Not use in last 3 months");
-                contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNo3());
-                break;
-            case "no6":
-                txtTitleDelete.setText("Not use in last 6 months");
-                contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNo6());
-                break;
-            case "no12":
-                txtTitleDelete.setText("Not use in last 12 months");
-                contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNo12());
-                break;
-            case "never":
-                txtTitleDelete.setText("Contact never use");
-                contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNeverUse());
-                break;
+        switch (type) {
             case "noName":
                 txtTitleDelete.setText("Contact have no name");
-                contacts.addAll( DBHelper.getInstance(DeleteActivity.this).getContactNoName());
+                contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNoName());
                 break;
             case "noPhone":
                 txtTitleDelete.setText("Contact have no phone");
@@ -151,10 +140,10 @@ public class DeleteActivity extends AppCompatActivity {
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i = 0 ; i< contacts.size();i++){
-                    if(contacts.get(i).isTicked()){
+                for (int i = 0; i < contacts.size(); i++) {
+                    if (contacts.get(i).isTicked()) {
                         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-                        String[] args = new String[] {contacts.get(i).getIdContact()};
+                        String[] args = new String[]{contacts.get(i).getIdContact()};
                         ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(ContactsContract.RawContacts.CONTACT_ID + "=?", args).build());
                         try {
                             getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
@@ -167,6 +156,11 @@ public class DeleteActivity extends AppCompatActivity {
                 contacts.clear();
                 getContactFromDB();
                 deleteAdapter.notifyDataSetChanged();
+                if (MainActivity.ggInterstitialAd != null && MainActivity.ggInterstitialAd.isLoaded())
+                    MainActivity.ggInterstitialAd.show();
+                else if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))
+                    UnityAds.show(DeleteActivity.this, getString(R.string.INTER_UNI));
+
                 Toast.makeText(DeleteActivity.this, "Delete Success!!!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
@@ -182,13 +176,14 @@ public class DeleteActivity extends AppCompatActivity {
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
+
     private void initView() {
-        imgBack= findViewById(R.id.imgBack);
-        txtTitleDelete= findViewById(R.id.txtTitleDelete);
-        cbAll= findViewById(R.id.cbAll);
-        llDelete= findViewById(R.id.llDelete);
-        llButtonDelete= findViewById(R.id.llButtonDelete);
-        rcvDelete= findViewById(R.id.rcvList);
+        imgBack = findViewById(R.id.imgBack);
+        txtTitleDelete = findViewById(R.id.txtTitleDelete);
+        cbAll = findViewById(R.id.cbAll);
+        llDelete = findViewById(R.id.llDelete);
+        llButtonDelete = findViewById(R.id.llButtonDelete);
+        rcvDelete = findViewById(R.id.rcvList);
     }
 
     private void setDefaultTick() {
@@ -196,6 +191,7 @@ public class DeleteActivity extends AppCompatActivity {
             contacts.get(i).setTicked(false);
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

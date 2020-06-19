@@ -10,7 +10,6 @@ public class Contact  implements Serializable, Comparable<Contact> {
     private String idContact;
     private String name;
     private String image;
-    private String lastCT;
     private String merger;
     private String father;
     private String deleted;
@@ -20,13 +19,12 @@ public class Contact  implements Serializable, Comparable<Contact> {
     private boolean isTicked = false;
     private int type = 0;
 
-    public Contact(String id, String idContact, String name, String image, String lastCT,String merger,String father,String deleted, List<String> phone, List<Account> account, List<String> email) {
+    public Contact(String id, String idContact, String name, String image,String merger,String father,String deleted, List<String> phone, List<Account> account, List<String> email) {
         this.id = id;
         this.idContact = idContact;
         this.image = image;
         this.name = name;
         this.deleted = deleted;
-        this.lastCT = lastCT;
         this.merger = merger;
         this.father = father;
         this.phone = phone;
@@ -56,14 +54,6 @@ public class Contact  implements Serializable, Comparable<Contact> {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getLastCT() {
-        return lastCT;
-    }
-
-    public void setLastCT(String lastCT) {
-        this.lastCT = lastCT;
     }
 
     public String getDeleted() {

@@ -52,6 +52,10 @@ public class AskPermissionActivity extends AppCompatActivity {
                     (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) &&
                     (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) &&
                     (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)) {
+                Intent intent = new Intent(AskPermissionActivity.this,MainActivity.class);
+                startActivity(intent);
+                Intent intent2 = new Intent(AskPermissionActivity.this,WaitingActivity.class);
+                startActivity(intent2);
                 finish();
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE}, PERMISSION_CODE);
@@ -69,6 +73,11 @@ public class AskPermissionActivity extends AppCompatActivity {
                     grantResults[2] == PackageManager.PERMISSION_GRANTED &&
                     grantResults[3] == PackageManager.PERMISSION_GRANTED) {
                 // do your work here
+
+                Intent intent = new Intent(AskPermissionActivity.this,MainActivity.class);
+                startActivity(intent);
+                Intent intent2 = new Intent(AskPermissionActivity.this,WaitingActivity.class);
+                startActivity(intent2);
                 finish();
                 Toast.makeText(this, "All permission accepted!", Toast.LENGTH_SHORT).show();
             } else if (Build.VERSION.SDK_INT >= 23) {
@@ -80,11 +89,6 @@ public class AskPermissionActivity extends AppCompatActivity {
                     //Cái này bật setting trên màn hình app
                     openSettingPermissionDialog();
                 }
-                //Cái này sẽ bật tab trên hệ thống.
-                    /*Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.fromParts("package", getPackageName(), null));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);*/
             }
         }
     }
