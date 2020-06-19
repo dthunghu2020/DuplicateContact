@@ -43,27 +43,27 @@
         android:id="@+id/cvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/_120sdp"
         android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_90sdp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:elevation="6dp"
+        android:minHeight="@dimen/_120sdp"
         app:cardCornerRadius="@dimen/_8sdp"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:padding="@dimen/_2sdp"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_2sdp">
 
             <TextView
                 android:id="@+id/txtAccountName"
-                android:ellipsize="end"
-                android:maxLines="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_62sdp"
+                android:ellipsize="end"
                 android:gravity="center_horizontal"
+                android:maxLines="2"
                 android:text="Name"
                 android:textColor="@color/black"
                 android:textSize="24sp"
@@ -132,7 +132,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/txtTitleAccount" />
 
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -140,16 +139,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/clAccount">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
                     android:background="@color/light_gray"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/txtPhone"
-                    android:layout_marginTop="@dimen/_6sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
                     android:text="Phone"
                     android:textColor="@color/black"
                     android:textSize="18sp"
@@ -169,16 +170,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/clPhone">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
                     android:background="@color/light_gray"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/txtEmail"
-                    android:layout_marginTop="@dimen/_6sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
                     android:text="Email"
                     android:textColor="@color/black"
                     android:textSize="18sp"

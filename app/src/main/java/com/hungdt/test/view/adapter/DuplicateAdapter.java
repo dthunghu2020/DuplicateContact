@@ -3,8 +3,6 @@ package com.hungdt.test.view.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.hungdt.test.R;
 import com.hungdt.test.model.Contact;
+import com.hungdt.test.utils.KEY;
+import com.hungdt.test.view.MergerDuplicateActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.DuplicateHolder> {
@@ -50,11 +51,6 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
                 .error(R.drawable.ic_code)
                 .into(holder.imgContact);
 
-        if (contacts.get(position).isTicked()) {
-            holder.checkbox.setChecked(true);
-        } else {
-            holder.checkbox.setChecked(false);
-        }
         String name = null;
         String phone = null;
         String email = null;
@@ -89,24 +85,18 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
                 break;
             default:break;
         }
-
-        holder.checkbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (contacts.get(position).isTicked()) {
-                    contacts.get(position).setTicked(false);
-                } else {
-                    contacts.get(position).setTicked(true);
-                }
-            }
-        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI,
-                        String.valueOf(contacts.get(position).getIdContact()));
-                intent.setData(uri);
+                Intent intent = new Intent(layoutInflater.getContext(), MergerDuplicateActivity.class);
+                intent.putExtra(KEY.DUP, type);
+                ArrayList<String> id = new ArrayList<>();
+                for (int i = 0; i < contacts.size(); i++) {
+                    if (contacts.get(i).getType() == types.get(position)) {
+                        id.add(contacts.get(i).getIdContact());
+                    }
+                }
+                intent.putStringArrayListExtra(KEY.LIST_ID, id);
                 layoutInflater.getContext().startActivity(intent);
             }
         });
@@ -121,14 +111,13 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
     class DuplicateHolder extends RecyclerView.ViewHolder {
         private ImageView imgContact;
         private TextView txtContactDup, txtContactMerger;
-        private CheckBox checkbox;
+
 
         public DuplicateHolder(@NonNull View itemView) {
             super(itemView);
             imgContact = itemView.findViewById(R.id.imgContact);
             txtContactDup = itemView.findViewById(R.id.txtContactDup);
             txtContactMerger = itemView.findViewById(R.id.txtContactMerger);
-            checkbox = itemView.findViewById(R.id.checkbox);
 
         }
     }

@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:icon="@drawable/ic_remove_ads_2"
         android:id="@+id/nav_remove_add"
         android:title="Remove Ads" />
     <item
+        android:icon="@drawable/ic_rate"
         android:id="@+id/nav_rate_us"
         android:title="Rate Us" />
     <item
+        android:icon="@drawable/ic_share"
         android:id="@+id/nav_share"
-        android:title="Share app for your Friend" />
+        android:title="Share" />
     <item
+        android:icon="@drawable/ic_policy"
         android:id="@+id/nav_policy"
-        android:title="Privacy Policy" />
+        android:title="Policy" />
     <item
+        android:icon="@drawable/ic_feedback"
         android:id="@+id/nav_feedback_dev"
-        android:title="Feedback to Developer" />
+        android:title="Feedback" />
     <item
+        android:icon="@drawable/ic_moreapp"
         android:id="@+id/nav_more_app"
         android:title="More Apps" />
 </menu>

@@ -53,6 +53,9 @@ public class ManageFragment extends Fragment {
         names.addAll(DBHelper.getInstance(getContext()).getDupName());
         List<Duplicate> emailList = new ArrayList<>(emails);
         for (int i = 0; i < emails.size(); i++) {
+            if(!emails.get(i).getMerger().equals(KEY.FALSE)){
+                break;
+            }
             for (int j = 0; j < emailList.size(); j++) {
                 if (i != j) {
                     if (emails.get(i).getName().equalsIgnoreCase(emailList.get(j).getName()) && Integer.parseInt(emails.get(i).getContactID()) != Integer.parseInt(emailList.get(j).getContactID())) {
@@ -79,6 +82,9 @@ public class ManageFragment extends Fragment {
 
         List<Duplicate> phoneList = new ArrayList<>(phones);
         for (int i = 0; i < phones.size(); i++) {
+            if(!phones.get(i).getMerger().equals(KEY.FALSE)){
+                break;
+            }
             for (int j = 0; j < phoneList.size(); j++) {
                 if (i != j) {
                     if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
@@ -106,6 +112,9 @@ public class ManageFragment extends Fragment {
 
         List<Duplicate> nameList = new ArrayList<>(names);
         for (int i = 0; i < names.size(); i++) {
+            if(!names.get(i).getMerger().equals(KEY.FALSE)){
+                break;
+            }
             for (int j = 0; j < nameList.size(); j++) {
                 if (i != j) {
                     if (names.get(i).getName().equalsIgnoreCase(nameList.get(j).getName()) && Integer.parseInt(names.get(i).getContactID()) != Integer.parseInt(nameList.get(j).getContactID())) {

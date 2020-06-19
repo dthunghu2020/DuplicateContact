@@ -10,9 +10,18 @@
         android:layout_marginTop="@dimen/_25sdp"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_142sdp"
-        android:src="@drawable/img_nav_bar"
+        android:src="@drawable/img_scan"
         android:orientation="vertical" />
-
+    <TextView
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:text="Contact Merger"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <LinearLayout
         android:id="@+id/lnNative"
         android:layout_width="match_parent"

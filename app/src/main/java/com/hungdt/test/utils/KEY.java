@@ -7,4 +7,10 @@ public interface KEY {
     String FALSE = "false";
     String TRUE = "true";
     String LIST_ID = "ids";
+    String TYPE = "type";
+    String DETAIL = "detail";
+    String MERGER = "merger";
+    String CONTACT = "contact";
+    String RESULT  = "result";
+
 }

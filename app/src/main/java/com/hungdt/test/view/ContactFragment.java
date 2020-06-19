@@ -76,7 +76,7 @@ public class ContactFragment extends Fragment {
         }
 
         Collections.sort(contactList);
-        contactAdapter = new ContactAdapter(view.getContext(), contactList);
+        contactAdapter = new ContactAdapter(view.getContext(), contactList,KEY.CONTACT);
         rcvContactView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rcvContactView.setAdapter(contactAdapter);
 
@@ -96,6 +96,7 @@ public class ContactFragment extends Fragment {
             }
         }
     }
+
     private void readAccountContacts() {
 
         String[] projections = {
@@ -168,26 +169,26 @@ public class ContactFragment extends Fragment {
             boolean noEmail = false;
             if (phones.isEmpty()) {
                 noPhone = true;
-                Log.i("TAG", "readAccountContacts: "+name);
+                Log.i("TAG", "readAccountContacts: " + name);
             }
             if (!name.equals("")) {
-                noName =false;
+                noName = false;
             }
             if (emails.isEmpty()) {
                 noEmail = true;
             }
 
-            contactList.add(new Contact("0", idContact, name, image, lastCT, KEY.FALSE, phones, accounts, emails));
+            contactList.add(new Contact("0", idContact, name, image, lastCT, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones, accounts, emails));
             if (image != null) {
-                DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, image, lastCT, KEY.FALSE,KEY.TRUE,KEY.TRUE,KEY.TRUE,KEY.TRUE,String.valueOf(noName),String.valueOf(noPhone),String.valueOf(noEmail));
+                DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, image, lastCT, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.TRUE, KEY.TRUE, KEY.TRUE, KEY.TRUE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             } else {
-                DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, "image", lastCT,KEY.FALSE,KEY.TRUE,KEY.TRUE,KEY.TRUE,KEY.TRUE,String.valueOf(noName),String.valueOf(noPhone),String.valueOf(noEmail));
+                DBHelper.getInstance(getLayoutInflater().getContext()).addContact(idContact, name, "image", lastCT, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.TRUE, KEY.TRUE, KEY.TRUE, KEY.TRUE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             }
             String id = DBHelper.getInstance(getLayoutInflater().getContext()).getLastID();
             String idContact = DBHelper.getInstance(getLayoutInflater().getContext()).getLastContactID(id);
             if (!noPhone) {
                 for (int i = 0; i < phones.size(); i++) {
-                    DBHelper.getInstance(getLayoutInflater().getContext()).addPhone(id,idContact, phones.get(i));
+                    DBHelper.getInstance(getLayoutInflater().getContext()).addPhone(id, idContact, KEY.FALSE, phones.get(i));
                 }
             }
             if (!accounts.isEmpty()) {
@@ -197,7 +198,7 @@ public class ContactFragment extends Fragment {
             }
             if (!noEmail) {
                 for (int i = 0; i < emails.size(); i++) {
-                    DBHelper.getInstance(getLayoutInflater().getContext()).addEmail(id, idContact,emails.get(i));
+                    DBHelper.getInstance(getLayoutInflater().getContext()).addEmail(id, idContact, KEY.FALSE, emails.get(i));
                 }
             }
             image = null;

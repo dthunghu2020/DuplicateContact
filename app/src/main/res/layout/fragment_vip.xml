@@ -14,13 +14,13 @@
             android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="@dimen/_160sdp"
-                    android:layout_height="@dimen/_160sdp"
+                    android:layout_width="@dimen/_140sdp"
+                    android:layout_height="@dimen/_140sdp"
                     android:src="@drawable/img_nav_bar" />
 
                 <LinearLayout
@@ -32,9 +32,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Remove Duplicate"
+                        android:text="Contacts Manager"
                         android:textColor="@color/text_title_color"
-                        android:textSize="26sp"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -48,7 +48,7 @@
                         android:paddingBottom="@dimen/_4sdp"
                         android:text="PRO"
                         android:textColor="@color/white"
-                        android:textSize="24sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -60,12 +60,12 @@
                         android:id="@+id/btnVip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:background="@drawable/shape_button"
                         android:paddingStart="@dimen/_45sdp"
                         android:paddingEnd="@dimen/_45sdp"
                         android:paddingBottom="@dimen/_2sdp"
-                        android:text="Start Free 7-Day Trial"
+                        android:text="UPGRADE TO VIP USER"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/white" />
@@ -84,17 +84,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:paddingStart="@dimen/_6sdp"
-                    android:paddingEnd="@dimen/_6sdp">
+                    android:padding="@dimen/_6sdp">
 
                     <ImageView
-                        android:layout_marginTop="@dimen/_5sdp"
                         android:id="@+id/imgVip3"
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_25sdp"
                         android:layout_marginEnd="@dimen/_20sdp"
-                        android:src="@drawable/ic_call"
+                        android:src="@drawable/ic_remove_ads_2"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -107,20 +105,11 @@
                         android:layout_marginStart="@dimen/_20sdp"
                         android:text="Remove Ads"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgVip3"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!--<TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_20sdp"
-                        android:layout_marginEnd="@dimen/_20sdp"
-                        android:text="Translate many popular languages offline with over 900 possible language combinations"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imgVip3"
-                        app:layout_constraintTop_toBottomOf="@+id/txtTitleVip3" />-->
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -130,10 +119,10 @@
 
                     <ImageView
                         android:id="@+id/imgVip1"
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_25sdp"
-                        android:src="@drawable/ic_message"
+                        android:src="@drawable/ic_inside_dup"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -143,9 +132,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_20sdp"
-                        android:text="Generate Unlimited Codes"
+                        android:text="Sync Contact Data"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgVip1"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -170,10 +159,10 @@
 
                     <ImageView
                         android:id="@+id/imgVip2"
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_25sdp"
-                        android:src="@drawable/ic_gift"
+                        android:src="@drawable/ic_code"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -183,40 +172,27 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_20sdp"
-                        android:text="Get All Features Once And Forever"
+                        android:text="Auto-Update New Phone Numbers"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgVip2"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!--<TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_20sdp"
-                        android:layout_marginEnd="@dimen/_20sdp"
-                        android:text="Break down languages barriers and instantly start voice conversations in many languages"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imgVip2"
-                        app:layout_constraintTop_toBottomOf="@+id/txtTitleVip2" />-->
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
-                    android:paddingTop="@dimen/_6sdp"
-                    android:paddingLeft="@dimen/_6sdp"
-                    android:paddingRight="@dimen/_6sdp"
-                    android:paddingBottom="@dimen/_20sdp">
-
+                    android:padding="@dimen/_6sdp">
 
                     <ImageView
                         android:id="@+id/imgVip4"
-                        android:layout_width="@dimen/_30sdp"
-                        android:layout_height="@dimen/_30sdp"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
                         android:layout_marginStart="@dimen/_25sdp"
                         android:layout_marginEnd="@dimen/_20sdp"
-                        android:src="@drawable/email"
+                        android:src="@drawable/img_vip1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -226,22 +202,43 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_20sdp"
-                        android:text=" And More Upcoming Features"
+                        android:text="Get All Features Once And Forever"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgVip4"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <!--<TextView
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:padding="@dimen/_6sdp"
+                    >
+                    <ImageView
+                        android:id="@+id/imgVip5"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginStart="@dimen/_25sdp"
+                        android:layout_marginEnd="@dimen/_20sdp"
+                        android:src="@drawable/img_vip2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/txtTitleVip5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_20sdp"
-                        android:layout_marginEnd="@dimen/_20sdp"
-                        android:text="Break down languages barriers and instantly start voice conversations in many languages"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imgVip2"
-                        app:layout_constraintTop_toBottomOf="@+id/txtTitleVip2" />-->
+                        android:text="And More Upcoming Features"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imgVip5"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </ScrollView>

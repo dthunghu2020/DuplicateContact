@@ -1,15 +1,18 @@
 package com.hungdt.test.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 
-public class Contact  implements Comparable<Contact> {
+public class Contact  implements Serializable, Comparable<Contact> {
 
     private String id;
     private String idContact;
     private String name;
     private String image;
     private String lastCT;
+    private String merger;
+    private String father;
     private String deleted;
     private List<String> phone;
     private List<Account> account;
@@ -17,13 +20,15 @@ public class Contact  implements Comparable<Contact> {
     private boolean isTicked = false;
     private int type = 0;
 
-    public Contact(String id, String idContact, String name, String image, String lastCT,String deleted, List<String> phone, List<Account> account, List<String> email) {
+    public Contact(String id, String idContact, String name, String image, String lastCT,String merger,String father,String deleted, List<String> phone, List<Account> account, List<String> email) {
         this.id = id;
         this.idContact = idContact;
         this.image = image;
         this.name = name;
         this.deleted = deleted;
         this.lastCT = lastCT;
+        this.merger = merger;
+        this.father = father;
         this.phone = phone;
         this.account = account;
         this.email = email;
@@ -115,6 +120,22 @@ public class Contact  implements Comparable<Contact> {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getMerger() {
+        return merger;
+    }
+
+    public void setMerger(String merger) {
+        this.merger = merger;
+    }
+
+    public String getFather() {
+        return father;
+    }
+
+    public void setFather(String father) {
+        this.father = father;
     }
 
     @Override

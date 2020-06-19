@@ -18,6 +18,7 @@ import com.hungdt.test.R;
 import com.hungdt.test.model.Contact;
 import com.hungdt.test.utils.KEY;
 import com.hungdt.test.view.DetailContactActivity;
+import com.hungdt.test.view.MergerDuplicateActivity;
 
 
 import java.io.Serializable;
@@ -27,9 +28,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
 
     List<Contact> contactList ;
     LayoutInflater layoutInflater;
-
-    public ContactAdapter(Context context, List<Contact> contactList) {
+private String type;
+    public ContactAdapter(Context context, List<Contact> contactList,String type) {
         this.contactList = contactList;
+        this.type = type;
         layoutInflater = LayoutInflater.from(context);
     }
 
@@ -54,9 +56,19 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
         holder.clItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(layoutInflater.getContext(), DetailContactActivity.class);
-                intent.putExtra(KEY.ID,contactList.get(position).getId());
-                layoutInflater.getContext().startActivity(intent);
+                switch (type){
+                    case KEY.CONTACT:
+                        Intent intent = new Intent(layoutInflater.getContext(), DetailContactActivity.class);
+                        intent.putExtra(KEY.ID,contactList.get(position).getId());
+                        layoutInflater.getContext().startActivity(intent);
+                        break;
+                    case KEY.MERGER:
+                        Intent intent2 = new Intent(layoutInflater.getContext(), MergerDuplicateActivity.class);
+                        intent2.putExtra(KEY.DUP,contactList.get(position).getMerger());
+                        layoutInflater.getContext().startActivity(intent2);
+                        break;
+                }
+
             }
         });
     }

@@ -3,12 +3,14 @@ package com.hungdt.test.model;
 public class Duplicate {
     private String id;
     private String contactID;
+    private String merger;
     private String name;
     private int type = 0;
 
-    public Duplicate(String id, String contactID, String name) {
+    public Duplicate(String id, String contactID,String merger, String name) {
         this.id = id;
         this.contactID = contactID;
+        this.merger = merger;
         this.name = name;
     }
 
@@ -42,5 +44,13 @@ public class Duplicate {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getMerger() {
+        return merger;
+    }
+
+    public void setMerger(String merger) {
+        this.merger = merger;
     }
 }

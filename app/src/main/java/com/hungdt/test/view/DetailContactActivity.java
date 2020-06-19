@@ -1,6 +1,7 @@
 package com.hungdt.test.view;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,14 +40,16 @@ import java.util.List;
 
 public class DetailContactActivity extends AppCompatActivity {
 
-    private ImageView imgContact,imgBack;
-    private Contact contact ;
-    private TextView txtAccountName,txtAccountNumber;
-    private RecyclerView rcvPhone, rcvEmail,rcvAccount;
+    private ImageView imgContact, imgBack;
+    private Contact contact;
+    private TextView txtAccountName, txtAccountNumber;
+    private RecyclerView rcvPhone, rcvEmail, rcvAccount;
     private PhoneAdapter phoneAdapter;
     private EmailAdapter emailAdapter;
     private AccountAdapter accountAdapter;
-    private ConstraintLayout clPhone,clEmail;
+    private ConstraintLayout clPhone, clEmail;
+
+    private String type;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,30 +59,42 @@ public class DetailContactActivity extends AppCompatActivity {
         initView();
 
         Intent intent = getIntent();
-         contact = DBHelper.getInstance(this).getContact(intent.getStringExtra(KEY.ID));
-
-
+        type = intent.getStringExtra(KEY.TYPE);
+        assert type != null;
+        switch (type) {
+            case KEY.DETAIL:
+                contact = DBHelper.getInstance(this).getContact(intent.getStringExtra(KEY.ID));
+                break;
+            case KEY.MERGER:
+                contact = (Contact) intent.getSerializableExtra(KEY.CONTACT);
+                break;
+            default:
+                break;
+        }
+        assert contact != null;
+        txtAccountName.setText(contact.getName());
         Glide.with(this)
                 .load(contact.getImage())
                 .error(R.drawable.ic_code)
                 .into(imgContact);
 
-        txtAccountName.setText(contact.getName());
+
+
 
         accountAdapter = new AccountAdapter(this, contact.getAccount());
         rcvAccount.setLayoutManager(new LinearLayoutManager(this));
         rcvAccount.setAdapter(accountAdapter);
 
-        if(contact.getEmail().size()==0){
+        if (contact.getEmail().size() == 0) {
             clEmail.setVisibility(View.GONE);
-        }else {
+        } else {
             emailAdapter = new EmailAdapter(this, contact.getEmail());
             rcvEmail.setLayoutManager(new LinearLayoutManager(this));
             rcvEmail.setAdapter(emailAdapter);
         }
-        if(contact.getPhone().size()==0){
+        if (contact.getPhone().size() == 0) {
             clPhone.setVisibility(View.GONE);
-        }else {
+        } else {
             txtAccountNumber.setText(contact.getPhone().get(0));
             phoneAdapter = new PhoneAdapter(this, contact.getPhone());
             rcvPhone.setLayoutManager(new LinearLayoutManager(this));
@@ -116,5 +132,4 @@ public class DetailContactActivity extends AppCompatActivity {
         clPhone = findViewById(R.id.clPhone);
         clEmail = findViewById(R.id.clEmail);
     }
-
 }

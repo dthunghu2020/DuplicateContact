@@ -41,7 +41,7 @@ public class DuplicateActivity extends AppCompatActivity {
     private ImageView imgBack, imgBtnDelete;
     private TextView txtTitleDelete, txtBtnDelete;
     private CheckBox cbAll;
-    private LinearLayout llDelete, llButtonDelete;
+    private LinearLayout llDelete;
     private RecyclerView rcvList;
     private List<Contact> contacts = new ArrayList<>();
     private DuplicateAdapter duplicateAdapter;
@@ -81,43 +81,9 @@ public class DuplicateActivity extends AppCompatActivity {
             }
         });
 
-        cbAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!cbAll.isChecked()) {
-                    cbAll.setChecked(false);
-                    setAllUnChecked();
-                } else {
-                    cbAll.setChecked(true);
-                    setAllChecked();
-                }
-                duplicateAdapter.notifyDataSetChanged();
-            }
-        });
+        cbAll.setVisibility(View.GONE);
+        llDelete.setVisibility(View.GONE);
 
-        if (contacts.size() == 0) {
-            llDelete.setVisibility(View.GONE);
-        }
-
-        llButtonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDeleteDialog();
-            }
-        });
-    }
-
-
-    private void setAllChecked() {
-        for (int i = 0; i < contacts.size(); i++) {
-            contacts.get(i).setTicked(true);
-        }
-    }
-
-    private void setAllUnChecked() {
-        for (int i = 0; i < contacts.size(); i++) {
-            contacts.get(i).setTicked(false);
-        }
     }
 
     private void setTypeContact() {
@@ -216,57 +182,14 @@ public class DuplicateActivity extends AppCompatActivity {
 
     }
 
-    private void openDeleteDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog_qs_yes_no);
-
-        Button btnYes = dialog.findViewById(R.id.btnYes);
-        Button btnNo = dialog.findViewById(R.id.btnNo);
-
-        btnYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i < contacts.size(); i++) {
-                    if (contacts.get(i).isTicked()) {
-                        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-                        String[] args = new String[]{contacts.get(i).getIdContact()};
-                        ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI).withSelection(ContactsContract.RawContacts.CONTACT_ID + "=?", args).build());
-                        try {
-                            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-                        } catch (RemoteException | OperationApplicationException e) {
-                            e.printStackTrace();
-                        }
-                        DBHelper.getInstance(DuplicateActivity.this).deleteContact(contacts.get(i).getId());
-                    }
-                }
-                contacts.clear();
-                //getContactFromDB();
-                duplicateAdapter.notifyDataSetChanged();
-                Toast.makeText(DuplicateActivity.this, "Delete Success!!!", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        });
-
-        btnNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-    }
-
     private void initView() {
         imgBack = findViewById(R.id.imgBack);
         txtTitleDelete = findViewById(R.id.txtTitleDelete);
         cbAll = findViewById(R.id.cbAll);
-        llDelete = findViewById(R.id.llDelete);
-        llButtonDelete = findViewById(R.id.llButtonDelete);
         txtBtnDelete = findViewById(R.id.txtBtnDelete);
         imgBtnDelete = findViewById(R.id.imgBtnDelete);
         rcvList = findViewById(R.id.rcvList);
+        llDelete = findViewById(R.id.llDelete);
     }
 
     private void setDefaultTick() {
