@@ -1,6 +1,11 @@
 package com.hungdt.test.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +32,7 @@ public class MergedFragment extends Fragment {
     private RecyclerView rcvMerged;
     private ContactAdapter contactAdapter;
     private List<Contact> contacts = new ArrayList<>();
-    private LinearLayout llBanner;
+    public static final String ACTION_RELOAD_FRAGMENT_MERGED="reloadMergedFragment";
 
     public MergedFragment() {
     }
@@ -42,13 +47,23 @@ public class MergedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rcvMerged = view.findViewById(R.id.rcvMerged);
-        llBanner = view.findViewById(R.id.llBanner);
         Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
         contacts.addAll(DBHelper.getInstance(getActivity()).getContactMergedF());
+        IntentFilter intentFilter = new IntentFilter(ACTION_RELOAD_FRAGMENT_MERGED);
 
+        getActivity().registerReceiver(reloadFragmentMerged,intentFilter);
         Collections.sort(contacts);
         contactAdapter = new ContactAdapter(view.getContext(), contacts, KEY.MERGER);
         rcvMerged.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rcvMerged.setAdapter(contactAdapter);
     }
+
+    private BroadcastReceiver reloadFragmentMerged = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            contacts.addAll(DBHelper.getInstance(getActivity()).getContactMergedF());
+            Collections.sort(contacts);
+            contactAdapter.notifyDataSetChanged();
+        }
+    };
 }

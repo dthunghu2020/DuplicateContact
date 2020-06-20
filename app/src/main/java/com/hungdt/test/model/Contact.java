@@ -10,6 +10,10 @@ public class Contact  implements Serializable, Comparable<Contact> {
     private String idContact;
     private String name;
     private String image;
+    private String mContact;
+    private String mName;
+    private String mPhone;
+    private String mEmail;
     private String merger;
     private String father;
     private String deleted;
@@ -19,17 +23,21 @@ public class Contact  implements Serializable, Comparable<Contact> {
     private boolean isTicked = false;
     private int type = 0;
 
-    public Contact(String id, String idContact, String name, String image,String merger,String father,String deleted, List<String> phone, List<Account> account, List<String> email) {
+    public Contact(String id, String idContact, String name, String image,String merger,String mContact,String mName,String mPhone,String mEmail,String father,String deleted, List<String> phone, List<Account> account, List<String> email) {
         this.id = id;
         this.idContact = idContact;
         this.image = image;
         this.name = name;
         this.deleted = deleted;
+        this.mName = mName;
+        this.mEmail = mEmail;
+        this.mPhone = mPhone;
         this.merger = merger;
         this.father = father;
         this.phone = phone;
         this.account = account;
         this.email = email;
+        this.mContact = mContact;
     }
 
     public String getId() {
@@ -126,6 +134,38 @@ public class Contact  implements Serializable, Comparable<Contact> {
 
     public void setFather(String father) {
         this.father = father;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public String getmPhone() {
+        return mPhone;
+    }
+
+    public void setmPhone(String mPhone) {
+        this.mPhone = mPhone;
+    }
+
+    public String getmEmail() {
+        return mEmail;
+    }
+
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
+
+    public String getmContact() {
+        return mContact;
+    }
+
+    public void setmContact(String mContact) {
+        this.mContact = mContact;
     }
 
     @Override

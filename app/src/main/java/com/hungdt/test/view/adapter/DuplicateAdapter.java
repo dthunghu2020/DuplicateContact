@@ -47,7 +47,7 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
     @Override
     public void onBindViewHolder(@NonNull DuplicateHolder holder, final int position) {
         for(int i = 0 ; i<contacts.size();i++){
-            Log.e("123123", "onBindViewHolder: "+contacts.get(i).getIdContact()+contacts.get(i).getName());
+            Log.e("111111", "onBindViewHolder: "+contacts.get(i).getIdContact()+contacts.get(i).getName());
         }
         Glide.with(layoutInflater.getContext())
                 .load(contacts.get(position).getImage())
@@ -76,9 +76,19 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
         }
         switch (type) {
             case "email":
+                for(int i = 0;i<contacts.size();i++){
+                    if(contacts.get(i).getEmail().size()==1){
+                        email = contacts.get(i).getEmail().get(0);
+                    }
+                }
                 holder.txtContactMerger.setText("Email: " + email);
                 break;
             case "phone":
+                for(int i = 0;i<contacts.size();i++){
+                    if(contacts.get(i).getPhone().size()==1){
+                        phone = contacts.get(i).getPhone().get(0);
+                    }
+                }
                 holder.txtContactMerger.setText("Phone: " + phone);
                 break;
             case "contact":

@@ -81,8 +81,6 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    public static final String ACTION_UPDATE_DUB = "ACTION_UPDATE_DUB";
-    public static final String KEY_RELOAD_DUB = "reload_dub";
     private TabItem tabContacts, tabManager, tabMerged, tabDelete, tabVIP;
 
     private ImageView imgMenu, imgRemoveAds, imgGift;
@@ -389,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     ProgressDialog progressDialog;
     Dialog morePlaceDialog;
 
-    private void openVideoAdsDialog() {
+    public void openVideoAdsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
         final LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -399,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         Button btnBack = view.findViewById(R.id.btnBack);
         TextView txtTitle = view.findViewById(R.id.txtTitle);
         TextView txtBody = view.findViewById(R.id.txtBody);
-        txtBody.setText("What video to get free merger!");
+        txtBody.setText("Would you like to see video ads\nto get maximum free 10 gems?");
         txtTitle.setText("Daily Reward!");
 
 

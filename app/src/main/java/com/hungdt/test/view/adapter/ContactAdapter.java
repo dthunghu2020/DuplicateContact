@@ -66,6 +66,7 @@ private String type;
                     case KEY.MERGER:
                         Intent intent2 = new Intent(layoutInflater.getContext(), MergerDuplicateActivity.class);
                         intent2.putExtra(KEY.DUP,contactList.get(position).getMerger());
+                        Log.e("123321", "onClick: "+contactList.get(position).getMerger() );
                         layoutInflater.getContext().startActivity(intent2);
                         break;
                 }

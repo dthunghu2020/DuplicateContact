@@ -1,17 +1,29 @@
 package com.hungdt.test.model;
 
+import java.util.List;
+
 public class Duplicate {
     private String id;
     private String contactID;
     private String merger;
+    private String mName;
+    private String mPhone;
+    private String mEmail;
     private String name;
+    private List<String> phone;
+    private List<String> email;
     private int type = 0;
 
-    public Duplicate(String id, String contactID,String merger, String name) {
-        this.id = id;
+    public Duplicate(String id, String contactID,String merger,String mName,String mPhone,String mEmail, String name,List<String> phone,List<String> email) {
+            this.id = id;
         this.contactID = contactID;
         this.merger = merger;
+        this.mName = mName;
+        this.mPhone = mPhone;
+        this.mEmail = mEmail;
         this.name = name;
+        this.phone = phone;
+        this.email = email;
     }
 
     public String getId() {
@@ -52,5 +64,44 @@ public class Duplicate {
 
     public void setMerger(String merger) {
         this.merger = merger;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public String getmPhone() {
+        return mPhone;
+    }
+
+    public void setmPhone(String mPhone) {
+        this.mPhone = mPhone;
+    }
+
+    public String getmEmail() {
+        return mEmail;
+    }
+
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
+
+    public List<String> getPhone() {
+        return phone;
+    }
+
+    public void setPhone(List<String> phone) {
+        this.phone = phone;
+    }
+    public List<String> getEmail() {
+        return email;
+    }
+
+    public void setEmail(List<String> email) {
+        this.email = email;
     }
 }
