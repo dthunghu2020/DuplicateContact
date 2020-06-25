@@ -81,22 +81,22 @@ public class DetailContactActivity extends AppCompatActivity {
 
 
 
-        accountAdapter = new AccountAdapter(this, contact.getAccount());
+        accountAdapter = new AccountAdapter(this, contact.getAccounts());
         rcvAccount.setLayoutManager(new LinearLayoutManager(this));
         rcvAccount.setAdapter(accountAdapter);
 
-        if (contact.getEmail().size() == 0) {
+        if (contact.getEmails().size() == 0) {
             clEmail.setVisibility(View.GONE);
         } else {
-            emailAdapter = new EmailAdapter(this, contact.getEmail());
+            emailAdapter = new EmailAdapter(this, contact.getEmails());
             rcvEmail.setLayoutManager(new LinearLayoutManager(this));
             rcvEmail.setAdapter(emailAdapter);
         }
-        if (contact.getPhone().size() == 0) {
+        if (contact.getPhones().size() == 0) {
             clPhone.setVisibility(View.GONE);
         } else {
-            txtAccountNumber.setText(contact.getPhone().get(0));
-            phoneAdapter = new PhoneAdapter(this, contact.getPhone());
+            txtAccountNumber.setText(contact.getPhones().get(0).getPhone());
+            phoneAdapter = new PhoneAdapter(this, contact.getPhones());
             rcvPhone.setLayoutManager(new LinearLayoutManager(this));
             rcvPhone.setAdapter(phoneAdapter);
 

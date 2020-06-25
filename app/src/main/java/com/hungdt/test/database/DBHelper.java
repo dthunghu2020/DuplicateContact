@@ -40,8 +40,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_DELETED = "CONTACT_DELETED";
 
     public static final String TABLE_CONTACT_ACCOUNT = "TB_CONTACT_ACCOUNT";
-    public static final String COLUMN_ID_TABLE_ACCOUNT = "_ID_TABLE_ACCOUNT";
-    public static final String COLUMN_ID_CONTACT_ACCOUNT = "CONTACT_ID";
+    public static final String COLUMN_ID_TABLE_ACCOUNT = "ID_TABLE_ACCOUNT";
+    public static final String COLUMN_ID_CONTACT_ACCOUNT = "ID_CONTACT";
     public static final String COLUMN_ACCOUNT_NAME = "ACCOUNT_NAME";
     public static final String COLUMN_ACCOUNT_TYPE = "ACCOUNT_TYPE";
 
@@ -88,7 +88,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static final String SQL_CREATE_TABLE_CONTACT_EMAIL = "CREATE TABLE " + TABLE_CONTACT_EMAIL + "("
             + COLUMN_ID_TABLE_EMAIL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + COLUMN_ID_CONTACT_EMAIL + " TEXT NOT NULL, "
             + COLUMN_ID_CONTACT_EMAIL + " TEXT NOT NULL, "
             + COLUMN_EMAIL_MERGED + " TEXT NOT NULL, "
             + COLUMN_EMAIL_NAME + " TEXT NOT NULL " + ");";
@@ -160,11 +159,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return lastID;
     }
 
-    public void addAccount(String id, String account, String type) {
+    public void addAccount(String idContact, String account, String type) {
         SQLiteDatabase database = instance.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_ID_CONTACT_ACCOUNT, id);
+        values.put(COLUMN_ID_CONTACT_ACCOUNT, idContact);
         values.put(COLUMN_ACCOUNT_NAME, account);
         values.put(COLUMN_ACCOUNT_TYPE, type);
         database.insert(TABLE_CONTACT_ACCOUNT, null, values);
@@ -374,7 +373,7 @@ public class DBHelper extends SQLiteOpenHelper {
         int count = 0;
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                if (cursor.getString(cursor.getColumnIndex(COLUMN_NO_PHONE)).equals("true")) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_NO_PHONE)).equals(KEY.TRUE)) {
                     count++;
                 }
                 cursor.moveToNext();

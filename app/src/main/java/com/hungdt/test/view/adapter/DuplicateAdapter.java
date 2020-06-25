@@ -61,11 +61,11 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
             if (contacts.get(i).getType() == types.get(position)) {
                 if (name == null) {
                     name = contacts.get(i).getName();
-                    if(contacts.get(i).getPhone().size()==1){
-                        phone = contacts.get(i).getPhone().get(0);
+                    if(contacts.get(i).getPhones().size()==1){
+                        phone = contacts.get(i).getPhones().get(0).getPhone();
                     }
-                    if(contacts.get(i).getEmail().size()==1){
-                        email = contacts.get(i).getEmail().get(0);
+                    if(contacts.get(i).getEmails().size()==1){
+                        email = contacts.get(i).getEmails().get(0).getEmail();
                     }
                     holder.txtContactDup.setText(contacts.get(i).getName());
                 } else {
@@ -77,16 +77,16 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
         switch (type) {
             case "email":
                 for(int i = 0;i<contacts.size();i++){
-                    if(contacts.get(i).getEmail().size()==1){
-                        email = contacts.get(i).getEmail().get(0);
+                    if(contacts.get(i).getEmails().size()==1){
+                        email = contacts.get(i).getEmails().get(0).getEmail();
                     }
                 }
                 holder.txtContactMerger.setText("Email: " + email);
                 break;
             case "phone":
                 for(int i = 0;i<contacts.size();i++){
-                    if(contacts.get(i).getPhone().size()==1){
-                        phone = contacts.get(i).getPhone().get(0);
+                    if(contacts.get(i).getPhones().size()==1){
+                        phone = contacts.get(i).getPhones().get(0).getPhone();
                     }
                 }
                 holder.txtContactMerger.setText("Phone: " + phone);

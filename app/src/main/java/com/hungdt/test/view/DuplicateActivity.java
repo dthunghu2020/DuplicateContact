@@ -133,7 +133,7 @@ public class DuplicateActivity extends AppCompatActivity {
                 for (int i = 0; i < contacts.size(); i++) {
                     for (int j = 0; j < contactList.size(); j++) {
                         if (i != j) {
-                            if (contacts.get(i).getPhone().equals(contactList.get(j).getPhone())) {
+                            if (contacts.get(i).getPhones().equals(contactList.get(j).getPhones())) {
                                 if (contacts.get(j).getType() == 0) {
                                     contacts.get(i).setType(kind);
                                     kind++;
@@ -153,7 +153,7 @@ public class DuplicateActivity extends AppCompatActivity {
                 for (int i = 0; i < contacts.size(); i++) {
                     for (int j = 0; j < contactList.size(); j++) {
                         if (i != j) {
-                            if (contacts.get(i).getEmail().equals(contactList.get(j).getEmail())) {
+                            if (contacts.get(i).getEmails().equals(contactList.get(j).getEmails())) {
                                 if (contacts.get(j).getType() == 0) {
                                     contacts.get(i).setType(kind);
                                     kind++;

@@ -1019,17 +1019,17 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             String idContact = DBHelper.getInstance(this).getLastContactID(id);
             if (!noPhone) {
                 for (int i = 0; i < phones.size(); i++) {
-                    DBHelper.getInstance(this).addPhone(id, idContact, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones.get(i));
+                    DBHelper.getInstance(this).addPhone(idContact, KEY.FALSE, phones.get(i).getPhone());
                 }
             }
             if (!accounts.isEmpty()) {
                 for (int i = 0; i < accounts.size(); i++) {
-                    DBHelper.getInstance(this).addAccount(id, accounts.get(i).getAccountName(), accounts.get(i).getAccountType());
+                    DBHelper.getInstance(this).addAccount(idContact, accounts.get(i).getAccountName(), accounts.get(i).getAccountType());
                 }
             }
             if (!noEmail) {
                 for (int i = 0; i < emails.size(); i++) {
-                    DBHelper.getInstance(this).addEmail(id, idContact, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, emails.get(i));
+                    DBHelper.getInstance(this).addEmail(idContact, KEY.FALSE, emails.get(i).getEmail());
                 }
             }
             image = null;

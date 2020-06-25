@@ -13,14 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hungdt.test.R;
+import com.hungdt.test.model.Email;
 
 import java.util.List;
 
 public class EmailAdapter extends RecyclerView.Adapter<EmailAdapter.EmailHolder> {
-    List<String> emails;
+    List<Email> emails;
     LayoutInflater layoutInflater;
 
-    public EmailAdapter(Context context, List<String> emails) {
+    public EmailAdapter(Context context, List<Email> emails) {
         this.emails = emails;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -35,13 +36,13 @@ public class EmailAdapter extends RecyclerView.Adapter<EmailAdapter.EmailHolder>
     @Override
     public void onBindViewHolder(@NonNull EmailHolder holder, final int position) {
         holder.imgSMS.setVisibility(View.GONE);
-        holder.txtPhone.setText(emails.get(position));
+        holder.txtPhone.setText(emails.get(position).getEmail());
         holder.imgCall.setImageResource(R.drawable.ic_gmail);
         holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
-                intent.setData(Uri.parse("mailto:"+emails.get(position))); // only email apps should handle this
+                intent.setData(Uri.parse("mailto:"+emails.get(position).getEmail())); // only email apps should handle this
                 intent.putExtra(Intent.EXTRA_EMAIL, "addresses");
                 intent.putExtra(Intent.EXTRA_SUBJECT, "mail");
                 if (intent.resolveActivity(layoutInflater.getContext().getPackageManager()) != null) {

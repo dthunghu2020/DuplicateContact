@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.hungdt.test.R;
 import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Duplicate;
+import com.hungdt.test.model.Phone;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
 
@@ -30,6 +31,7 @@ import java.util.Objects;
 import static com.hungdt.test.view.MainActivity.contactList;
 
 public class ManageFragment extends Fragment {
+    public static final String ACTION_RELOAD_FRAGMENT_MANAGE = "updateFragmentManage";
     private List<Duplicate> names = new ArrayList<>();
     private List<Duplicate> phones = new ArrayList<>();
     private List<Duplicate> emails = new ArrayList<>();
@@ -65,13 +67,13 @@ public class ManageFragment extends Fragment {
         emails.addAll(DBHelper.getInstance(getContext()).getDupEmail());
         names.addAll(DBHelper.getInstance(getContext()).getDupName());*/
 
-        loadDubName();
+       /* loadDubName();
         loadDubPhone();
         loadDubEmail();
         loadDubContact();
 
         setTextFragment();
-
+*/
         clDupContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,7 +219,7 @@ public class ManageFragment extends Fragment {
                 break;
             }
             for (int j = 0; j < phoneList.size(); j++) {
-                if (i != j && phones.get(j).getmName().equals(KEY.FALSE)) {
+                if (i != j && phones.get(j).getMerger().equals(KEY.FALSE)) {
                     if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
                         if (phones.get(j).getType() == 0) {
                             phones.get(i).setType(type);
@@ -242,14 +244,13 @@ public class ManageFragment extends Fragment {
     }
 
     private void loadDubEmail() {
-        contacts.addAll(DBHelper.getInstance(getContext()).getDupContact());
         List<Duplicate> emailList = new ArrayList<>(emails);
         for (int i = 0; i < emails.size(); i++) {
             if (!emails.get(i).getMerger().equals(KEY.FALSE)) {
                 break;
             }
             for (int j = 0; j < emailList.size(); j++) {
-                if (i != j && emails.get(j).getmEmail().equals(KEY.FALSE)) {
+                if (i != j && emails.get(j).getMerger().equals(KEY.FALSE)) {
                     if (emails.get(i).getName().equalsIgnoreCase(emailList.get(j).getName()) && Integer.parseInt(emails.get(i).getContactID()) != Integer.parseInt(emailList.get(j).getContactID())) {
                         if (emails.get(j).getType() == 0) {
                             emails.get(i).setType(type);
@@ -274,19 +275,37 @@ public class ManageFragment extends Fragment {
         }
     }
 
-    public static final String ACTION_RELOAD_FRAGMENT_MANAGE = "updateFragmentManage";
+
     private BroadcastReceiver reloadFragmentManage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             for(int i =0 ; i<contactList.size();i++){
-                if(contactList.get(i).getPhone()!=null){
-                    for(int j = 0; j < contactList.get(i).getPhone().size();j++){
-                        if( contactList.get(i).getPhone().get(j))
+                if(contactList.get(i).getPhones()!=null){
+                    for(int j = 0; j < contactList.get(i).getPhones().size();j++){
+                        if( contactList.get(i).getPhones().get(j).getMerger().equals(KEY.FALSE)){
+                            phones.add(new Duplicate(contactList.get(i).getPhones().get(j).getIdTable(),
+                                    contactList.get(i).getPhones().get(j).getIdContact(),
+                                    contactList.get(i).getPhones().get(j).getPhone(),
+                                    KEY.FALSE,null,null));
+                        }
+                    }
+                    for(int j = 0; j < contactList.get(i).getEmails().size();j++){
+                        if( contactList.get(i).getEmails().get(j).getMerger().equals(KEY.FALSE)){
+                            emails.add(new Duplicate(contactList.get(i).getEmails().get(j).getIdTable(),
+                                    contactList.get(i).getEmails().get(j).getIdContact(),
+                                    contactList.get(i).getEmails().get(j).getEmail(),
+                                    KEY.FALSE,null,null));
+                        }
+                    }
+                    for(int j = 0; j < contactList.size();j++){
+                        if( contactList.get(i).getmName().equals(KEY.FALSE)){
+                            names.add(new Duplicate(contactList.get(i).getIdTable(),
+                                    contactList.get(i).getIdContact(),
+                                    contactList.get(i).getName(),
+                                    KEY.FALSE,contactList.get(i).getPhones(),contactList.get(i).getEmails()));
+                        }
                     }
                 }
-                phones.addAll(DBHelper.getInstance(getContext()).getDupPhone());
-                emails.addAll(DBHelper.getInstance(getContext()).getDupEmail());
-                names.addAll(DBHelper.getInstance(getContext()).getDupName());
             }
             loadDubName();
             loadDubEmail();

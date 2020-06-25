@@ -6,21 +6,15 @@ public class Duplicate {
     private String id;
     private String contactID;
     private String merger;
-    private String mName;
-    private String mPhone;
-    private String mEmail;
     private String name;
-    private List<String> phone;
-    private List<String> email;
+    private List<Phone> phone;
+    private List<Email> email;
     private int type = 0;
 
-    public Duplicate(String id, String contactID,String merger,String mName,String mPhone,String mEmail, String name,List<String> phone,List<String> email) {
+    public Duplicate(String id, String contactID, String name,String merger,List<Phone> phone,List<Email> email) {
             this.id = id;
         this.contactID = contactID;
         this.merger = merger;
-        this.mName = mName;
-        this.mPhone = mPhone;
-        this.mEmail = mEmail;
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -66,42 +60,19 @@ public class Duplicate {
         this.merger = merger;
     }
 
-    public String getmName() {
-        return mName;
-    }
-
-    public void setmName(String mName) {
-        this.mName = mName;
-    }
-
-    public String getmPhone() {
-        return mPhone;
-    }
-
-    public void setmPhone(String mPhone) {
-        this.mPhone = mPhone;
-    }
-
-    public String getmEmail() {
-        return mEmail;
-    }
-
-    public void setmEmail(String mEmail) {
-        this.mEmail = mEmail;
-    }
-
-    public List<String> getPhone() {
+    public List<Phone> getPhone() {
         return phone;
     }
 
-    public void setPhone(List<String> phone) {
+    public void setPhone(List<Phone> phone) {
         this.phone = phone;
     }
-    public List<String> getEmail() {
+
+    public List<Email> getEmail() {
         return email;
     }
 
-    public void setEmail(List<String> email) {
+    public void setEmail(List<Email> email) {
         this.email = email;
     }
 }

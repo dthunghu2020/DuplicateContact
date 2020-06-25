@@ -18,14 +18,15 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hungdt.test.R;
+import com.hungdt.test.model.Phone;
 
 import java.util.List;
 
 public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.PhoneHolder> {
-    List<String> phones;
+    List<Phone> phones;
     LayoutInflater layoutInflater;
 
-    public PhoneAdapter(Context context, List<String> phones) {
+    public PhoneAdapter(Context context, List<Phone> phones) {
         this.phones = phones;
         layoutInflater = LayoutInflater.from(context);
     }
@@ -39,12 +40,12 @@ public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.PhoneHolder>
 
     @Override
     public void onBindViewHolder(@NonNull PhoneHolder holder, final int position) {
-        holder.txtPhone.setText(phones.get(position));
+        holder.txtPhone.setText(phones.get(position).getPhone());
         holder.imgCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentCall = new Intent(Intent.ACTION_CALL);
-                intentCall.setData(Uri.parse("tel:" + phones.get(position)));
+                intentCall.setData(Uri.parse("tel:" + phones.get(position).getPhone()));
                 if (ActivityCompat.checkSelfPermission(layoutInflater.getContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     layoutInflater.getContext().startActivity(intentCall);
                 } else {
@@ -58,7 +59,7 @@ public class PhoneAdapter extends RecyclerView.Adapter<PhoneAdapter.PhoneHolder>
             public void onClick(View v) {
                Intent intentSMS = new Intent(Intent.ACTION_SENDTO);
                 intentSMS.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intentSMS.setData(Uri.parse("smsto:" + phones.get(position))); // This ensures only SMS apps respond
+                intentSMS.setData(Uri.parse("smsto:" + phones.get(position).getPhone())); // This ensures only SMS apps respond
                 layoutInflater.getContext().startActivity(intentSMS);
             }
         });

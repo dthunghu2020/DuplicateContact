@@ -83,8 +83,9 @@ public class MergerDuplicateActivity extends AppCompatActivity {
             }
             Collections.sort(contacts);
             for (int i = 0; i < contacts.size(); i++) {
-                listPhones.addAll(contacts.get(i).getPhone());
-                listEmails.addAll(contacts.get(i).getEmail());
+
+                /*listPhones.addAll(contacts.get(i).getPhones());
+                listEmails.addAll(contacts.get(i).getEmails());*/
             }
             ArrayList<String> listP = new ArrayList<>();
             for (int i = 0; i < listPhones.size(); i++) {
@@ -107,7 +108,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
             int number = rd.nextInt();
             Log.e("123123", "onCreate: " + listPhones + listEmails);
             Log.e("123123", "onCreate: " + listP + listE);
-            switch (type) {
+           /* switch (type) {
                 case "email":
                     contactMerger = new Contact(String.valueOf(number), "0", contacts.get(0).getName(), "image", KEY.TRUE,KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.TRUE, KEY.TRUE, KEY.FALSE, listPhones,contacts.get(0).getAccount(), listEmails);
                 case "phone":
@@ -117,7 +118,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                 case "contact":
                     contactMerger = new Contact(String.valueOf(number), "0", contacts.get(0).getName(), "image", KEY.TRUE, KEY.TRUE, KEY.TRUE, KEY.TRUE, KEY.FALSE, KEY.TRUE, KEY.FALSE, listPhones, contacts.get(0).getAccount(), listEmails);
                     break;
-            }
+            }*/
 
         } else {
             contacts.addAll(DBHelper.getInstance(this).getContactMerged(type));
@@ -172,7 +173,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                     String mN = KEY.FALSE;
                     String mP = KEY.FALSE;
                     String mE = KEY.FALSE;
-                    switch (type) {
+                   /* switch (type) {
                         case "phone":
                             mP = KEY.TRUE;
                             for (int i = 0; i < contacts.size(); i++) {
@@ -197,13 +198,13 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                                 DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getIdTable(), contacts.get(i).getIdContact(), KEY.TRUE, KEY.TRUE, KEY.TRUE,KEY.TRUE, String.valueOf(number));
                             }
                             break;
-                    }
+                    }*/
                     //check
                     DBHelper.getInstance(MergerDuplicateActivity.this).addContact(contactMerger.getIdContact(), contactMerger.getName(), contactMerger.getImage(), String.valueOf(number),contactMerger.getmContact(), contactMerger.getmName(), contactMerger.getmPhone(), contactMerger.getmEmail(), KEY.TRUE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE);
                     String id = DBHelper.getInstance(MergerDuplicateActivity.this).getLastID();
                     String idContact = DBHelper.getInstance(MergerDuplicateActivity.this).getLastContactID(id);
 
-                    if (listPhones.size() > 0) {
+                  /*  if (listPhones.size() > 0) {
                         for (int i = 0; i < listPhones.size(); i++) {
                             DBHelper.getInstance(MergerDuplicateActivity.this).addPhone(id, idContact, KEY.TRUE, mN, mP, mE, listPhones.get(i));
                         }
@@ -213,7 +214,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                         for (int i = 0; i < listEmails.size(); i++) {
                             DBHelper.getInstance(MergerDuplicateActivity.this).addEmail(id, idContact, KEY.TRUE, mN, mP, mE, listEmails.get(i));
                         }
-                    }
+                    }*/
                     if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
                         if (MainActivity.ggInterstitialAd != null && MainActivity.ggInterstitialAd.isLoaded())
                             MainActivity.ggInterstitialAd.show();
@@ -312,7 +313,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                 .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contactMerger.getName()) // Name of the contact
                 .build());
 
-        for (String s : contactMerger.getPhone()) {
+        /*for (String s : contactMerger.getPhone()) {
             cntProOper.add(ContentProviderOperation.newInsert(android.provider.ContactsContract.Data.CONTENT_URI)//Step 3
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, contactIndex)
                     .withValue(android.provider.ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
@@ -325,7 +326,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                     .withValue(android.provider.ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
                     .withValue(ContactsContract.CommonDataKinds.Email.DISPLAY_NAME, s)
                     .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_CUSTOM).build()); //Type like HOME, MOBILE etc
-        }
+        }*/
 
         ContentProviderResult[] s = new ContentProviderResult[0];
         try {
