@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -63,21 +64,18 @@ import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.hungdt.test.view.MainActivity.contactList;
 
 public class ContactFragment extends Fragment {
 
-    private List<Contact> contactList = new ArrayList<>();
     private ContactAdapter contactAdapter;
     private RecyclerView rcvContactView;
-    private String idContact;
-    private String name;
-    private String image;
     private LinearLayout llButtonMerger;
     private List<Account> accounts = new ArrayList<>();
     private List<String> phones = new ArrayList<>();
     private List<String> emails = new ArrayList<>();
-
-    private Calendar calendar;
+    private LoadingDialog loadingDialog;
+    public static final String ACTION_UPDATE_LIST_CONTACT= "Update Contact";
 
     public ContactFragment() {
     }
@@ -92,17 +90,9 @@ public class ContactFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        calendar = Calendar.getInstance();
-        Log.i("TAG", "onViewCreated: " + calendar.getTimeInMillis());
-
         rcvContactView = view.findViewById(R.id.rcvListContact);
         llButtonMerger = view.findViewById(R.id.llButtonMerger);
 
-        contactList = DBHelper.getInstance(getActivity()).getAllContact();
-        if (contactList.size() == 0) {
-            readAccountContacts();
-            contactList = DBHelper.getInstance(getActivity()).getAllContact();
-        }
         llButtonMerger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,14 +105,19 @@ public class ContactFragment extends Fragment {
         rcvContactView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rcvContactView.setAdapter(contactAdapter);
 
-        /*IntentFilter intentFilter = new IntentFilter(MainActivity.ACTION_UPDATE);
-        getLayoutInflater().getContext().registerReceiver(bcUpdateContact,intentFilter);*/
+        IntentFilter intentFilter = new IntentFilter(ACTION_UPDATE_LIST_CONTACT);
+        getLayoutInflater().getContext().registerReceiver(broadCastUpdate,intentFilter);
 
     }
-
+    private BroadcastReceiver broadCastUpdate = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            contactAdapter.notifyDataSetChanged();
+        }
+    };
 
     private void openReloadContactDialog() {
-        final Dialog dialog = new Dialog(getContext());
+        final Dialog dialog = new Dialog(getLayoutInflater().getContext());
         dialog.setContentView(R.layout.dialog_qs_yes_no);
 
         Button btnYes = dialog.findViewById(R.id.btnYes);
@@ -166,7 +161,7 @@ public class ContactFragment extends Fragment {
             videoAds.setRewardedVideoAdListener(new RewardedVideoAdListener() {
                 @Override
                 public void onRewarded(RewardItem reward) {
-                    MySetting.setMaxLength(getActivity(), MySetting.getMaxLength(getActivity()) + 3);
+                    //MySetting.setMaxLength(getActivity(), MySetting.getMaxLength(getActivity()) + 3);
                     rewardedVideoCompleted = true;
                 }
 
@@ -178,11 +173,8 @@ public class ContactFragment extends Fragment {
                 public void onRewardedVideoAdClosed() {
                     if (rewardedVideoCompleted) {
                         DBHelper.getInstance(getActivity()).deleteAllContact();
-                        startActivity(new Intent(getActivity(), WaitingActivity.class));
-                        readAccountContacts();
-                        contactList = DBHelper.getInstance(getActivity()).getAllContact();
-                        contactAdapter.notifyDataSetChanged();
-                        getActivity().sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
+                        new ReloadContact().execute();
+                       //todo
                     }
                 }
 
@@ -265,8 +257,37 @@ public class ContactFragment extends Fragment {
             Toast.makeText(getActivity(), "Please check your internet connection!!!", Toast.LENGTH_SHORT).show();
         }
     }
+    private class ReloadContact extends AsyncTask<Void, Void, Void> {
 
-    private void readAccountContacts() {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingDialog = new LoadingDialog(getActivity());
+            loadingDialog.startLoadingDialog();
+            Toast.makeText(getContext(), "Loading DB", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            contactList.clear();
+            if(DBHelper.getInstance(getContext()).getAllContact().size()==0){
+                ((MainActivity)getActivity()).readAccountContacts();
+            }else {
+                contactList.addAll(DBHelper.getInstance(getContext()).getAllContact());
+                Collections.sort(contactList);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            loadingDialog.dismissDialog();
+            contactAdapter.notifyDataSetChanged();
+        }
+    }
+
+  /*  private void readAccountContacts() {
 
         String[] projections = {
                 ContactsContract.Contacts._ID,
@@ -369,19 +390,12 @@ public class ContactFragment extends Fragment {
         }
         assert cursorContact != null;
         cursorContact.close();
-    }
+    }*/
 
-    /*private BroadcastReceiver bcUpdateContact = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            *//*String name = intent.getStringExtra(KEY);
-            txt.setText(name);*//*
-        }
-    };*/
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //getLayoutInflater().getContext().unregisterReceiver(bcUpdateContact);
+        getLayoutInflater().getContext().unregisterReceiver(broadCastUpdate);
     }
 }

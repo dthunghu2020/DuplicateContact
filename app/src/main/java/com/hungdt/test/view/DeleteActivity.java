@@ -23,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
 import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Contact;
@@ -150,7 +149,7 @@ public class DeleteActivity extends AppCompatActivity {
                         } catch (RemoteException | OperationApplicationException e) {
                             e.printStackTrace();
                         }
-                        DBHelper.getInstance(DeleteActivity.this).deleteContact(contacts.get(i).getId());
+                        DBHelper.getInstance(DeleteActivity.this).deleteContact(contacts.get(i).getIdContact());
                     }
                 }
                 contacts.clear();

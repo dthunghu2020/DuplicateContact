@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Contact  implements Serializable, Comparable<Contact> {
 
-    private String id;
+    private String idTable;
     private String idContact;
     private String name;
     private String image;
@@ -17,14 +17,14 @@ public class Contact  implements Serializable, Comparable<Contact> {
     private String merger;
     private String father;
     private String deleted;
-    private List<String> phone;
-    private List<Account> account;
-    private List<String> email;
+    private List<Phone> phones;
+    private List<Account> accounts;
+    private List<Email> emails;
     private boolean isTicked = false;
     private int type = 0;
 
-    public Contact(String id, String idContact, String name, String image,String merger,String mContact,String mName,String mPhone,String mEmail,String father,String deleted, List<String> phone, List<Account> account, List<String> email) {
-        this.id = id;
+    public Contact(String idTable, String idContact, String name, String image,String merger,String mContact,String mName,String mPhone,String mEmail,String father,String deleted, List<Phone> phones, List<Account> accounts, List<Email> emails) {
+        this.idTable = idTable;
         this.idContact = idContact;
         this.image = image;
         this.name = name;
@@ -34,18 +34,18 @@ public class Contact  implements Serializable, Comparable<Contact> {
         this.mPhone = mPhone;
         this.merger = merger;
         this.father = father;
-        this.phone = phone;
-        this.account = account;
-        this.email = email;
+        this.phones = phones;
+        this.accounts = accounts;
+        this.emails = emails;
         this.mContact = mContact;
     }
 
-    public String getId() {
-        return id;
+    public String getIdTable() {
+        return idTable;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setIdTable(String idTable) {
+        this.idTable = idTable;
     }
 
     public String getIdContact() {
@@ -80,28 +80,28 @@ public class Contact  implements Serializable, Comparable<Contact> {
         this.name = name;
     }
 
-    public List<String> getPhone() {
-        return phone;
+    public List<Phone> getPhones() {
+        return phones;
     }
 
-    public void setPhone(List<String> phone) {
-        this.phone = phone;
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
     }
 
-    public List<Account> getAccount() {
-        return account;
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
-    public void setAccount(List<Account> account) {
-        this.account = account;
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 
-    public List<String> getEmail() {
-        return email;
+    public List<Email> getEmails() {
+        return emails;
     }
 
-    public void setEmail(List<String> email) {
-        this.email = email;
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
     }
 
     public boolean isTicked() {

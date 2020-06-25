@@ -28,8 +28,6 @@ public class SplashActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
-                Intent intent2 = new Intent(SplashActivity.this,WaitingActivity.class);
-                startActivity(intent2);
             } else {
                Intent intent = new Intent(SplashActivity.this, AskPermissionActivity.class);
                startActivity(intent);

@@ -1,6 +1,9 @@
 package com.hungdt.test.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,10 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteFragment extends Fragment {
-    private List<Contact> contacts = new ArrayList<>();
     private ConstraintLayout clNoName,clNoPhone,clNoEmail;
     private TextView txtNoName,txtNoPhone,txtNoEmail;
-    private LinearLayout llBanner;
+    public static final String ACTION_UPDATE_DELETE_FRAGMENT= "Update Delete Fragment";
     public DeleteFragment() {
     }
 
@@ -43,9 +45,6 @@ public class DeleteFragment extends Fragment {
 
         initView(view);
         Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
-        txtNoName.setText(DBHelper.getInstance(getActivity()).getNumberContactNoName());
-        txtNoPhone.setText(DBHelper.getInstance(getActivity()).getNumberContactNoPhone());
-        txtNoEmail.setText(DBHelper.getInstance(getActivity()).getNumberContactNoEmail());
 
         clNoName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,11 +71,19 @@ public class DeleteFragment extends Fragment {
             }
         });
 
-
+        IntentFilter intentFilter = new IntentFilter(ACTION_UPDATE_DELETE_FRAGMENT);
+        getLayoutInflater().getContext().registerReceiver(broadCastUpdate,intentFilter);
     }
+    private BroadcastReceiver broadCastUpdate = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            txtNoName.setText(DBHelper.getInstance(getActivity()).getNumberContactNoName());
+            txtNoPhone.setText(DBHelper.getInstance(getActivity()).getNumberContactNoPhone());
+            txtNoEmail.setText(DBHelper.getInstance(getActivity()).getNumberContactNoEmail());
+        }
+    };
 
     private void initView(View view) {
-        llBanner = view.findViewById(R.id.llBanner);
         clNoName = view.findViewById(R.id.clNoName);
         clNoPhone = view.findViewById(R.id.clNoPhone);
         clNoEmail = view.findViewById(R.id.clNoEmail);
@@ -85,5 +92,9 @@ public class DeleteFragment extends Fragment {
         txtNoEmail = view.findViewById(R.id.txtNoEmail);
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(broadCastUpdate);
+    }
 }

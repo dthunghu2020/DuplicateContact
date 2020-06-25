@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.hungdt.test.view.MainActivity.contactList;
+
 public class ManageFragment extends Fragment {
     private List<Duplicate> names = new ArrayList<>();
     private List<Duplicate> phones = new ArrayList<>();
@@ -57,11 +59,11 @@ public class ManageFragment extends Fragment {
         Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
 
         IntentFilter intentFilter = new IntentFilter(ACTION_RELOAD_FRAGMENT_MANAGE);
-       getActivity().registerReceiver(reloadFragmentManage,intentFilter);
+        getActivity().registerReceiver(reloadFragmentManage, intentFilter);
 
-        phones.addAll(DBHelper.getInstance(getContext()).getDupPhone());
+        /*phones.addAll(DBHelper.getInstance(getContext()).getDupPhone());
         emails.addAll(DBHelper.getInstance(getContext()).getDupEmail());
-        names.addAll(DBHelper.getInstance(getContext()).getDupName());
+        names.addAll(DBHelper.getInstance(getContext()).getDupName());*/
 
         loadDubName();
         loadDubPhone();
@@ -133,7 +135,6 @@ public class ManageFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
 
     }
 
@@ -216,7 +217,7 @@ public class ManageFragment extends Fragment {
                 break;
             }
             for (int j = 0; j < phoneList.size(); j++) {
-                if (i != j&&phones.get(j).getmName().equals(KEY.FALSE)) {
+                if (i != j && phones.get(j).getmName().equals(KEY.FALSE)) {
                     if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
                         if (phones.get(j).getType() == 0) {
                             phones.get(i).setType(type);
@@ -248,11 +249,11 @@ public class ManageFragment extends Fragment {
                 break;
             }
             for (int j = 0; j < emailList.size(); j++) {
-                if (i != j&&emails.get(j).getmEmail().equals(KEY.FALSE)) {
+                if (i != j && emails.get(j).getmEmail().equals(KEY.FALSE)) {
                     if (emails.get(i).getName().equalsIgnoreCase(emailList.get(j).getName()) && Integer.parseInt(emails.get(i).getContactID()) != Integer.parseInt(emailList.get(j).getContactID())) {
                         if (emails.get(j).getType() == 0) {
                             emails.get(i).setType(type);
-                            Log.e("123321", "onViewCreated: "+ emails.get(i).getName()+emailList.get(i).getName() );
+                            Log.e("123321", "onViewCreated: " + emails.get(i).getName() + emailList.get(i).getName());
                             type++;
                             break;
                         }
@@ -277,6 +278,16 @@ public class ManageFragment extends Fragment {
     private BroadcastReceiver reloadFragmentManage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            for(int i =0 ; i<contactList.size();i++){
+                if(contactList.get(i).getPhone()!=null){
+                    for(int j = 0; j < contactList.get(i).getPhone().size();j++){
+                        if( contactList.get(i).getPhone().get(j))
+                    }
+                }
+                phones.addAll(DBHelper.getInstance(getContext()).getDupPhone());
+                emails.addAll(DBHelper.getInstance(getContext()).getDupEmail());
+                names.addAll(DBHelper.getInstance(getContext()).getDupName());
+            }
             loadDubName();
             loadDubEmail();
             loadDubPhone();
@@ -299,7 +310,7 @@ public class ManageFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(reloadFragmentManage!=null){
+        if (reloadFragmentManage != null) {
             getActivity().unregisterReceiver(reloadFragmentManage);
         }
     }

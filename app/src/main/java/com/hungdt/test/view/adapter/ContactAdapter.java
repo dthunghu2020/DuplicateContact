@@ -21,7 +21,6 @@ import com.hungdt.test.view.DetailContactActivity;
 import com.hungdt.test.view.MergerDuplicateActivity;
 
 
-import java.io.Serializable;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
@@ -59,7 +58,7 @@ private String type;
                 switch (type){
                     case KEY.CONTACT:
                         Intent intent = new Intent(layoutInflater.getContext(), DetailContactActivity.class);
-                        intent.putExtra(KEY.ID,contactList.get(position).getId());
+                        intent.putExtra(KEY.ID,contactList.get(position).getIdTable());
                         intent.putExtra(KEY.TYPE,KEY.DETAIL);
                         layoutInflater.getContext().startActivity(intent);
                         break;

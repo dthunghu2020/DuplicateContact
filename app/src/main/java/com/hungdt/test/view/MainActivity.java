@@ -1,23 +1,13 @@
 package com.hungdt.test.view;
 
-import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -35,13 +25,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.android.billingclient.api.BillingClientStateListener;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.facebook.ads.Ad;
@@ -64,8 +51,13 @@ import com.google.android.material.tabs.TabLayout;
 import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
 import com.hungdt.test.database.DBHelper;
+import com.hungdt.test.model.Account;
+import com.hungdt.test.model.Contact;
+import com.hungdt.test.model.Email;
+import com.hungdt.test.model.Phone;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.Helper;
+import com.hungdt.test.utils.KEY;
 import com.hungdt.test.utils.MySetting;
 import com.hungdt.test.view.adapter.ViewPageAdapter;
 import com.unity3d.ads.IUnityAdsListener;
@@ -73,12 +65,13 @@ import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
+    public static List<Contact> contactList = new ArrayList<>();
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TabItem tabContacts, tabManager, tabMerged, tabDelete, tabVIP;
@@ -93,9 +86,17 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     private RewardedVideoAd videoAds;
     private boolean readyToPurchase = false;
     private boolean rewardedVideoCompleted = false;
+    private LoadingDialog loadingDialog;
     private boolean isDailyReward = false;
     public static InterstitialAd ggInterstitialAd;
     public static com.facebook.ads.InterstitialAd fbInterstitialAd;
+
+    private String idContact;
+    private String name;
+    private String image;
+    private List<Account> accounts = new ArrayList<>();
+    private List<Phone> phones = new ArrayList<>();
+    private List<Email> emails = new ArrayList<>();
 
 
     @Override
@@ -110,8 +111,8 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         initView();
+        new GetContactFromDB().execute();
         //readAccountContacts();
         initInterstitialAd();
         View hView = navigationView.getHeaderView(0);
@@ -225,11 +226,45 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         });
     }
 
+    private class GetContactFromDB extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingDialog = new LoadingDialog(MainActivity.this);
+            loadingDialog.startLoadingDialog();
+            Toast.makeText(MainActivity.this, "Loading DB", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            contactList.clear();
+            if (DBHelper.getInstance(MainActivity.this).getAllContact().size() == 0) {
+                readAccountContacts();
+            } else {
+                contactList.addAll(DBHelper.getInstance(MainActivity.this).getAllContact());
+                Collections.sort(contactList);
+            }
+            Log.e("123", "doInBackground: " + contactList.size());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            loadingDialog.dismissDialog();
+            sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
+            sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
+            Toast.makeText(MainActivity.this, "Finish DB", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void initInterstitialAd() {
         initUnityInterstitialAd();
         initFbInterstitialAd(false);
         initGgInterstitialAd();
     }
+
     private void initGgInterstitialAd() {
         try {
             ggInterstitialAd = new InterstitialAd(this);
@@ -302,6 +337,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             return true;
         } else return false;
     }
+
     private void initFbInterstitialAd(final boolean isLoad_ID_FB_2) {
         try {
             if (!isLoad_ID_FB_2)
@@ -587,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }*/
 
 
-    private void getContact() {
+    /*private void getContact() {
         Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         assert cursor != null;
         while (cursor.moveToNext()) {
@@ -647,9 +683,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         //getContactFromSIM();
         //getContactFromPhoneUse();
 
-    }
+    }*/
 
-    private void getContactFromPhoneUse() {
+   /* private void getContactFromPhoneUse() {
         Cursor cursor = getContentResolver().query(
                 ContactsContract.RawContacts.CONTENT_URI,
                 new String[]{ContactsContract.RawContacts._ID, ContactsContract.RawContacts.ACCOUNT_TYPE},
@@ -853,11 +889,11 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
     private void readDeviceAccounts() {
         //Account[] accounts = manager.getAccountsByType("com.google");
-        /*List<String> username = new LinkedList<String>();
+        *//*List<String> username = new LinkedList<String>();
 
         for (Account account : accounts) {
             username.add(account.name);
-        }*/
+        }*//*
         Account[] accounts = AccountManager.get(this).getAccounts();
         for (Account account : accounts) {
             //val contactAccount = ContactAccount()
@@ -900,9 +936,116 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         assert cursor != null;
         cursor.close();
 
-    }
+    }*/
 
-    private void readAccountContacts() {
+    public void readAccountContacts() {
+        contactList.clear();
+        String[] projections = {
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.Contacts.PHOTO_URI,
+        };
+        Cursor cursorContact = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, projections, null, null, null);
+        while (cursorContact != null && cursorContact.moveToNext()) {
+
+            idContact = cursorContact.getString(cursorContact.getColumnIndex(ContactsContract.Contacts._ID));
+            name = cursorContact.getString(cursorContact.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            image = cursorContact.getString(cursorContact.getColumnIndex(ContactsContract.Contacts.PHOTO_URI));
+            String[] projection2 = {
+                    ContactsContract.RawContacts._ID,
+                    ContactsContract.RawContacts.CONTACT_ID,
+                    ContactsContract.RawContacts.ACCOUNT_NAME,
+                    ContactsContract.RawContacts.ACCOUNT_TYPE
+            };
+            //val stringZalo =
+            String selection = ContactsContract.RawContacts.CONTACT_ID + " = " + idContact;
+            //val selection = "${ContactsContract.RawContacts._ID} = $idContact";
+            Cursor cursorAccount = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, projection2, selection, null, null, null);
+            while (cursorAccount != null && cursorAccount.moveToNext()) {
+                String idRawContract = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts._ID));
+                String account = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
+                String accountType = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
+                //readDataXXX(idContact)
+                accounts.add(new Account(account, accountType));
+                String[] projectionx = {
+                        ContactsContract.Data.RAW_CONTACT_ID,
+                        ContactsContract.Data.MIMETYPE,
+                        ContactsContract.Data.DATA1,
+                        ContactsContract.Data.DATA2,
+                };
+                String selectionx = ContactsContract.Data.RAW_CONTACT_ID + " = " + idRawContract;
+
+                Cursor cursorData = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projectionx, selectionx, null, null);
+                while (cursorData != null && cursorData.moveToNext()) {
+                    if (accountType.contains("xiaomi") || accountType.contains("google") || accountType.contains("pcsc") ||
+                            accountType.contains("phone") || accountType.contains("Phone") || accountType.contains("PHONE") || accountType.contains("Sim") || accountType.contains("sim") || accountType.contains("SIM")) {
+                        String data1 = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA1));
+                        String mineType = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE));
+                        if (mineType.equals("vnd.android.cursor.item/phone_v2")) {
+                            phones.add(new Phone("0", idContact, data1, KEY.FALSE));
+                        } else if (mineType.equals("vnd.android.cursor.item/email_v2")) {
+                            emails.add(new Email("0", idContact, data1, KEY.FALSE));
+                        }
+                    }
+
+                }
+                assert cursorData != null;
+                cursorData.close();
+            }
+            assert cursorAccount != null;
+            cursorAccount.close();
+            boolean noPhone = false;
+            boolean noName = true;
+            boolean noEmail = false;
+            if (phones.isEmpty()) {
+                noPhone = true;
+                Log.i("TAG", "readAccountContacts: " + name);
+            }
+            if (!name.equals("")) {
+                noName = false;
+            }
+            if (emails.isEmpty()) {
+                noEmail = true;
+            }
+
+            contactList.add(new Contact("0", idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones, accounts, emails));
+            if (image != null) {
+                DBHelper.getInstance(this).addContact(idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+            } else {
+                DBHelper.getInstance(this).addContact(idContact, name, "image", KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+            }
+
+            String id = DBHelper.getInstance(this).getLastID();
+            String idContact = DBHelper.getInstance(this).getLastContactID(id);
+            if (!noPhone) {
+                for (int i = 0; i < phones.size(); i++) {
+                    DBHelper.getInstance(this).addPhone(id, idContact, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones.get(i));
+                }
+            }
+            if (!accounts.isEmpty()) {
+                for (int i = 0; i < accounts.size(); i++) {
+                    DBHelper.getInstance(this).addAccount(id, accounts.get(i).getAccountName(), accounts.get(i).getAccountType());
+                }
+            }
+            if (!noEmail) {
+                for (int i = 0; i < emails.size(); i++) {
+                    DBHelper.getInstance(this).addEmail(id, idContact, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, emails.get(i));
+                }
+            }
+            image = null;
+            phones.clear();
+            accounts.clear();
+            emails.clear();
+
+
+        }
+        assert cursorContact != null;
+        cursorContact.close();
+        contactList.clear();
+        contactList.addAll(DBHelper.getInstance(this).getAllContact());
+        Collections.sort(contactList);
+    }
+    /*private void readAccountContacts() {
         String[] projections = {
                 ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.DISPLAY_NAME
@@ -959,7 +1102,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         }
         assert cursorContact != null;
         cursorContact.close();
-    }
+    }*/
 
     private void openExitAppDialog() {
         final BottomSheetDialog exitDialog = new BottomSheetDialog(this);

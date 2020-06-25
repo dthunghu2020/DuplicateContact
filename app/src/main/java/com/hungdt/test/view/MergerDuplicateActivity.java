@@ -176,24 +176,25 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                         case "phone":
                             mP = KEY.TRUE;
                             for (int i = 0; i < contacts.size(); i++) {
-                                DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getId(), contacts.get(i).getIdContact(), contacts.get(i).getmContact(), contacts.get(i).getmName(),KEY.TRUE, contacts.get(i).getmEmail(), String.valueOf(number));
+                                //todo
+                                DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getIdContact(), contacts.get(i).getmContact(), contacts.get(i).getmName(),KEY.TRUE, contacts.get(i).getmEmail(), type, String.valueOf(number));
                             }
                             break;
                         case "email":
                             mE = KEY.TRUE;
                             for (int i = 0; i < contacts.size(); i++) {
-                                DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getId(), contacts.get(i).getIdContact(), contacts.get(i).getmContact(),contacts.get(i).getmName(), contacts.get(i).getmPhone(), KEY.TRUE, String.valueOf(number));
+                                DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getIdTable(), contacts.get(i).getIdContact(), contacts.get(i).getmContact(),contacts.get(i).getmName(), contacts.get(i).getmPhone(), KEY.TRUE, String.valueOf(number));
                             }
                             break;
                         case "name":
                             mN = KEY.TRUE;
                             for (int i = 0; i < contacts.size(); i++) {
-                                DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getId(), contacts.get(i).getIdContact(),contacts.get(i).getmContact(),  KEY.TRUE, contacts.get(i).getmPhone(), contacts.get(i).getmEmail(), String.valueOf(number));
+                                DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getIdTable(), contacts.get(i).getIdContact(),contacts.get(i).getmContact(),  KEY.TRUE, contacts.get(i).getmPhone(), contacts.get(i).getmEmail(), String.valueOf(number));
                             }
                             break;
                         case "contact":
                             for (int i = 0; i < contacts.size(); i++) {
-                                DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getId(), contacts.get(i).getIdContact(), KEY.TRUE, KEY.TRUE, KEY.TRUE,KEY.TRUE, String.valueOf(number));
+                                DBHelper.getInstance(MergerDuplicateActivity.this).updateContactMerger(contacts.get(i).getIdTable(), contacts.get(i).getIdContact(), KEY.TRUE, KEY.TRUE, KEY.TRUE,KEY.TRUE, String.valueOf(number));
                             }
                             break;
                     }
@@ -256,10 +257,10 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                 for (int i = 0; i < contacts.size(); i++) {
                     if (!contacts.get(i).getFather().equals(KEY.TRUE)) {
                         deleteContact(i);
-                        DBHelper.getInstance(MergerDuplicateActivity.this).updateDisableContact(contacts.get(i).getId());
+                        DBHelper.getInstance(MergerDuplicateActivity.this).updateDisableContact(contacts.get(i).getIdTable());
                     }
                 }
-                DBHelper.getInstance(MergerDuplicateActivity.this).updateMergedContact(contactMerger.getId());
+                DBHelper.getInstance(MergerDuplicateActivity.this).updateMergedContact(contactMerger.getIdTable());
                 addNewContact();
                 Toast.makeText(MergerDuplicateActivity.this, "Merger Success!!!", Toast.LENGTH_SHORT).show();
                 if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {

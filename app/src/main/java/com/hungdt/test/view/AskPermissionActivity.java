@@ -49,7 +49,6 @@ public class AskPermissionActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 23) {
             if ((ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) &&
                     (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) &&
-                    (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) &&
                     (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) &&
                     (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)) {
                 Intent intent = new Intent(AskPermissionActivity.this,MainActivity.class);
@@ -76,8 +75,6 @@ public class AskPermissionActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(AskPermissionActivity.this,MainActivity.class);
                 startActivity(intent);
-                Intent intent2 = new Intent(AskPermissionActivity.this,WaitingActivity.class);
-                startActivity(intent2);
                 finish();
                 Toast.makeText(this, "All permission accepted!", Toast.LENGTH_SHORT).show();
             } else if (Build.VERSION.SDK_INT >= 23) {

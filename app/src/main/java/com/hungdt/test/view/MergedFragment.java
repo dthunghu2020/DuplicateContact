@@ -48,14 +48,14 @@ public class MergedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rcvMerged = view.findViewById(R.id.rcvMerged);
         Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
-        contacts.addAll(DBHelper.getInstance(getActivity()).getContactMergedF());
+        /*contacts.addAll(DBHelper.getInstance(getActivity()).getContactMergedF());
         IntentFilter intentFilter = new IntentFilter(ACTION_RELOAD_FRAGMENT_MERGED);
 
         getActivity().registerReceiver(reloadFragmentMerged,intentFilter);
         Collections.sort(contacts);
         contactAdapter = new ContactAdapter(view.getContext(), contacts, KEY.MERGER);
         rcvMerged.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        rcvMerged.setAdapter(contactAdapter);
+        rcvMerged.setAdapter(contactAdapter);*/
     }
 
     private BroadcastReceiver reloadFragmentMerged = new BroadcastReceiver() {
