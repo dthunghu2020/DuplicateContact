@@ -1,6 +1,8 @@
 package com.hungdt.test.model;
 
-public class Phone {
+import java.io.Serializable;
+
+public class Phone implements Serializable {
     String idTable;
     String idContact;
     String phone;

@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.hungdt.test.view.MainActivity.contactList;
+
 public class MergedFragment extends Fragment {
     private RecyclerView rcvMerged;
     private ContactAdapter contactAdapter;
@@ -48,21 +50,25 @@ public class MergedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rcvMerged = view.findViewById(R.id.rcvMerged);
         Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
-        /*contacts.addAll(DBHelper.getInstance(getActivity()).getContactMergedF());
-        IntentFilter intentFilter = new IntentFilter(ACTION_RELOAD_FRAGMENT_MERGED);
 
+        IntentFilter intentFilter = new IntentFilter(ACTION_RELOAD_FRAGMENT_MERGED);
         getActivity().registerReceiver(reloadFragmentMerged,intentFilter);
-        Collections.sort(contacts);
+
         contactAdapter = new ContactAdapter(view.getContext(), contacts, KEY.MERGER);
         rcvMerged.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        rcvMerged.setAdapter(contactAdapter);*/
+        rcvMerged.setAdapter(contactAdapter);
     }
 
     private BroadcastReceiver reloadFragmentMerged = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            contacts.addAll(DBHelper.getInstance(getActivity()).getContactMergedF());
-            Collections.sort(contacts);
+            contacts.clear();
+            Collections.sort(contactList);
+            for(int i = 0; i<contactList.size();i++){
+                if(contactList.get(i).getFather().equals(KEY.TRUE)){
+                    contacts.add(contactList.get(i));
+                }
+            }
             contactAdapter.notifyDataSetChanged();
         }
     };

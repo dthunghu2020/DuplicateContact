@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static com.hungdt.test.view.MainActivity.contactList;
+
 public class DeleteActivity extends AppCompatActivity {
     private ImageView imgBack;
     private TextView txtTitleDelete;
@@ -150,11 +152,15 @@ public class DeleteActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         DBHelper.getInstance(DeleteActivity.this).deleteContact(contacts.get(i).getIdContact());
+                        contactList.remove(contacts.get(i));
                     }
                 }
                 contacts.clear();
                 getContactFromDB();
                 deleteAdapter.notifyDataSetChanged();
+                sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
+                sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
+                sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
                 if (MainActivity.ggInterstitialAd != null && MainActivity.ggInterstitialAd.isLoaded())
                     MainActivity.ggInterstitialAd.show();
                 else if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))

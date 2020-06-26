@@ -1,5 +1,6 @@
 package com.hungdt.test.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class Duplicate {

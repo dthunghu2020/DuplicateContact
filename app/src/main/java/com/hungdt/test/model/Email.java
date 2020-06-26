@@ -1,6 +1,8 @@
 package com.hungdt.test.model;
 
-public class Email {
+import java.io.Serializable;
+
+public class Email implements Serializable {
     String idTable;
     String idContact;
     String email;

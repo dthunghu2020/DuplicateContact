@@ -71,9 +71,6 @@ public class ContactFragment extends Fragment {
     private ContactAdapter contactAdapter;
     private RecyclerView rcvContactView;
     private LinearLayout llButtonMerger;
-    private List<Account> accounts = new ArrayList<>();
-    private List<String> phones = new ArrayList<>();
-    private List<String> emails = new ArrayList<>();
     private LoadingDialog loadingDialog;
     public static final String ACTION_UPDATE_LIST_CONTACT= "Update Contact";
 
@@ -125,8 +122,8 @@ public class ContactFragment extends Fragment {
         TextView txtTitleToolBar = dialog.findViewById(R.id.txtTitleToolBar);
         TextView txtBody = dialog.findViewById(R.id.txtBody);
 
-        txtBody.setText("All Contact will be reload!");
         txtTitleToolBar.setText("Reload contact");
+        txtBody.setText("Watch a video to reload all contact!?");
 
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +146,6 @@ public class ContactFragment extends Fragment {
     }
 
     ProgressDialog progressDialog;
-    Dialog morePlaceDialog;
 
     private RewardedVideoAd videoAds;
 
@@ -264,7 +260,6 @@ public class ContactFragment extends Fragment {
             super.onPreExecute();
             loadingDialog = new LoadingDialog(getActivity());
             loadingDialog.startLoadingDialog();
-            Toast.makeText(getContext(), "Loading DB", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -272,6 +267,9 @@ public class ContactFragment extends Fragment {
             contactList.clear();
             if(DBHelper.getInstance(getContext()).getAllContact().size()==0){
                 ((MainActivity)getActivity()).readAccountContacts();
+                getActivity().sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
+                getActivity().sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
+                getActivity().sendBroadcast(new Intent(MergedFragment.ACTION_RELOAD_FRAGMENT_MERGED));
             }else {
                 contactList.addAll(DBHelper.getInstance(getContext()).getAllContact());
                 Collections.sort(contactList);

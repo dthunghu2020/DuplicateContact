@@ -24,7 +24,6 @@ import com.hungdt.test.view.MergerDuplicateActivity;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
-
     List<Contact> contactList ;
     LayoutInflater layoutInflater;
 private String type;
@@ -58,15 +57,15 @@ private String type;
                 switch (type){
                     case KEY.CONTACT:
                         Intent intent = new Intent(layoutInflater.getContext(), DetailContactActivity.class);
-                        intent.putExtra(KEY.ID,contactList.get(position).getIdTable());
+                        intent.putExtra(KEY.ID,contactList.get(position).getIdContact());
                         intent.putExtra(KEY.TYPE,KEY.DETAIL);
                         layoutInflater.getContext().startActivity(intent);
                         break;
                     case KEY.MERGER:
-                        Intent intent2 = new Intent(layoutInflater.getContext(), MergerDuplicateActivity.class);
+                       /* Intent intent2 = new Intent(layoutInflater.getContext(), MergerDuplicateActivity.class);
                         intent2.putExtra(KEY.DUP,contactList.get(position).getMerger());
                         Log.e("123321", "onClick: "+contactList.get(position).getMerger() );
-                        layoutInflater.getContext().startActivity(intent2);
+                        layoutInflater.getContext().startActivity(intent2);*/
                         break;
                 }
 

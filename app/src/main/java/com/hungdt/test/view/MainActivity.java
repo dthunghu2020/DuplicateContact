@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             e.printStackTrace();
         }
         initView();
-        new GetContactFromDB().execute();
+
         //readAccountContacts();
         initInterstitialAd();
         View hView = navigationView.getHeaderView(0);
@@ -224,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 return true;
             }
         });
+        new GetContactFromDB().execute();
     }
 
     private class GetContactFromDB extends AsyncTask<Void, Void, Void> {
@@ -233,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             super.onPreExecute();
             loadingDialog = new LoadingDialog(MainActivity.this);
             loadingDialog.startLoadingDialog();
-            Toast.makeText(MainActivity.this, "Loading DB", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -255,7 +255,8 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             loadingDialog.dismissDialog();
             sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
             sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
-            Toast.makeText(MainActivity.this, "Finish DB", Toast.LENGTH_SHORT).show();
+            sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
+            sendBroadcast(new Intent(MergedFragment.ACTION_RELOAD_FRAGMENT_MERGED));
         }
     }
 
@@ -995,24 +996,30 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             assert cursorAccount != null;
             cursorAccount.close();
             boolean noPhone = false;
-            boolean noName = true;
+            boolean noName = false;
             boolean noEmail = false;
             if (phones.isEmpty()) {
                 noPhone = true;
                 Log.i("TAG", "readAccountContacts: " + name);
             }
-            if (!name.equals("")) {
-                noName = false;
+            if (phones.size() == 1) {
+                if (name.equals(phones.get(0).getPhone())) {
+                    noName = true;
+                }
             }
+            if (name.equals("")) {
+                noName = true;
+            }
+
             if (emails.isEmpty()) {
                 noEmail = true;
             }
 
-            contactList.add(new Contact("0", idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones, accounts, emails));
+            contactList.add(new Contact("0", idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones, accounts, emails));
             if (image != null) {
-                DBHelper.getInstance(this).addContact(idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+                DBHelper.getInstance(this).addContact(idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             } else {
-                DBHelper.getInstance(this).addContact(idContact, name, "image", KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+                DBHelper.getInstance(this).addContact(idContact, name, "image", KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             }
 
             String id = DBHelper.getInstance(this).getLastID();

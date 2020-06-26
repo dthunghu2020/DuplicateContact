@@ -46,8 +46,8 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull DuplicateHolder holder, final int position) {
-        for(int i = 0 ; i<contacts.size();i++){
-            Log.e("111111", "onBindViewHolder: "+contacts.get(i).getIdContact()+contacts.get(i).getName());
+        for (int i = 0; i < contacts.size(); i++) {
+            Log.e("111111", "onBindViewHolder: " + contacts.get(i).getIdContact() + contacts.get(i).getName());
         }
         Glide.with(layoutInflater.getContext())
                 .load(contacts.get(position).getImage())
@@ -61,31 +61,30 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
             if (contacts.get(i).getType() == types.get(position)) {
                 if (name == null) {
                     name = contacts.get(i).getName();
-                    if(contacts.get(i).getPhones().size()==1){
+                    if (contacts.get(i).getPhones().size() == 1) {
                         phone = contacts.get(i).getPhones().get(0).getPhone();
                     }
-                    if(contacts.get(i).getEmails().size()==1){
+                    if (contacts.get(i).getEmails().size() == 1) {
                         email = contacts.get(i).getEmails().get(0).getEmail();
                     }
                     holder.txtContactDup.setText(contacts.get(i).getName());
                 } else {
                     holder.txtContactDup.append("\n" + contacts.get(i).getName());
                 }
-
             }
         }
         switch (type) {
             case "email":
-                for(int i = 0;i<contacts.size();i++){
-                    if(contacts.get(i).getEmails().size()==1){
+                for (int i = 0; i < contacts.size(); i++) {
+                    if (contacts.get(i).getEmails().size() == 1) {
                         email = contacts.get(i).getEmails().get(0).getEmail();
                     }
                 }
                 holder.txtContactMerger.setText("Email: " + email);
                 break;
             case "phone":
-                for(int i = 0;i<contacts.size();i++){
-                    if(contacts.get(i).getPhones().size()==1){
+                for (int i = 0; i < contacts.size(); i++) {
+                    if (contacts.get(i).getPhones().size() == 1) {
                         phone = contacts.get(i).getPhones().get(0).getPhone();
                     }
                 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,15 +19,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.hungdt.test.R;
-import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Duplicate;
-import com.hungdt.test.model.Phone;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.hungdt.test.view.MainActivity.contactList;
 
@@ -63,17 +61,7 @@ public class ManageFragment extends Fragment {
         IntentFilter intentFilter = new IntentFilter(ACTION_RELOAD_FRAGMENT_MANAGE);
         getActivity().registerReceiver(reloadFragmentManage, intentFilter);
 
-        /*phones.addAll(DBHelper.getInstance(getContext()).getDupPhone());
-        emails.addAll(DBHelper.getInstance(getContext()).getDupEmail());
-        names.addAll(DBHelper.getInstance(getContext()).getDupName());*/
 
-       /* loadDubName();
-        loadDubPhone();
-        loadDubEmail();
-        loadDubContact();
-
-        setTextFragment();
-*/
         clDupContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +69,7 @@ public class ManageFragment extends Fragment {
                 intent.putExtra(KEY.DUP, "contact");
                 ArrayList<String> id = new ArrayList<>();
                 for (int i = 0; i < contacts.size(); i++) {
-                    if (contacts.get(i).getType() != 0) {
+                    if (contacts.get(i).getType() != 0 && !id.contains(contacts.get(i).getContactID())) {
                         id.add(contacts.get(i).getContactID());
                     }
                 }
@@ -97,11 +85,10 @@ public class ManageFragment extends Fragment {
                 intent.putExtra(KEY.DUP, "phone");
                 ArrayList<String> id = new ArrayList<>();
                 for (int i = 0; i < phones.size(); i++) {
-                    if (phones.get(i).getType() != 0) {
+                    if (phones.get(i).getType() != 0 && !id.contains(phones.get(i).getContactID())) {
                         id.add(phones.get(i).getContactID());
                     }
                 }
-                Log.e("111111", "onClick: " + id);
 
                 intent.putStringArrayListExtra(KEY.LIST_ID, id);
                 startActivity(intent);
@@ -114,7 +101,7 @@ public class ManageFragment extends Fragment {
                 intent.putExtra(KEY.DUP, "email");
                 ArrayList<String> id = new ArrayList<>();
                 for (int i = 0; i < emails.size(); i++) {
-                    if (emails.get(i).getType() != 0) {
+                    if (emails.get(i).getType() != 0 && !id.contains(emails.get(i).getContactID())) {
                         id.add(emails.get(i).getContactID());
                     }
                 }
@@ -129,7 +116,7 @@ public class ManageFragment extends Fragment {
                 intent.putExtra(KEY.DUP, "name");
                 ArrayList<String> id = new ArrayList<>();
                 for (int i = 0; i < names.size(); i++) {
-                    if (names.get(i).getType() != 0) {
+                    if (names.get(i).getType() != 0 && !id.contains(names.get(i).getContactID())) {
                         id.add(names.get(i).getContactID());
                     }
                 }
@@ -147,7 +134,9 @@ public class ManageFragment extends Fragment {
         txtSimilarName.setText(String.valueOf(similarName));
     }
 
-    private void loadDubContact() {
+
+    private void loadDub() {
+        //Contact
         List<Duplicate> contactList = new ArrayList<>(contacts);
         for (int i = 0; i < contacts.size(); i++) {
             if (!contacts.get(i).getMerger().equals(KEY.FALSE)) {
@@ -179,9 +168,7 @@ public class ManageFragment extends Fragment {
                 dubContact++;
             }
         }
-    }
-
-    private void loadDubName() {
+        //Name
         List<Duplicate> nameList = new ArrayList<>(names);
         for (int i = 0; i < names.size(); i++) {
             if (!names.get(i).getMerger().equals(KEY.FALSE)) {
@@ -210,9 +197,7 @@ public class ManageFragment extends Fragment {
                 similarName++;
             }
         }
-    }
-
-    private void loadDubPhone() {
+        //Phone
         List<Duplicate> phoneList = new ArrayList<>(phones);
         for (int i = 0; i < phones.size(); i++) {
             if (!phones.get(i).getMerger().equals(KEY.FALSE)) {
@@ -241,9 +226,7 @@ public class ManageFragment extends Fragment {
                 dubPhone++;
             }
         }
-    }
-
-    private void loadDubEmail() {
+        //Emails
         List<Duplicate> emailList = new ArrayList<>(emails);
         for (int i = 0; i < emails.size(); i++) {
             if (!emails.get(i).getMerger().equals(KEY.FALSE)) {
@@ -279,38 +262,52 @@ public class ManageFragment extends Fragment {
     private BroadcastReceiver reloadFragmentManage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            for(int i =0 ; i<contactList.size();i++){
-                if(contactList.get(i).getPhones()!=null){
-                    for(int j = 0; j < contactList.get(i).getPhones().size();j++){
-                        if( contactList.get(i).getPhones().get(j).getMerger().equals(KEY.FALSE)){
-                            phones.add(new Duplicate(contactList.get(i).getPhones().get(j).getIdTable(),
-                                    contactList.get(i).getPhones().get(j).getIdContact(),
-                                    contactList.get(i).getPhones().get(j).getPhone(),
-                                    KEY.FALSE,null,null));
-                        }
+            dubContact = 0;
+            dubPhone = 0;
+            dubEmail = 0;
+            similarName = 0;
+            contacts.clear();
+            phones.clear();
+            names.clear();
+            emails.clear();
+            for (int i = 0; i < contactList.size(); i++) {
+                if(contactList.get(i).getFather().equals(KEY.TRUE)){
+                    break;
+                }
+                //addContact
+                if (contactList.get(i).getmContact().equals(KEY.FALSE) && contactList.get(i).gettContact().equals(KEY.FALSE)) {
+                    contacts.add(new Duplicate(contactList.get(i).getIdTable(),
+                            contactList.get(i).getIdContact(),
+                            contactList.get(i).getName(),
+                            KEY.FALSE, contactList.get(i).getPhones(), contactList.get(i).getEmails()));
+                }
+                //addName
+                if (contactList.get(i).getmName().equals(KEY.FALSE) && contactList.get(i).gettName().equals(KEY.FALSE)) {
+                    names.add(new Duplicate(contactList.get(i).getIdTable(),
+                            contactList.get(i).getIdContact(),
+                            contactList.get(i).getName(),
+                            KEY.FALSE, contactList.get(i).getPhones(), contactList.get(i).getEmails()));
+                }
+                //add phone
+                for (int j = 0; j < contactList.get(i).getPhones().size(); j++) {
+                    if (contactList.get(i).getmPhone().equals(KEY.FALSE) && contactList.get(i).gettPhone().equals(KEY.FALSE) && contactList.get(i).getPhones().get(j).getMerger().equals(KEY.FALSE)) {
+                        phones.add(new Duplicate(contactList.get(i).getPhones().get(j).getIdTable(),
+                                contactList.get(i).getPhones().get(j).getIdContact(),
+                                contactList.get(i).getPhones().get(j).getPhone(),
+                                KEY.FALSE, null, null));
                     }
-                    for(int j = 0; j < contactList.get(i).getEmails().size();j++){
-                        if( contactList.get(i).getEmails().get(j).getMerger().equals(KEY.FALSE)){
-                            emails.add(new Duplicate(contactList.get(i).getEmails().get(j).getIdTable(),
-                                    contactList.get(i).getEmails().get(j).getIdContact(),
-                                    contactList.get(i).getEmails().get(j).getEmail(),
-                                    KEY.FALSE,null,null));
-                        }
-                    }
-                    for(int j = 0; j < contactList.size();j++){
-                        if( contactList.get(i).getmName().equals(KEY.FALSE)){
-                            names.add(new Duplicate(contactList.get(i).getIdTable(),
-                                    contactList.get(i).getIdContact(),
-                                    contactList.get(i).getName(),
-                                    KEY.FALSE,contactList.get(i).getPhones(),contactList.get(i).getEmails()));
-                        }
+                }
+                //addEmail
+                for (int j = 0; j < contactList.get(i).getEmails().size(); j++) {
+                    if (contactList.get(i).getmEmail().equals(KEY.FALSE) && contactList.get(i).gettEmail().equals(KEY.FALSE) && contactList.get(i).getEmails().get(j).getMerger().equals(KEY.FALSE)) {
+                        emails.add(new Duplicate(contactList.get(i).getEmails().get(j).getIdTable(),
+                                contactList.get(i).getEmails().get(j).getIdContact(),
+                                contactList.get(i).getEmails().get(j).getEmail(),
+                                KEY.FALSE, null, null));
                     }
                 }
             }
-            loadDubName();
-            loadDubEmail();
-            loadDubPhone();
-            loadDubContact();
+            loadDub();
             setTextFragment();
         }
     };

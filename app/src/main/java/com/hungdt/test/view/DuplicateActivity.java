@@ -56,10 +56,10 @@ public class DuplicateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         initView();
-
-        Ads.initNativeGgFb((LinearLayout) findViewById(R.id.lnNative), this, true);
         imgBtnDelete.setImageResource(R.drawable.merge);
         txtBtnDelete.setText("MERGER CONTACT");
+
+        Ads.initNativeGgFb((LinearLayout) findViewById(R.id.lnNative), this, true);
 
         IntentFilter intentFilter = new IntentFilter(ACTION_FINISH_ACTIVITY);
         registerReceiver(broadCastUpdate,intentFilter);
@@ -71,10 +71,10 @@ public class DuplicateActivity extends AppCompatActivity {
         for (int i = 0; i < idContact.size(); i++) {
             contacts.add(DBHelper.getInstance(this).getDuplicateContact(String.valueOf(idContact.get(i))));
         }
-        //lay duoc contact
+
         setTypeContact();
         Collections.sort(contacts);
-        Log.e("111111", "onCreate:typeList "+typeList );
+        Log.e("111111", "onCreate:typeList "+typeList);
         duplicateAdapter = new DuplicateAdapter(this, contacts, typeList, type);
         rcvList.setLayoutManager(new LinearLayoutManager(this));
         rcvList.setAdapter(duplicateAdapter);

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,6 +49,7 @@ public class DetailContactActivity extends AppCompatActivity {
     private EmailAdapter emailAdapter;
     private AccountAdapter accountAdapter;
     private ConstraintLayout clPhone, clEmail;
+    private CardView cvTitle;
 
     private String type;
 
@@ -79,8 +81,6 @@ public class DetailContactActivity extends AppCompatActivity {
                 .into(imgContact);
 
 
-
-
         accountAdapter = new AccountAdapter(this, contact.getAccounts());
         rcvAccount.setLayoutManager(new LinearLayoutManager(this));
         rcvAccount.setAdapter(accountAdapter);
@@ -104,13 +104,16 @@ public class DetailContactActivity extends AppCompatActivity {
         imgContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI,
-                        String.valueOf(contact.getIdContact()));
-                intent.setData(uri);
-                startActivity(intent);
+                viewContact();
             }
         });
+        cvTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewContact();
+            }
+        });
+
 
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +122,14 @@ public class DetailContactActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void viewContact() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI,
+                String.valueOf(contact.getIdContact()));
+        intent.setData(uri);
+        startActivity(intent);
     }
 
     private void initView() {
@@ -131,5 +142,6 @@ public class DetailContactActivity extends AppCompatActivity {
         txtAccountNumber = findViewById(R.id.txtAccountNumber);
         clPhone = findViewById(R.id.clPhone);
         clEmail = findViewById(R.id.clEmail);
+        cvTitle = findViewById(R.id.cvTitle);
     }
 }
