@@ -9,9 +9,9 @@ public class Duplicate {
     private String name;
     private List<Phone> phone;
     private List<Email> email;
-    private int typeMer;
+    private String typeMer;
 
-    public Duplicate(String idTable, String contactID, String name, String merged, int typeMer, List<Phone> phone, List<Email> email) {
+    public Duplicate(String idTable, String contactID, String name, String merged, String typeMer, List<Phone> phone, List<Email> email) {
         this.idTable = idTable;
         this.contactID = contactID;
         this.merged = merged;
@@ -45,11 +45,11 @@ public class Duplicate {
         this.name = name;
     }
 
-    public int getTypeMer() {
+    public String getTypeMer() {
         return typeMer;
     }
 
-    public void setTypeMer(int typeMer) {
+    public void setTypeMer(String typeMer) {
         this.typeMer = typeMer;
     }
 

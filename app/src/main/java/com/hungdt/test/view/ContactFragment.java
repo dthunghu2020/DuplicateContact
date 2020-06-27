@@ -123,7 +123,7 @@ public class ContactFragment extends Fragment {
         TextView txtBody = dialog.findViewById(R.id.txtBody);
 
         txtTitleToolBar.setText("Reload contact");
-        txtBody.setText("Watch a video to reload all contact!?");
+        txtBody.setText("Watch a video to reload all contact?");
 
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override

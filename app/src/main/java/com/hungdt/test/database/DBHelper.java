@@ -744,31 +744,46 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TYPE_CONTACT, tC);
         values.put(COLUMN_TYPE_NAME, tN);
-        values.put(COLUMN_TYPE_PHONE, tP);
-        values.put(COLUMN_TYPE_EMAIL, tE);
         values.put(COLUMN_MERGER_CONTACT, mC);
         values.put(COLUMN_MERGER_NAME, mN);
         db.update(TABLE_CONTACT, values, COLUMN_CONTACT_ID + "='" + idContact + "'", null);
         db.close();
         if (mP.equals(KEY.TRUE)) {
-            updatePhone(idContact);
+            updateContactPhone(idContact, tP);
         }
         if (mE.equals(KEY.TRUE)) {
-            updateEmail(idContact);
+            updateContactEmail(idContact, tE);
         }
     }
 
-    public void updatePhone(String idContact) {
+    public void updateContactPhone(String idContact, String typeMerger) {
         SQLiteDatabase db = instance.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(COLUMN_TYPE_PHONE, typeMerger);
         values.put(COLUMN_PHONE_MERGED, KEY.TRUE);
         db.update(TABLE_CONTACT_PHONE, values, COLUMN_ID_CONTACT_PHONE + "='" + idContact + "'", null);
         db.close();
     }
-
-    public void updateEmail(String idContact) {
+    public void updatePhone(String phoneNumber,String typeMerger) {
         SQLiteDatabase db = instance.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(COLUMN_TYPE_PHONE, typeMerger);
+        values.put(COLUMN_PHONE_MERGED, KEY.TRUE);
+        db.update(TABLE_CONTACT_PHONE, values, COLUMN_PHONE_NAME + "='" + phoneNumber + "'", null);
+        db.close();
+    }
+    public void updateEmail(String mail,String typeMerger) {
+        SQLiteDatabase db = instance.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TYPE_EMAIL, typeMerger);
+        values.put(COLUMN_EMAIL_MERGED, KEY.TRUE);
+        db.update(TABLE_CONTACT_EMAIL, values, COLUMN_EMAIL_NAME+ "='" + mail + "'", null);
+        db.close();
+    }
+    public void updateContactEmail(String idContact, String typeMerger) {
+        SQLiteDatabase db = instance.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TYPE_PHONE, typeMerger);
         values.put(COLUMN_EMAIL_MERGED, KEY.TRUE);
         db.update(TABLE_CONTACT_EMAIL, values, COLUMN_ID_CONTACT_EMAIL + "='" + idContact + "'", null);
         db.close();
@@ -798,6 +813,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACT_PHONE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACT_EMAIL);
     }
+
 
 
 }

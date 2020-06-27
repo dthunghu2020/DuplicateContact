@@ -66,13 +66,9 @@ public class DeleteActivity extends AppCompatActivity {
         }else {
             switch (type) {
                 case "noName":
-                   txtEmpty.setText("No contacts have't names");
-                    break;
                 case "noPhone":
-                    txtEmpty.setText("No contacts have't phone number");
-                    break;
                 case "noEmail":
-                    txtEmpty.setText("No contacts have't emails");
+                    txtEmpty.setText("No Contacts");
                     break;
                 default:
                     break;
@@ -131,15 +127,15 @@ public class DeleteActivity extends AppCompatActivity {
         assert type != null;
         switch (type) {
             case "noName":
-                txtTitleDelete.setText("Contact have no name");
+                txtTitleDelete.setText("No Name");
                 contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNoName());
                 break;
             case "noPhone":
-                txtTitleDelete.setText("Contact have no phone");
+                txtTitleDelete.setText("No Phone");
                 contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNoPhone());
                 break;
             case "noEmail":
-                txtTitleDelete.setText("Contact have no emails");
+                txtTitleDelete.setText("No Emails");
                 contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNoEmail());
                 break;
             default:

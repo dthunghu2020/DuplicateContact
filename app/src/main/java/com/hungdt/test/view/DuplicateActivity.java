@@ -22,6 +22,7 @@ import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
 import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Contact;
+import com.hungdt.test.model.ContactBum;
 import com.hungdt.test.model.Duplicate;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
@@ -43,24 +44,24 @@ public class DuplicateActivity extends AppCompatActivity {
     private CheckBox cbAll;
     private LinearLayout llDelete, llEmpty;
     private RecyclerView rcvList;
-    private List<Contact> listContact = new ArrayList<>();
+    private List<Contact> listContacts = new ArrayList<>();
     private List<Duplicate> names = new ArrayList<>();
     private List<Duplicate> phones = new ArrayList<>();
     private List<Duplicate> emails = new ArrayList<>();
     private List<Duplicate> contacts = new ArrayList<>();
+    private List<ContactBum> contactBums = new ArrayList<>();
     private DuplicateAdapter duplicateAdapter;
     private String type;
     private List<String> idContact = new ArrayList<>();
-    private ArrayList<Integer> typeList = new ArrayList<>();
+    private ArrayList<String> typeList = new ArrayList<>();
     public static final String ACTION_FINISH_ACTIVITY = "finishDuplicateActivity";
-    private Random rd;
+    private Random rd = new Random();
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
         initView();
         imgBtnDelete.setImageResource(R.drawable.merge);
         txtBtnDelete.setText("MERGER CONTACT");
@@ -75,69 +76,149 @@ public class DuplicateActivity extends AppCompatActivity {
         idContact.addAll(Objects.requireNonNull(intent.getStringArrayListExtra(KEY.LIST_ID)));
         Log.e("111111", "onCreate: dup " + type + idContact);
         for (int i = 0; i < idContact.size(); i++) {
-            listContact.add(DBHelper.getInstance(this).getDuplicateContact(String.valueOf(idContact.get(i))));
+            listContacts.add(DBHelper.getInstance(this).getDuplicateContact(String.valueOf(idContact.get(i))));
         }
-        for (int i = 0; i < contactList.size(); i++) {
-            if (contactList.get(i).getFather().equals(KEY.TRUE)) {
-                break;
-            }
-            //addContact
-            if (contactList.get(i).getmContact().equals(KEY.FALSE)) {
-                contacts.add(new Duplicate(contactList.get(i).getIdTable(),
-                        contactList.get(i).getIdContact(),
-                        contactList.get(i).getName(),
-                        KEY.FALSE, 0,
-                        contactList.get(i).getPhones(), contactList.get(i).getEmails()));
-            }
-            //addName
-            if (contactList.get(i).getmName().equals(KEY.FALSE)) {
-                names.add(new Duplicate(contactList.get(i).getIdTable(),
-                        contactList.get(i).getIdContact(),
-                        contactList.get(i).getName(),
-                        KEY.FALSE, 0, null, null));
-            }
-            //add phone
-            for (int j = 0; j < contactList.get(i).getPhones().size(); j++) {
-                if (contactList.get(i).getPhones().get(j).getmPhone().equals(KEY.FALSE)) {
-                    phones.add(new Duplicate(contactList.get(i).getPhones().get(j).getIdTable(),
-                            contactList.get(i).getPhones().get(j).getIdContact(),
-                            contactList.get(i).getPhones().get(j).getPhone(),
-                            KEY.FALSE, 0, null, null));
-                }
-            }
-            //addEmail
-            for (int j = 0; j < contactList.get(i).getEmails().size(); j++) {
-                if (contactList.get(i).getEmails().get(j).getmEmail().equals(KEY.FALSE)) {
-                    emails.add(new Duplicate(contactList.get(i).getEmails().get(j).getIdTable(),
-                            contactList.get(i).getEmails().get(j).getIdContact(),
-                            contactList.get(i).getEmails().get(j).getEmail(),
-                            KEY.FALSE, 0, null, null));
-                }
-            }
-
-        }
-        rd = new Random();
-        setTypeContact();
-        if (listContact.size() != 0) {
+        if (listContacts.size() != 0) {
             llEmpty.setVisibility(View.GONE);
         } else {
             txtEmpty.setText("No duplicate " + type + " yet");
         }
-        switch (type){
+
+        switch (type) {
             case "contact":
-                duplicateAdapter = new DuplicateAdapter(this, contacts, typeList, type);
+                txtTitleDelete.setText("Duplicate Contact");
+                for (int i = 0; i < listContacts.size(); i++) {
+                    contactBums.add(new ContactBum(listContacts.get(i).getIdContact(),
+                            listContacts.get(i).getName(),
+                            listContacts.get(i).getName(),
+                            listContacts.get(i).getPhones(),
+                            listContacts.get(i).getEmails()));
+                }
+                ArrayList<String> bumC = new ArrayList<>();
+                for (int i = 0; i < contactBums.size(); i++) {
+                    for (int j = 0; j < contactBums.size(); j++) {
+                        if (i == j) {
+                            break;
+                        }
+                        if (contactBums.get(i).getName().equalsIgnoreCase(contactBums.get(j).getName())
+                                && contactBums.get(i).getPhones().equals(contactBums.get(j).getPhones())
+                                && contactBums.get(i).getEmails().equals(contactBums.get(j).getEmails())) {
+                            if (!bumC.contains(contactBums.get(i).getName())) {
+                                bumC.add(contactBums.get(i).getName());
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < contactBums.size(); i++) {
+                    for (int j = 0; j < bumC.size(); j++) {
+                        if (contactBums.get(i).getName().equals(bumC.get(j))) {
+                            contactBums.get(i).setBum(bumC.get(j));
+                        }
+                    }
+                }
                 break;
             case "name":
-                duplicateAdapter = new DuplicateAdapter(this,names , typeList, type);
+                txtTitleDelete.setText("Duplicate Name");
+                for (int i = 0; i < listContacts.size(); i++) {
+                    contactBums.add(new ContactBum(listContacts.get(i).getIdContact(),
+                            listContacts.get(i).getName(),
+                            listContacts.get(i).getName(),
+                            null,
+                            null));
+
+                }
+                ArrayList<String> bumN = new ArrayList<>();
+                for (int i = 0; i < contactBums.size(); i++) {
+                    for (int j = 0; j < contactBums.size(); j++) {
+                        if (i == j) {
+                            break;
+                        }
+                        if (contactBums.get(i).getName().equalsIgnoreCase(contactBums.get(j).getName())) {
+                            if (!bumN.contains(contactBums.get(i).getName())) {
+                                bumN.add(contactBums.get(i).getName());
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < contactBums.size(); i++) {
+                    for (int j = 0; j < bumN.size(); j++) {
+                        if (contactBums.get(i).getName().equalsIgnoreCase(bumN.get(j))) {
+                            contactBums.get(i).setBum(bumN.get(j));
+                        }
+                    }
+                }
                 break;
             case "phone":
-                duplicateAdapter = new DuplicateAdapter(this,phones , typeList, type);
+                txtTitleDelete.setText("Duplicate Phone");
+                for (int i = 0; i < listContacts.size(); i++) {
+                    for (int j = 0; j < listContacts.get(i).getPhones().size(); j++) {
+                        contactBums.add(new ContactBum(listContacts.get(i).getIdContact(),
+                                listContacts.get(i).getName(),
+                                listContacts.get(i).getPhones().get(j).getPhone(),
+                                null,
+                                null));
+                    }
+                }
+                ArrayList<String> bumP = new ArrayList<>();
+                for (int i = 0; i < contactBums.size(); i++) {
+                    for (int j = 0; j < contactBums.size(); j++) {
+                        if (i == j) {
+                            break;
+                        }
+                        if (contactBums.get(i).getName().equals(contactBums.get(j).getName())) {
+                            if (!bumP.contains(contactBums.get(i).getName())) {
+                                bumP.add(contactBums.get(i).getName());
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < contactBums.size(); i++) {
+                    for (int j = 0; j < bumP.size(); j++) {
+                        if (contactBums.get(i).getName().equals(bumP.get(j))) {
+                            contactBums.get(i).setBum(bumP.get(j));
+                        }
+                    }
+                }
                 break;
             case "email":
-                duplicateAdapter = new DuplicateAdapter(this,emails , typeList, type);
+                txtTitleDelete.setText("Duplicate Email");
+                for (int i = 0; i < listContacts.size(); i++) {
+                    for (int j = 0; j < listContacts.get(i).getEmails().size(); j++) {
+                        contactBums.add(new ContactBum(listContacts.get(i).getIdContact(),
+                                listContacts.get(i).getName(),
+                                listContacts.get(i).getEmails().get(j).getEmail(),
+                                null,
+                                null));
+                    }
+                }
+                ArrayList<String> bumE = new ArrayList<>();
+                for (int i = 0; i < contactBums.size(); i++) {
+                    for (int j = 0; j < contactBums.size(); j++) {
+                        if (i == j) {
+                            break;
+                        }
+                        if (contactBums.get(i).getName().equals(contactBums.get(j).getName())) {
+                            if (!bumE.contains(contactBums.get(i).getName())) {
+                                bumE.add(contactBums.get(i).getName());
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < contactBums.size(); i++) {
+                    for (int j = 0; j < bumE.size(); j++) {
+                        if (contactBums.get(i).getName().equals(bumE.get(j))) {
+                            contactBums.get(i).setBum(bumE.get(j));
+                        }
+                    }
+                }
                 break;
+        }
+        for (int i = 0; i < contactBums.size(); i++) {
+            if (!typeList.contains(contactBums.get(i).getBum())) {
+                typeList.add(contactBums.get(i).getBum());
             }
-
+        }
+        duplicateAdapter = new DuplicateAdapter(this, contactBums, typeList, type);
         rcvList.setLayoutManager(new LinearLayoutManager(this));
         rcvList.setAdapter(duplicateAdapter);
         imgBack.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +251,7 @@ public class DuplicateActivity extends AppCompatActivity {
     private void setTypeContact() {
         switch (type) {
             case "contact":
-                txtTitleDelete.setText("Duplicate Contact");
+
                 List<Duplicate> contactList = new ArrayList<>(contacts);
                 for (int i = 0; i < contacts.size(); i++) {
                     if (!contacts.get(i).getMerged().equals(KEY.FALSE)) {
@@ -181,12 +262,12 @@ public class DuplicateActivity extends AppCompatActivity {
                             if (contacts.get(i).getName().equalsIgnoreCase(contactList.get(j).getName()) &&
                                     contacts.get(i).getPhone().equals(contacts.get(j).getPhone()) &&
                                     contacts.get(i).getEmail().equals(contacts.get(j).getEmail())) {
-                                if (contacts.get(j).getTypeMer() == 0) {
-                                    contacts.get(i).setTypeMer(rd.nextInt());
+                                if (!contacts.get(j).getTypeMer().isEmpty()) {
+                                    contacts.get(i).setTypeMer(contacts.get(j).getTypeMer());
                                     break;
                                 }
-                                if (contacts.get(j).getTypeMer() != 0) {
-                                    contacts.get(i).setTypeMer(contacts.get(j).getTypeMer());
+                                if (contacts.get(j).getTypeMer().isEmpty()) {
+                                    contacts.get(i).setTypeMer(contacts.get(i).getName());
                                     break;
                                 }
                             }
@@ -206,17 +287,20 @@ public class DuplicateActivity extends AppCompatActivity {
                         break;
                     }
                     for (int j = 0; j < nameList.size(); j++) {
+                        //khác vị trí và khác id
                         if (i != j && !names.get(i).getContactID().equals(nameList.get(j).getContactID())) {
-                            if (names.get(i).getName().equalsIgnoreCase(nameList.get(j).getName())) {
-                                Log.e("123123", "loadDub: " + names.get(i).getName() + nameList.get(j).getName());
-                                if (names.get(j).getTypeMer() != 0) {
+                            //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
+                            //trùng sdt
+                            if (names.get(i).getName().equals(nameList.get(j).getName())) {
+                                Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
+                                if (!names.get(j).getTypeMer().isEmpty()) {
                                     names.get(i).setTypeMer(names.get(j).getTypeMer());
-                                    Log.e("123123", "names(i): " + names.get(i).getTypeMer());
+                                    Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
                                     break;
                                 }
-                                if (names.get(j).getTypeMer() == 0) {
-                                    names.get(i).setTypeMer(rd.nextInt());
-                                    Log.e("123123", "names(i): " + names.get(i).getTypeMer());
+                                if (names.get(j).getTypeMer().isEmpty()) {
+                                    names.get(i).setTypeMer(names.get(i).getName());
+                                    Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
                                     break;
                                 }
                             }
@@ -230,7 +314,6 @@ public class DuplicateActivity extends AppCompatActivity {
                 }
                 break;
             case "phone":
-                txtTitleDelete.setText("Duplicate Phone");
                 List<Duplicate> phoneList = new ArrayList<>(phones);
                 for (int i = 0; i < phones.size(); i++) {
                     if (!phones.get(i).getMerged().equals(KEY.FALSE)) {
@@ -243,13 +326,13 @@ public class DuplicateActivity extends AppCompatActivity {
                             //trùng sdt
                             if (phones.get(i).getName().equals(phoneList.get(j).getName())) {
                                 Log.e("123123", "loadDub: phone i " + phones.get(i).getTypeMer());
-                                if (phones.get(j).getTypeMer() != 0) {
+                                if (!phones.get(j).getTypeMer().isEmpty()) {
                                     phones.get(i).setTypeMer(phones.get(j).getTypeMer());
                                     Log.e("123123", "loadDub: phone i " + phones.get(i).getTypeMer());
                                     break;
                                 }
-                                if (phones.get(j).getTypeMer() == 0) {
-                                    phones.get(i).setTypeMer(rd.nextInt());
+                                if (phones.get(j).getTypeMer().isEmpty()) {
+                                    phones.get(i).setTypeMer(phones.get(i).getName());
                                     Log.e("123123", "loadDub: phone i " + phones.get(i).getTypeMer());
                                     break;
                                 }
@@ -264,21 +347,24 @@ public class DuplicateActivity extends AppCompatActivity {
                 }
                 break;
             case "email":
-                txtTitleDelete.setText("Duplicate Email");
                 List<Duplicate> emailList = new ArrayList<>(emails);
                 for (int i = 0; i < emails.size(); i++) {
                     if (!emails.get(i).getMerged().equals(KEY.FALSE)) {
                         break;
                     }
                     for (int j = 0; j < emailList.size(); j++) {
+                        //khác vị trí và khác id
                         if (i != j && !emails.get(i).getContactID().equals(emailList.get(j).getContactID())) {
+                            //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
+                            //trùng sdt
                             if (emails.get(i).getName().equals(emailList.get(j).getName())) {
-                                if (emails.get(j).getTypeMer() != 0) {
+                                if (!emails.get(j).getTypeMer().isEmpty()) {
                                     emails.get(i).setTypeMer(emails.get(j).getTypeMer());
                                     break;
                                 }
-                                if (emails.get(j).getTypeMer() == 0) {
-                                    emails.get(i).setTypeMer(rd.nextInt());
+                                if (emails.get(j).getTypeMer().isEmpty()) {
+                                    emails.get(i).setTypeMer(emails.get(i).getName());
+                                    Log.e("123123", "loadDub: phone i " + emails.get(i).getTypeMer());
                                     break;
                                 }
                             }
