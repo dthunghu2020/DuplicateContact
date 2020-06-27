@@ -3,16 +3,18 @@ package com.hungdt.test.model;
 import java.io.Serializable;
 
 public class Email implements Serializable {
-    String idTable;
-    String idContact;
-    String email;
-    String merger;
+    private String idTable;
+    private String idContact;
+    private String email;
+    private String typeMerger;
+    private String mEmail;
 
-    public Email(String idTable, String idContact, String email, String merger) {
+    public Email(String idTable, String idContact, String email, String typeMerger, String mEmail) {
         this.idTable = idTable;
         this.idContact = idContact;
         this.email = email;
-        this.merger = merger;
+        this.typeMerger = typeMerger;
+        this.mEmail = mEmail;
     }
 
     public String getIdTable() {
@@ -39,12 +41,20 @@ public class Email implements Serializable {
         this.email = email;
     }
 
-    public String getMerger() {
-        return merger;
+    public String getmEmail() {
+        return mEmail;
     }
 
-    public void setMerger(String merger) {
-        this.merger = merger;
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
+
+    public String getTypeMerger() {
+        return typeMerger;
+    }
+
+    public void setTypeMerger(String typeMerger) {
+        this.typeMerger = typeMerger;
     }
 }
 

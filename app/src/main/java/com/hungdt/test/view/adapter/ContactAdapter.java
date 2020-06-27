@@ -67,7 +67,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactH
                         Intent intent2 = new Intent(layoutInflater.getContext(), MergerDuplicateActivity.class);
                         Bundle bundle = new Bundle();
                         intent2.putExtra(KEY.DUP, KEY.MERGER);
-                        bundle.putSerializable(KEY.CONTACT,contactList.get(position));
+                        bundle.putSerializable(KEY.CONTACT, contactList.get(position));
                         intent2.putExtras(bundle);
                         layoutInflater.getContext().startActivity(intent2);
                         break;

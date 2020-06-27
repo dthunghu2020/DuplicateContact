@@ -54,7 +54,7 @@
             android:layout_marginBottom="@dimen/_5sdp"
             android:layout_weight="1"
             android:background="@drawable/shape_button"
-            android:text="No,Thanks"
+            android:text="No, Thanks"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </LinearLayout>

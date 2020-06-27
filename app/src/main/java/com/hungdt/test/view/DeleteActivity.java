@@ -40,9 +40,9 @@ import static com.hungdt.test.view.MainActivity.contactList;
 
 public class DeleteActivity extends AppCompatActivity {
     private ImageView imgBack;
-    private TextView txtTitleDelete;
+    private TextView txtTitleDelete,txtEmpty;
     private CheckBox cbAll;
-    private LinearLayout llDelete, llButtonDelete;
+    private LinearLayout llDelete, llButtonDelete,llEmpty;
     private RecyclerView rcvDelete;
     private List<Contact> contacts = new ArrayList<>();
     private DeleteAdapter deleteAdapter;
@@ -61,6 +61,23 @@ public class DeleteActivity extends AppCompatActivity {
         type = intent.getStringExtra(KEY.DELETE);
         getContactFromDB();
 
+        if(contacts.size()!=0){
+            llEmpty.setVisibility(View.GONE);
+        }else {
+            switch (type) {
+                case "noName":
+                   txtEmpty.setText("No contacts have't names");
+                    break;
+                case "noPhone":
+                    txtEmpty.setText("No contacts have't phone number");
+                    break;
+                case "noEmail":
+                    txtEmpty.setText("No contacts have't emails");
+                    break;
+                default:
+                    break;
+            }
+        }
         deleteAdapter = new DeleteAdapter(this, contacts);
         rcvDelete.setLayoutManager(new LinearLayoutManager(this));
         rcvDelete.setAdapter(deleteAdapter);
@@ -189,6 +206,8 @@ public class DeleteActivity extends AppCompatActivity {
         llDelete = findViewById(R.id.llDelete);
         llButtonDelete = findViewById(R.id.llButtonDelete);
         rcvDelete = findViewById(R.id.rcvList);
+        llEmpty = findViewById(R.id.llEmpty);
+        txtEmpty = findViewById(R.id.txtEmpty);
     }
 
     private void setDefaultTick() {

@@ -239,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         @Override
         protected Void doInBackground(Void... voids) {
             contactList.clear();
+            //readAccountContactsxx();
             if (DBHelper.getInstance(MainActivity.this).getAllContact().size() == 0) {
                 readAccountContacts();
             } else {
@@ -434,7 +435,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         Button btnBack = view.findViewById(R.id.btnBack);
         TextView txtTitle = view.findViewById(R.id.txtTitle);
         TextView txtBody = view.findViewById(R.id.txtBody);
-        txtBody.setText("Would you like to see video ads\nto get maximum free 10 gems?");
+        txtBody.setText("Would you like to see a video ads\nto get maximum free 10 gem ?");
         txtTitle.setText("Daily Reward!");
 
 
@@ -983,9 +984,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                         String data1 = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA1));
                         String mineType = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE));
                         if (mineType.equals("vnd.android.cursor.item/phone_v2")) {
-                            phones.add(new Phone("0", idContact, data1, KEY.FALSE));
+                            phones.add(new Phone("0", idContact, data1, KEY.FALSE, KEY.FALSE));
                         } else if (mineType.equals("vnd.android.cursor.item/email_v2")) {
-                            emails.add(new Email("0", idContact, data1, KEY.FALSE));
+                            emails.add(new Email("0", idContact, data1, KEY.FALSE, KEY.FALSE));
                         }
                     }
 
@@ -1015,18 +1016,18 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 noEmail = true;
             }
 
-            contactList.add(new Contact("0", idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones, accounts, emails));
+            contactList.add(new Contact("0", idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones, accounts, emails));
             if (image != null) {
-                DBHelper.getInstance(this).addContact(idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+                DBHelper.getInstance(this).addContact(idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             } else {
-                DBHelper.getInstance(this).addContact(idContact, name, "image", KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+                DBHelper.getInstance(this).addContact(idContact, name, "image", KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             }
 
             String id = DBHelper.getInstance(this).getLastID();
             String idContact = DBHelper.getInstance(this).getLastContactID(id);
             if (!noPhone) {
                 for (int i = 0; i < phones.size(); i++) {
-                    DBHelper.getInstance(this).addPhone(idContact, KEY.FALSE, phones.get(i).getPhone());
+                    DBHelper.getInstance(this).addPhone(idContact, phones.get(i).getPhone(), KEY.FALSE, KEY.FALSE);
                 }
             }
             if (!accounts.isEmpty()) {
@@ -1036,7 +1037,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             }
             if (!noEmail) {
                 for (int i = 0; i < emails.size(); i++) {
-                    DBHelper.getInstance(this).addEmail(idContact, KEY.FALSE, emails.get(i).getEmail());
+                    DBHelper.getInstance(this).addEmail(idContact, emails.get(i).getEmail(), KEY.FALSE, KEY.FALSE);
                 }
             }
             image = null;
@@ -1052,7 +1053,8 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         contactList.addAll(DBHelper.getInstance(this).getAllContact());
         Collections.sort(contactList);
     }
-    /*private void readAccountContacts() {
+
+    private void readAccountContactsxx() {
         String[] projections = {
                 ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.DISPLAY_NAME
@@ -1109,7 +1111,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         }
         assert cursorContact != null;
         cursorContact.close();
-    }*/
+    }
 
     private void openExitAppDialog() {
         final BottomSheetDialog exitDialog = new BottomSheetDialog(this);

@@ -11,6 +11,7 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:src="@drawable/ic_code"
             android:id="@+id/imgContact"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
@@ -28,7 +29,6 @@
             android:layout_marginEnd="@dimen/_5sdp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/cbDelete"
             app:layout_constraintStart_toEndOf="@+id/imgContact"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:text="NAME"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 

@@ -17,14 +17,18 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
 import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Contact;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
+import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hungdt.test.view.MainActivity.showInterstitial;
 
 public class DeleteFragment extends Fragment {
     private ConstraintLayout clNoName,clNoPhone,clNoEmail;
@@ -52,6 +56,7 @@ public class DeleteFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"noName");
                 startActivity(intent);
+                showInter();
             }
         });
         clNoPhone.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +65,7 @@ public class DeleteFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"noPhone");
                 startActivity(intent);
+                showInter();
             }
         });
         clNoEmail.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +74,7 @@ public class DeleteFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), DeleteActivity.class);
                 intent.putExtra(KEY.DELETE,"noEmail");
                 startActivity(intent);
+                showInter();
             }
         });
 
@@ -91,7 +98,14 @@ public class DeleteFragment extends Fragment {
         txtNoPhone = view.findViewById(R.id.txtNoPhone);
         txtNoEmail = view.findViewById(R.id.txtNoEmail);
     }
-
+    private void showInter() {
+        if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
+            if (!showInterstitial()) {
+                if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))
+                    UnityAds.show(getActivity(), getString(R.string.INTER_UNI));
+            }
+        }
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 
-public class Contact  implements Serializable, Comparable<Contact> {
+public class Contact implements Serializable, Comparable<Contact> {
 
     private String idTable;
     private String idContact;
@@ -12,12 +12,12 @@ public class Contact  implements Serializable, Comparable<Contact> {
     private String image;
     private String tContact;
     private String tName;
-    private String tPhone;
-    private String tEmail;
+    /*private String tPhone;
+    private String tEmail;*/
     private String mContact;
     private String mName;
-    private String mPhone;
-    private String mEmail;
+    /*private String mPhone;
+    private String mEmail;*/
     private String father;
     private String deleted;
     private List<Phone> phones;
@@ -26,24 +26,20 @@ public class Contact  implements Serializable, Comparable<Contact> {
     private boolean isTicked = false;
     private int type = 0;
 
-    public Contact(String idTable, String idContact, String name, String image,String tContact,String tName,String tPhone,String tEmail,String mContact,String mName,String mPhone,String mEmail,String father,String deleted, List<Phone> phones, List<Account> accounts, List<Email> emails) {
+    public Contact(String idTable, String idContact, String name, String image, String tContact, String tName, String mContact, String mName, String father, String deleted, List<Phone> phones, List<Account> accounts, List<Email> emails) {
         this.idTable = idTable;
         this.idContact = idContact;
-        this.image = image;
         this.name = name;
-        this.deleted = deleted;
-        this.mName = mName;
-        this.mEmail = mEmail;
-        this.mPhone = mPhone;
+        this.image = image;
         this.tContact = tContact;
         this.tName = tName;
-        this.tPhone = tPhone;
-        this.tEmail = tEmail;
+        this.mContact = mContact;
+        this.mName = mName;
         this.father = father;
+        this.deleted = deleted;
         this.phones = phones;
         this.accounts = accounts;
         this.emails = emails;
-        this.mContact = mContact;
     }
 
     public String getIdTable() {
@@ -142,22 +138,6 @@ public class Contact  implements Serializable, Comparable<Contact> {
         this.tName = tName;
     }
 
-    public String gettPhone() {
-        return tPhone;
-    }
-
-    public void settPhone(String tPhone) {
-        this.tPhone = tPhone;
-    }
-
-    public String gettEmail() {
-        return tEmail;
-    }
-
-    public void settEmail(String tEmail) {
-        this.tEmail = tEmail;
-    }
-
     public String getFather() {
         return father;
     }
@@ -174,21 +154,6 @@ public class Contact  implements Serializable, Comparable<Contact> {
         this.mName = mName;
     }
 
-    public String getmPhone() {
-        return mPhone;
-    }
-
-    public void setmPhone(String mPhone) {
-        this.mPhone = mPhone;
-    }
-
-    public String getmEmail() {
-        return mEmail;
-    }
-
-    public void setmEmail(String mEmail) {
-        this.mEmail = mEmail;
-    }
 
     public String getmContact() {
         return mContact;

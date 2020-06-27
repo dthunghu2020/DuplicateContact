@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
         android:gravity="center_horizontal"
-        android:text="Your Contact selected will be deleted from PhoneBook!?\nAre you Sure?"
+        android:text="Contacts will be deleted from\nyour phone. Are you sure?			"
         android:textSize="16sp" />
 
     <LinearLayout

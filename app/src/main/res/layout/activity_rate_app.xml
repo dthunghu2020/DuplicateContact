@@ -96,7 +96,7 @@
                     android:maxWidth="350dp"
                     android:minWidth="320dp"
                     android:padding="5dp"
-                    android:text=" RATE US"
+                    android:text="DO YOU LOVE THIS APP"
                     android:textAllCaps="true"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -111,7 +111,7 @@
                     android:maxWidth="350dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:text="Hi there! Do you like our app?"
+                    android:text="Let me know your satisfaction"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 

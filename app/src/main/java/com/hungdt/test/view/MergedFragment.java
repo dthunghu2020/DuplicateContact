@@ -32,6 +32,7 @@ import static com.hungdt.test.view.MainActivity.contactList;
 
 public class MergedFragment extends Fragment {
     private RecyclerView rcvMerged;
+    private LinearLayout llEmpty;
     private ContactAdapter contactAdapter;
     private List<Contact> contacts = new ArrayList<>();
     public static final String ACTION_RELOAD_FRAGMENT_MERGED="reloadMergedFragment";
@@ -49,10 +50,12 @@ public class MergedFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rcvMerged = view.findViewById(R.id.rcvMerged);
+        llEmpty = view.findViewById(R.id.llEmpty);
         Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
 
         IntentFilter intentFilter = new IntentFilter(ACTION_RELOAD_FRAGMENT_MERGED);
         getActivity().registerReceiver(reloadFragmentMerged,intentFilter);
+
 
         contactAdapter = new ContactAdapter(view.getContext(), contacts, KEY.MERGER);
         rcvMerged.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -68,6 +71,9 @@ public class MergedFragment extends Fragment {
                 if(contactList.get(i).getFather().equals(KEY.TRUE)){
                     contacts.add(contactList.get(i));
                 }
+            }
+            if(contacts.size()!=0){
+                llEmpty.setVisibility(View.GONE);
             }
             contactAdapter.notifyDataSetChanged();
         }

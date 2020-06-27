@@ -56,15 +56,16 @@ public class MergerDuplicateActivity extends AppCompatActivity {
     private ConstraintLayout clContactMerger;
     private DuplicateContactAdapter dupContactAdapter;
     private LinearLayout llButtonMerger;
+    int number;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Random rd = new Random();
-        int number = rd.nextInt();
+        number = rd.nextInt();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_merger_duplicate);
 
-        rcvDupContact = findViewById(R.id.rcvDupContact);
+        /*rcvDupContact = findViewById(R.id.rcvDupContact);
         imgContact = findViewById(R.id.imgContact);
         imgBack = findViewById(R.id.imgBack);
         txtContactName = findViewById(R.id.txtContactName);
@@ -122,36 +123,44 @@ public class MergerDuplicateActivity extends AppCompatActivity {
         } else {
             contactMerger = (Contact) intent.getSerializableExtra(KEY.CONTACT);
             txtContactName.setText(contactMerger.getName());
-            if(contactMerger.getmContact().equals(KEY.TRUE)){
+            if (contactMerger.getmContact().equals(KEY.TRUE)) {
                 for (int i = 0; i < contactList.size(); i++) {
-                    if (contactList.get(i).getmContact().equals(KEY.TRUE)&&contactList.get(i).gettContact().equals(contactMerger.gettContact())) {
-                        contacts.add(contactList.get(i));
+                    if (!contactMerger.getIdContact().equals(contactList.get(i).getIdContact())) {
+                        if (contactList.get(i).getmContact().equals(KEY.TRUE) && contactList.get(i).gettContact().equals(contactMerger.gettContact())) {
+                            contacts.add(contactList.get(i));
+                        }
                     }
                 }
             }
-            if(contactMerger.getmName().equals(KEY.TRUE)){
+            if (contactMerger.getmName().equals(KEY.TRUE)) {
                 for (int i = 0; i < contactList.size(); i++) {
-                    if (contactList.get(i).getmName().equals(KEY.TRUE)&&contactList.get(i).gettName().equals(contactMerger.gettName())) {
-                        contacts.add(contactList.get(i));
+                    if (!contactMerger.getIdContact().equals(contactList.get(i).getIdContact())) {
+                        if (contactList.get(i).getmName().equals(KEY.TRUE) && contactList.get(i).gettName().equals(contactMerger.gettName())) {
+                            contacts.add(contactList.get(i));
+                        }
                     }
+
                 }
             }
-            if(contactMerger.getmPhone().equals(KEY.TRUE)){
+            if (contactMerger.getmPhone().equals(KEY.TRUE)) {
                 for (int i = 0; i < contactList.size(); i++) {
-                    if (contactList.get(i).getmPhone().equals(KEY.TRUE)&&contactList.get(i).gettPhone().equals(contactMerger.gettPhone())) {
-                        contacts.add(contactList.get(i));
+                    if (!contactMerger.getIdContact().equals(contactList.get(i).getIdContact())) {
+                        if (contactList.get(i).getmPhone().equals(KEY.TRUE) && contactList.get(i).gettPhone().equals(contactMerger.gettPhone())) {
+                            contacts.add(contactList.get(i));
+                        }
                     }
                 }
             }
 
-            if(contactMerger.getmEmail().equals(KEY.TRUE)){
+            if (contactMerger.getmEmail().equals(KEY.TRUE)) {
                 for (int i = 0; i < contactList.size(); i++) {
-                    if (contactList.get(i).getmEmail().equals(KEY.TRUE)&&contactList.get(i).gettEmail().equals(contactMerger.gettEmail())) {
-                        contacts.add(contactList.get(i));
+                    if (!contactMerger.getIdContact().equals(contactList.get(i).getIdContact())) {
+                        if (contactList.get(i).getmEmail().equals(KEY.TRUE) && contactList.get(i).gettEmail().equals(contactMerger.gettEmail())) {
+                            contacts.add(contactList.get(i));
+                        }
                     }
                 }
             }
-            contacts.remove(contactMerger);
         }
 
         imgContact.setImageResource(R.drawable.ic_code);
@@ -182,8 +191,6 @@ public class MergerDuplicateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (type.equals("contact") || type.equals("name") || type.equals("email") || type.equals("phone")) {
-                    Random rd = new Random();
-                    int number = rd.nextInt();
                     //check
                     String mP = KEY.FALSE;
                     String mE = KEY.FALSE;
@@ -296,7 +303,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
     }
 
     private void openMergerDialog() {
@@ -323,12 +330,13 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                         //Delete from list
                         contactList.remove(contacts.get(i));
                         //Delete db
-                        DBHelper.getInstance(MergerDuplicateActivity.this).updateDisableContact(contacts.get(i).getIdContact(),KEY.FALSE);
+                        DBHelper.getInstance(MergerDuplicateActivity.this).updateDisableContact(contacts.get(i).getIdContact(), KEY.FALSE);
                     }
                 }
-                DBHelper.getInstance(MergerDuplicateActivity.this).updateDisableContact(contactMerger.getIdContact(),KEY.TRUE);
-                for (int i = 0;i<contactList.size();i++){
-                    if(contactList.get(i).getIdContact().equals(contactMerger.getIdContact())){
+                DBHelper.getInstance(MergerDuplicateActivity.this).updateDisableContact(contactMerger.getIdContact(), KEY.TRUE);
+                /*for (int i = 0; i < contactList.size(); i++) {
+                    if (contactList.get(i).getIdContact().equals(contactMerger.getIdContact())) {
+                        contactList.get(i).setFather(KEY.FALSE);
                         contactList.get(i).settContact(KEY.FALSE);
                         contactList.get(i).settName(KEY.FALSE);
                         contactList.get(i).settPhone(KEY.FALSE);
@@ -338,7 +346,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                         contactList.get(i).setmPhone(KEY.FALSE);
                         contactList.get(i).settEmail(KEY.FALSE);
                     }
-                }
+                }*/
                 addNewContactPhoneBook();
                 sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
                 sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
@@ -347,8 +355,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                 if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
                     if (MainActivity.ggInterstitialAd != null && MainActivity.ggInterstitialAd.isLoaded()) {
                         MainActivity.ggInterstitialAd.show();
-                    }
-                    else if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI))) {
+                    } else if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI))) {
                         UnityAds.show(MergerDuplicateActivity.this, getString(R.string.INTER_UNI));
                     }
                 }

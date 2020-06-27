@@ -29,12 +29,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CONTACT_IMAGE = "CONTACT_IMAGE";
     public static final String COLUMN_TYPE_CONTACT = "TYPE_CONTACT";
     public static final String COLUMN_TYPE_NAME = "TYPE_NAME";
-    public static final String COLUMN_TYPE_PHONE = "TYPE_PHONE";
-    public static final String COLUMN_TYPE_EMAIL = "TYPE_EMAIL";
+    /*public static final String COLUMN_TYPE_PHONE = "TYPE_PHONE";
+    public static final String COLUMN_TYPE_EMAIL = "TYPE_EMAIL";*/
     public static final String COLUMN_MERGER_CONTACT = "CONTACT_MERGER_CONTACT";
     public static final String COLUMN_MERGER_NAME = "CONTACT_MERGER_N";
-    public static final String COLUMN_MERGER_PHONE = "CONTACT_MERGER_P";
-    public static final String COLUMN_MERGER_EMAIL = "CONTACT_MERGER_E";
+    /*public static final String COLUMN_MERGER_PHONE = "CONTACT_MERGER_P";
+    public static final String COLUMN_MERGER_EMAIL = "CONTACT_MERGER_E"*/;
     public static final String COLUMN_MERGER_FATHER = "CONTACT_MERGER_FATHER";
     public static final String COLUMN_NO_NAME = "CONTACT_NO_NAME";
     public static final String COLUMN_NO_PHONE = "CONTACT_NO_PHONE";
@@ -50,12 +50,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_CONTACT_PHONE = "TB_CONTACT_PHONE";
     public static final String COLUMN_ID_TABLE_PHONE = "ID_TABLE_PHONE";
     public static final String COLUMN_ID_CONTACT_PHONE = "ID_CONTACT";
+    public static final String COLUMN_TYPE_PHONE = "TYPE_PHONE";
     public static final String COLUMN_PHONE_MERGED = "PHONE_MERGED";
     public static final String COLUMN_PHONE_NAME = "PHONE_NAME";
 
     public static final String TABLE_CONTACT_EMAIL = "TB_CONTACT_EMAIL";
     public static final String COLUMN_ID_TABLE_EMAIL = "ID_TABLE_EMAIL";
     public static final String COLUMN_ID_CONTACT_EMAIL = "ID_CONTACT";
+    public static final String COLUMN_TYPE_EMAIL = "TYPE_EMAIL";
     public static final String COLUMN_EMAIL_MERGED = "EMAIL_MERGED";
     public static final String COLUMN_EMAIL_NAME = "EMAIL_NAME";
 
@@ -67,12 +69,8 @@ public class DBHelper extends SQLiteOpenHelper {
             + COLUMN_CONTACT_IMAGE + " TEXT NOT NULL, "
             + COLUMN_MERGER_CONTACT + " TEXT NOT NULL, "
             + COLUMN_MERGER_NAME + " TEXT NOT NULL, "
-            + COLUMN_MERGER_PHONE + " TEXT NOT NULL, "
-            + COLUMN_MERGER_EMAIL + " TEXT NOT NULL, "
             + COLUMN_TYPE_CONTACT + " TEXT NOT NULL, "
             + COLUMN_TYPE_NAME + " TEXT NOT NULL, "
-            + COLUMN_TYPE_PHONE + " TEXT NOT NULL, "
-            + COLUMN_TYPE_EMAIL + " TEXT NOT NULL, "
             + COLUMN_MERGER_FATHER + " TEXT NOT NULL, "
             + COLUMN_NO_NAME + " TEXT NOT NULL, "
             + COLUMN_NO_PHONE + " TEXT NOT NULL, "
@@ -88,12 +86,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String SQL_CREATE_TABLE_CONTACT_PHONE = "CREATE TABLE " + TABLE_CONTACT_PHONE + "("
             + COLUMN_ID_TABLE_PHONE + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + COLUMN_ID_CONTACT_PHONE + " TEXT NOT NULL, "
+            + COLUMN_TYPE_PHONE + " TEXT NOT NULL, "
             + COLUMN_PHONE_MERGED + " TEXT NOT NULL, "
             + COLUMN_PHONE_NAME + " TEXT NOT NULL " + ");";
 
     public static final String SQL_CREATE_TABLE_CONTACT_EMAIL = "CREATE TABLE " + TABLE_CONTACT_EMAIL + "("
             + COLUMN_ID_TABLE_EMAIL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + COLUMN_ID_CONTACT_EMAIL + " TEXT NOT NULL, "
+            + COLUMN_TYPE_EMAIL + " TEXT NOT NULL, "
             + COLUMN_EMAIL_MERGED + " TEXT NOT NULL, "
             + COLUMN_EMAIL_NAME + " TEXT NOT NULL " + ");";
 
@@ -108,7 +108,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return instance;
     }
 
-    public void addContact(String idContact, String name, String image, String tContact, String tName, String tPhone, String tEmail, String mContact, String mName, String mPhone, String mEmail, String father, String deleted, String noName, String noPhone, String noEmail) {
+    public void addContact(String idContact, String name, String image, String tContact, String tName, String mContact, String mName, String father, String deleted, String noName, String noPhone, String noEmail) {
 
         SQLiteDatabase database = instance.getWritableDatabase();
 
@@ -118,12 +118,8 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_CONTACT_IMAGE, image);
         values.put(COLUMN_MERGER_CONTACT, mContact);
         values.put(COLUMN_MERGER_NAME, mName);
-        values.put(COLUMN_MERGER_PHONE, mPhone);
-        values.put(COLUMN_MERGER_EMAIL, mEmail);
         values.put(COLUMN_TYPE_CONTACT, tContact);
         values.put(COLUMN_TYPE_NAME, tName);
-        values.put(COLUMN_TYPE_PHONE, tPhone);
-        values.put(COLUMN_TYPE_EMAIL, tEmail);
         values.put(COLUMN_MERGER_FATHER, father);
         values.put(COLUMN_NO_NAME, noName);
         values.put(COLUMN_NO_PHONE, noPhone);
@@ -177,23 +173,25 @@ public class DBHelper extends SQLiteOpenHelper {
         database.close();
     }
 
-    public void addPhone(String contactId, String merger, String phone) {
+    public void addPhone(String contactId, String phone, String typeMerger, String merger) {
         SQLiteDatabase database = instance.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_ID_CONTACT_PHONE, contactId);
-        values.put(COLUMN_PHONE_MERGED, merger);
         values.put(COLUMN_PHONE_NAME, phone);
+        values.put(COLUMN_TYPE_PHONE, typeMerger);
+        values.put(COLUMN_PHONE_MERGED, merger);
         database.insert(TABLE_CONTACT_PHONE, "", values);
         database.close();
     }
 
-    public void addEmail(String contactId, String merger, String email) {
+    public void addEmail(String contactId, String email, String typeMerger, String merger) {
         SQLiteDatabase database = instance.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_ID_CONTACT_EMAIL, contactId);
-        values.put(COLUMN_EMAIL_MERGED, merger);
         values.put(COLUMN_EMAIL_NAME, email);
+        values.put(COLUMN_TYPE_EMAIL, typeMerger);
+        values.put(COLUMN_EMAIL_MERGED, merger);
         database.insert(TABLE_CONTACT_EMAIL, null, values);
         database.close();
     }
@@ -206,7 +204,7 @@ public class DBHelper extends SQLiteOpenHelper {
         List<Contact> contacts = new ArrayList<>();
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                if (!cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)).equals(KEY.TRUE)) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)).equals(KEY.FALSE)) {
                     String idContact = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID));
                     contacts.add(new Contact(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)),
@@ -214,12 +212,8 @@ public class DBHelper extends SQLiteOpenHelper {
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_FATHER)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)),
                             getPhone(idContact),
@@ -245,14 +239,10 @@ public class DBHelper extends SQLiteOpenHelper {
                     contact = new Contact(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT)), idContact,
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_FATHER)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)),
                             getPhone(idContact), getAccount(idContact), getEmail(idContact));
@@ -282,12 +272,8 @@ public class DBHelper extends SQLiteOpenHelper {
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_FATHER)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)),
                             getPhone(id), getAccount(id), getEmail(id)));
@@ -363,22 +349,18 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 if (cursor.getString(cursor.getColumnIndex(COLUMN_NO_NAME)).equals("true")) {
-                    String id = cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT));
-                    contacts.add(new Contact(id,
-                            cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)),
+                    String idContact = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID));
+                    contacts.add(new Contact(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT)),
+                            idContact,
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_FATHER)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)),
-                            getPhone(id), getAccount(id), getEmail(id)));
+                            getPhone(idContact), getAccount(idContact), getEmail(idContact)));
                 }
                 cursor.moveToNext();
             }
@@ -416,22 +398,18 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 if (cursor.getString(cursor.getColumnIndex(COLUMN_NO_PHONE)).equals("true")) {
-                    String id = cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT));
-                    contacts.add(new Contact(id,
-                            cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)),
+                    String idContact = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID));
+                    contacts.add(new Contact(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT)),
+                            idContact,
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_FATHER)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)),
-                            getPhone(id), getAccount(id), getEmail(id)));
+                            getPhone(idContact), getAccount(idContact), getEmail(idContact)));
                 }
                 cursor.moveToNext();
             }
@@ -469,22 +447,18 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 if (cursor.getString(cursor.getColumnIndex(COLUMN_NO_EMAIL)).equals("true")) {
-                    String id = cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT));
-                    contacts.add(new Contact(id,
-                            cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)),
+                    String idContact = cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID));
+                    contacts.add(new Contact(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT)),
+                            idContact,
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_FATHER)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)),
-                            getPhone(id), getAccount(id), getEmail(id)));
+                            getPhone(idContact), getAccount(idContact), getEmail(idContact)));
                 }
                 cursor.moveToNext();
             }
@@ -508,12 +482,8 @@ public class DBHelper extends SQLiteOpenHelper {
                             cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_CONTACT)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_PHONE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_EMAIL)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_MERGER_FATHER)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)),
                             getPhone(idContact), getAccount(idContact), getEmail(idContact)));
@@ -538,6 +508,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     phones.add(new Phone(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_PHONE)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_ID_CONTACT_PHONE)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_NAME)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_PHONE)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_PHONE_MERGED))));
                 }
                 cursor.moveToNext();
@@ -547,6 +518,29 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
 
         return phones;
+    }
+
+    public List<Email> getEmail(String contactID) {
+        SQLiteDatabase db = instance.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT_EMAIL), null);
+        List<Email> emails = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_ID_CONTACT_EMAIL)).equals(contactID)) {
+                    emails.add(new Email(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_ID_CONTACT_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL_NAME)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_TYPE_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL_MERGED))));
+                }
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+        db.close();
+
+        return emails;
     }
 
 
@@ -671,27 +665,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return accounts;
     }
 
-    public List<Email> getEmail(String contactID) {
-        SQLiteDatabase db = instance.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT_EMAIL), null);
-        List<Email> emails = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                if (cursor.getString(cursor.getColumnIndex(COLUMN_ID_CONTACT_EMAIL)).equals(contactID)) {
-                    emails.add(new Email(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_EMAIL)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_ID_CONTACT_EMAIL)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL_MERGED))));
-                }
-                cursor.moveToNext();
-            }
-        }
-        cursor.close();
-        db.close();
-
-        return emails;
-    }
 
     public void deleteAllContact() {
         SQLiteDatabase db = instance.getWritableDatabase();
@@ -721,6 +694,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         if (father.equals(KEY.FALSE)) {
             values.put(COLUMN_DELETED, KEY.TRUE);
+            values.put(COLUMN_MERGER_FATHER, KEY.FALSE);
         }
         values.put(COLUMN_TYPE_CONTACT, KEY.FALSE);
         values.put(COLUMN_TYPE_NAME, KEY.FALSE);
@@ -728,9 +702,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TYPE_EMAIL, KEY.FALSE);
         values.put(COLUMN_MERGER_CONTACT, KEY.FALSE);
         values.put(COLUMN_MERGER_NAME, KEY.FALSE);
-        values.put(COLUMN_MERGER_PHONE, KEY.FALSE);
-        values.put(COLUMN_MERGER_EMAIL, KEY.FALSE);
-        values.put(COLUMN_MERGER_FATHER, KEY.FALSE);
         db.update(TABLE_CONTACT, values, COLUMN_CONTACT_ID + "='" + idContact + "'", null);
         db.close();
     }
@@ -777,8 +748,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TYPE_EMAIL, tE);
         values.put(COLUMN_MERGER_CONTACT, mC);
         values.put(COLUMN_MERGER_NAME, mN);
-        values.put(COLUMN_MERGER_PHONE, mP);
-        values.put(COLUMN_MERGER_EMAIL, mE);
         db.update(TABLE_CONTACT, values, COLUMN_CONTACT_ID + "='" + idContact + "'", null);
         db.close();
         if (mP.equals(KEY.TRUE)) {

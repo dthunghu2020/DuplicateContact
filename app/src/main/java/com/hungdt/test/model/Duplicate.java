@@ -1,32 +1,32 @@
 package com.hungdt.test.model;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class Duplicate {
-    private String id;
+    private String idTable;
     private String contactID;
-    private String merger;
+    private String merged;
     private String name;
     private List<Phone> phone;
     private List<Email> email;
-    private int type = 0;
+    private int typeMer;
 
-    public Duplicate(String id, String contactID, String name,String merger,List<Phone> phone,List<Email> email) {
-            this.id = id;
+    public Duplicate(String idTable, String contactID, String name, String merged, int typeMer, List<Phone> phone, List<Email> email) {
+        this.idTable = idTable;
         this.contactID = contactID;
-        this.merger = merger;
+        this.merged = merged;
         this.name = name;
         this.phone = phone;
         this.email = email;
+        this.typeMer = typeMer;
     }
 
-    public String getId() {
-        return id;
+    public String getIdTable() {
+        return idTable;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setIdTable(String idTable) {
+        this.idTable = idTable;
     }
 
     public String getContactID() {
@@ -45,20 +45,20 @@ public class Duplicate {
         this.name = name;
     }
 
-    public int getType() {
-        return type;
+    public int getTypeMer() {
+        return typeMer;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setTypeMer(int typeMer) {
+        this.typeMer = typeMer;
     }
 
-    public String getMerger() {
-        return merger;
+    public String getMerged() {
+        return merged;
     }
 
-    public void setMerger(String merger) {
-        this.merger = merger;
+    public void setMerged(String merger) {
+        this.merged = merged;
     }
 
     public List<Phone> getPhone() {
@@ -76,4 +76,6 @@ public class Duplicate {
     public void setEmail(List<Email> email) {
         this.email = email;
     }
+
+
 }

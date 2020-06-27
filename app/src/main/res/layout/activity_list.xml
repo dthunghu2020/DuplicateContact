@@ -95,4 +95,26 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/llDelete"
         app:layout_constraintTop_toBottomOf="@+id/lnNative" />
+    <LinearLayout
+        android:id="@+id/llEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/llDelete"
+        app:layout_constraintTop_toBottomOf="@+id/lnNative">
+        <ImageView
+            android:src="@drawable/img_nofile"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_120sdp"/>
+        <TextView
+            android:id="@+id/txtEmpty"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/appColor"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_width="wrap_content"
+            android:text="No merged contacts yet!"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
