@@ -2,6 +2,7 @@ package com.hungdt.test.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +25,11 @@ import com.hungdt.test.view.MergerDuplicateActivity;
 import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactHolder> {
-    List<Contact> contactList ;
+    List<Contact> contactList;
     LayoutInflater layoutInflater;
-private String type;
-    public ContactAdapter(Context context, List<Contact> contactList,String type) {
+    private String type;
+
+    public ContactAdapter(Context context, List<Contact> contactList, String type) {
         this.contactList = contactList;
         this.type = type;
         layoutInflater = LayoutInflater.from(context);
@@ -54,18 +56,20 @@ private String type;
         holder.clItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (type){
+                switch (type) {
                     case KEY.CONTACT:
                         Intent intent = new Intent(layoutInflater.getContext(), DetailContactActivity.class);
-                        intent.putExtra(KEY.ID,contactList.get(position).getIdContact());
-                        intent.putExtra(KEY.TYPE,KEY.DETAIL);
+                        intent.putExtra(KEY.ID, contactList.get(position).getIdContact());
+                        intent.putExtra(KEY.TYPE, KEY.DETAIL);
                         layoutInflater.getContext().startActivity(intent);
                         break;
                     case KEY.MERGER:
-                       /* Intent intent2 = new Intent(layoutInflater.getContext(), MergerDuplicateActivity.class);
-                        intent2.putExtra(KEY.DUP,contactList.get(position).getMerger());
-                        Log.e("123321", "onClick: "+contactList.get(position).getMerger() );
-                        layoutInflater.getContext().startActivity(intent2);*/
+                        Intent intent2 = new Intent(layoutInflater.getContext(), MergerDuplicateActivity.class);
+                        Bundle bundle = new Bundle();
+                        intent2.putExtra(KEY.DUP, KEY.MERGER);
+                        bundle.putSerializable(KEY.CONTACT,contactList.get(position));
+                        intent2.putExtras(bundle);
+                        layoutInflater.getContext().startActivity(intent2);
                         break;
                 }
 

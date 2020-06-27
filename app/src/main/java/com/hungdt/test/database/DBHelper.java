@@ -715,15 +715,24 @@ public class DBHelper extends SQLiteOpenHelper {
         deleteEmail(idContact);
     }
 
-    public void updateDisableContact(String id) {
-        /*SQLiteDatabase db = instance.getWritableDatabase();
+    public void updateDisableContact(String idContact, String father) {
+        SQLiteDatabase db = instance.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED, KEY.TRUE);
-        values.put(COLUMN_TYPE_MERGER, KEY.FALSE);
+        if (father.equals(KEY.FALSE)) {
+            values.put(COLUMN_DELETED, KEY.TRUE);
+        }
+        values.put(COLUMN_TYPE_CONTACT, KEY.FALSE);
+        values.put(COLUMN_TYPE_NAME, KEY.FALSE);
+        values.put(COLUMN_TYPE_PHONE, KEY.FALSE);
+        values.put(COLUMN_TYPE_EMAIL, KEY.FALSE);
+        values.put(COLUMN_MERGER_CONTACT, KEY.FALSE);
+        values.put(COLUMN_MERGER_NAME, KEY.FALSE);
+        values.put(COLUMN_MERGER_PHONE, KEY.FALSE);
+        values.put(COLUMN_MERGER_EMAIL, KEY.FALSE);
         values.put(COLUMN_MERGER_FATHER, KEY.FALSE);
-        db.update(TABLE_CONTACT, values, COLUMN_ID_TABLE_CONTACT + "='" + id + "'", null);
-        db.close();*/
+        db.update(TABLE_CONTACT, values, COLUMN_CONTACT_ID + "='" + idContact + "'", null);
+        db.close();
     }
 
     public void deletePhone(String idContact) {
