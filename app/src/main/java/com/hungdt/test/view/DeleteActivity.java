@@ -68,7 +68,7 @@ public class DeleteActivity extends AppCompatActivity {
                 case "noName":
                 case "noPhone":
                 case "noEmail":
-                    txtEmpty.setText("No Contacts");
+                    txtEmpty.setText("No Contact");
                     break;
                 default:
                     break;
@@ -106,7 +106,23 @@ public class DeleteActivity extends AppCompatActivity {
         llButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDeleteDialog();
+                if(contacts.size()==0){
+                    Toast.makeText(DeleteActivity.this, "No contact to delete!!!", Toast.LENGTH_SHORT).show();
+                }else {
+                    boolean dataCheck = false;
+                    for (int i = 0; i < contacts.size(); i++) {
+                        if (contacts.get(i).isTicked()) {
+                            dataCheck=true;
+                        }
+                    }
+                    if(dataCheck){
+                        openDeleteDialog();
+                    }else {
+                        Toast.makeText(DeleteActivity.this, "No contact to delete!!!", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
             }
         });
     }
@@ -135,7 +151,7 @@ public class DeleteActivity extends AppCompatActivity {
                 contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNoPhone());
                 break;
             case "noEmail":
-                txtTitleDelete.setText("No Emails");
+                txtTitleDelete.setText("No Email");
                 contacts.addAll(DBHelper.getInstance(DeleteActivity.this).getContactNoEmail());
                 break;
             default:
@@ -178,8 +194,8 @@ public class DeleteActivity extends AppCompatActivity {
                     MainActivity.ggInterstitialAd.show();
                 else if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))
                     UnityAds.show(DeleteActivity.this, getString(R.string.INTER_UNI));
+                    Toast.makeText(DeleteActivity.this, "Delete Success!!!", Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(DeleteActivity.this, "Delete Success!!!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

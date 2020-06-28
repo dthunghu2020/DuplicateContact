@@ -76,17 +76,35 @@ public class DuplicateActivity extends AppCompatActivity {
         idContact.addAll(Objects.requireNonNull(intent.getStringArrayListExtra(KEY.LIST_ID)));
         Log.e("111111", "onCreate: dup " + type + idContact);
         for (int i = 0; i < idContact.size(); i++) {
-            listContacts.add(DBHelper.getInstance(this).getDuplicateContact(String.valueOf(idContact.get(i))));
+            for (int j = 0; j < contactList.size(); j++) {
+                if (idContact.get(i).equals(contactList.get(j).getIdContact())) {
+                    listContacts.add(contactList.get(j));
+                }
+            }
         }
         if (listContacts.size() != 0) {
             llEmpty.setVisibility(View.GONE);
         } else {
-            txtEmpty.setText("No duplicate " + type + " yet");
+            switch (type) {
+                case "contact":
+                    txtEmpty.setText("No Duplicate Contacts Yet");
+                    break;
+                case "name":
+                    txtEmpty.setText("No Similar Names Yet");
+                    break;
+                case "phone":
+                    txtEmpty.setText("No Duplicate Phone Numbers Yet");
+                    break;
+                case "email":
+                    txtEmpty.setText("No Duplicate Emails Yet");
+                    break;
+            }
+
         }
 
         switch (type) {
             case "contact":
-                txtTitleDelete.setText("Duplicate Contact");
+                txtTitleDelete.setText("Duplicate Contacts");
                 for (int i = 0; i < listContacts.size(); i++) {
                     contactBums.add(new ContactBum(listContacts.get(i).getIdContact(),
                             listContacts.get(i).getName(),
@@ -100,32 +118,33 @@ public class DuplicateActivity extends AppCompatActivity {
                         if (i == j) {
                             break;
                         }
-                        if (contactBums.get(i).getName().equalsIgnoreCase(contactBums.get(j).getName())
-                                && contactBums.get(i).getPhones().equals(contactBums.get(j).getPhones())
-                                && contactBums.get(i).getEmails().equals(contactBums.get(j).getEmails())) {
+                        if (contactBums.get(i).getName().equals(contactBums.get(j).getName())) {
                             if (!bumC.contains(contactBums.get(i).getName())) {
                                 bumC.add(contactBums.get(i).getName());
                             }
                         }
                     }
+
                 }
+                Log.e("123", "onCreate: bumC " + bumC);
                 for (int i = 0; i < contactBums.size(); i++) {
+                    Log.e("123", "before: " + contactBums.get(i).getBum());
                     for (int j = 0; j < bumC.size(); j++) {
                         if (contactBums.get(i).getName().equals(bumC.get(j))) {
                             contactBums.get(i).setBum(bumC.get(j));
                         }
                     }
+                    Log.e("123", "apter: " + contactBums.get(i).getBum());
                 }
                 break;
             case "name":
-                txtTitleDelete.setText("Duplicate Name");
+                txtTitleDelete.setText("Similar Names");
                 for (int i = 0; i < listContacts.size(); i++) {
                     contactBums.add(new ContactBum(listContacts.get(i).getIdContact(),
                             listContacts.get(i).getName(),
                             listContacts.get(i).getName(),
                             null,
                             null));
-
                 }
                 ArrayList<String> bumN = new ArrayList<>();
                 for (int i = 0; i < contactBums.size(); i++) {
@@ -139,17 +158,21 @@ public class DuplicateActivity extends AppCompatActivity {
                             }
                         }
                     }
+
                 }
+                Log.e("123", "onCreate: bumN " + bumN);
                 for (int i = 0; i < contactBums.size(); i++) {
+                    Log.e("123", "before: " + contactBums.get(i).getBum());
                     for (int j = 0; j < bumN.size(); j++) {
                         if (contactBums.get(i).getName().equalsIgnoreCase(bumN.get(j))) {
                             contactBums.get(i).setBum(bumN.get(j));
                         }
                     }
+                    Log.e("123", "apter: " + contactBums.get(i).getBum());
                 }
                 break;
             case "phone":
-                txtTitleDelete.setText("Duplicate Phone");
+                txtTitleDelete.setText("Duplicate Phone Numbers");
                 for (int i = 0; i < listContacts.size(); i++) {
                     for (int j = 0; j < listContacts.get(i).getPhones().size(); j++) {
                         contactBums.add(new ContactBum(listContacts.get(i).getIdContact(),
@@ -171,17 +194,21 @@ public class DuplicateActivity extends AppCompatActivity {
                             }
                         }
                     }
+
                 }
+                Log.e("123", "onCreate: bumP " + bumP);
                 for (int i = 0; i < contactBums.size(); i++) {
+                    Log.e("123", "before: " + contactBums.get(i).getBum());
                     for (int j = 0; j < bumP.size(); j++) {
                         if (contactBums.get(i).getName().equals(bumP.get(j))) {
                             contactBums.get(i).setBum(bumP.get(j));
                         }
                     }
+                    Log.e("123", "apter: " + contactBums.get(i).getBum());
                 }
                 break;
             case "email":
-                txtTitleDelete.setText("Duplicate Email");
+                txtTitleDelete.setText("Duplicate Emails");
                 for (int i = 0; i < listContacts.size(); i++) {
                     for (int j = 0; j < listContacts.get(i).getEmails().size(); j++) {
                         contactBums.add(new ContactBum(listContacts.get(i).getIdContact(),
@@ -203,17 +230,30 @@ public class DuplicateActivity extends AppCompatActivity {
                             }
                         }
                     }
+
                 }
+                Log.e("123", "onCreate: bumP " + bumE);
                 for (int i = 0; i < contactBums.size(); i++) {
+                    Log.e("123", "before: " + contactBums.get(i).getBum());
                     for (int j = 0; j < bumE.size(); j++) {
                         if (contactBums.get(i).getName().equals(bumE.get(j))) {
                             contactBums.get(i).setBum(bumE.get(j));
                         }
                     }
+                    Log.e("123", "apter: " + contactBums.get(i).getBum());
                 }
                 break;
         }
+        ArrayList<ContactBum> contacts = new ArrayList<>();
         for (int i = 0; i < contactBums.size(); i++) {
+            if (contactBums.get(i).getBum() != null) {
+                contacts.add(contactBums.get(i));
+            }
+        }
+        contactBums.clear();
+        contactBums.addAll(contacts);
+        for (int i = 0; i < contactBums.size(); i++) {
+            Log.e("123", "onCreate: contactbum" + contactBums.get(i).getName() + " /" + contactBums.get(i).getBum());
             if (!typeList.contains(contactBums.get(i).getBum())) {
                 typeList.add(contactBums.get(i).getBum());
             }
@@ -237,7 +277,7 @@ public class DuplicateActivity extends AppCompatActivity {
     private BroadcastReceiver broadCastUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
+            //sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
             finish();
         }
     };
@@ -259,7 +299,7 @@ public class DuplicateActivity extends AppCompatActivity {
                     }
                     for (int j = 0; j < contactList.size(); j++) {
                         if (i != j && !contacts.get(i).getContactID().equals(contactList.get(j).getContactID())) {
-                            if (contacts.get(i).getName().equalsIgnoreCase(contactList.get(j).getName()) &&
+                            if (contacts.get(i).getName().equals(contactList.get(j).getName()) &&
                                     contacts.get(i).getPhone().equals(contacts.get(j).getPhone()) &&
                                     contacts.get(i).getEmail().equals(contacts.get(j).getEmail())) {
                                 if (!contacts.get(j).getTypeMer().isEmpty()) {
@@ -290,8 +330,8 @@ public class DuplicateActivity extends AppCompatActivity {
                         //khác vị trí và khác id
                         if (i != j && !names.get(i).getContactID().equals(nameList.get(j).getContactID())) {
                             //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
-                            //trùng sdt
-                            if (names.get(i).getName().equals(nameList.get(j).getName())) {
+
+                            if (names.get(i).getName().equalsIgnoreCase(nameList.get(j).getName())) {
                                 Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
                                 if (!names.get(j).getTypeMer().isEmpty()) {
                                     names.get(i).setTypeMer(names.get(j).getTypeMer());
@@ -400,7 +440,6 @@ public class DuplicateActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
         finish();
     }
 }

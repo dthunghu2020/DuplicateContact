@@ -66,16 +66,25 @@ public class MergedFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             contacts.clear();
-            Collections.sort(contactList);
+            //Collections.sort(contactList);
             for(int i = 0; i<contactList.size();i++){
                 if(contactList.get(i).getFather().equals(KEY.TRUE)){
                     contacts.add(contactList.get(i));
                 }
             }
+            Log.e("hdt123", "onReceive: "+contacts.size() );
             if(contacts.size()!=0){
                 llEmpty.setVisibility(View.GONE);
+            }else {
+                llEmpty.setVisibility(View.VISIBLE);
             }
             contactAdapter.notifyDataSetChanged();
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(reloadFragmentMerged);
+    }
 }

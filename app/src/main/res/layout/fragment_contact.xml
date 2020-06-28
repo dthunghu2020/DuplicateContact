@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
-                android:text="Filter Contact"
+                android:text="Reload Contact"
                 android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>

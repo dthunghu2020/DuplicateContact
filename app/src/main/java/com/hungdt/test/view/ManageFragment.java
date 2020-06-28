@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
+import com.hungdt.test.model.Contact;
 import com.hungdt.test.model.Duplicate;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
@@ -97,6 +98,7 @@ public class ManageFragment extends Fragment {
                 Intent intent = new Intent(getContext(), DuplicateActivity.class);
                 intent.putExtra(KEY.DUP, "phone");
                 intent.putStringArrayListExtra(KEY.LIST_ID, idPhones);
+                Log.e("123", "onClick: " + idPhones);
                 startActivity(intent);
                 showInter();
             }
@@ -136,19 +138,27 @@ public class ManageFragment extends Fragment {
         List<Duplicate> contactList = new ArrayList<>(contacts);
         for (int i = 0; i < contacts.size(); i++) {
             if (!contacts.get(i).getMerged().equals(KEY.FALSE)) {
+                Log.e("HVV1312","Break : "+ phones.get(i).getName());
                 break;
             }
             for (int j = 0; j < contactList.size(); j++) {
+                //khác vị trí và khác id
                 if (i != j && !contacts.get(i).getContactID().equals(contactList.get(j).getContactID())) {
-                    if (contacts.get(i).getName().equalsIgnoreCase(contactList.get(j).getName()) &&
-                            contacts.get(i).getPhone().equals(contacts.get(j).getPhone()) &&
-                            contacts.get(i).getEmail().equals(contacts.get(j).getEmail())) {
-                        if (contacts.get(j).getTypeMer().equals("")) {
-                            contacts.get(i).setTypeMer(contacts.get(i).getName());
-                            break;
-                        }
+                    //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
+                    //trùng sdt
+                    if (contacts.get(i).getName().equalsIgnoreCase(contactList.get(j).getName())&&
+                            contacts.get(i).getPhone().equals(contactList.get(j).getPhone())&&
+                            contacts.get(i).getEmail().equals(contactList.get(j).getEmail())) {
+                        Log.e("HVV1312","Duplicate  : "+ contacts.get(i).getName() + " and "+ contacts.get(j).getName());
+                        Log.e("123123", "loadDub: phone i " + contacts.get(i).getTypeMer());
                         if (!contacts.get(j).getTypeMer().equals("")) {
                             contacts.get(i).setTypeMer(contacts.get(j).getTypeMer());
+                            Log.e("123123", "loadDub: phone i " + contacts.get(i).getTypeMer());
+                            break;
+                        }
+                        if (contacts.get(j).getTypeMer().equals("")) {
+                            contacts.get(i).setTypeMer(contacts.get(i).getContactID());
+                            Log.e("123123", "loadDub: phone i " + contacts.get(i).getTypeMer());
                             break;
                         }
                     }
@@ -159,9 +169,11 @@ public class ManageFragment extends Fragment {
         ArrayList<String> idCheckIdC = new ArrayList<>();
         for (int i = 0; i < contacts.size(); i++) {
             if (!contacts.get(i).getTypeMer().equals("")) {
+                Log.e("123", "loadDub: " + i + " : " + contacts.get(i).getContactID() + idCheckIdC);
                 if (!idCheckIdC.contains(contacts.get(i).getContactID())) {
                     idCheckIdC.add(contacts.get(i).getContactID());
                     idContacts.add(contacts.get(i).getContactID());
+                    Log.e("123", "loadDub: " + idCheckIdC + " : " + contacts);
                 }
                 if (!idCheckContact.contains(contacts.get(i).getTypeMer())) {
                     idCheckContact.add(contacts.get(i).getTypeMer());
@@ -169,10 +181,13 @@ public class ManageFragment extends Fragment {
                 }
             }
         }
+        Log.e("HVV1312","Duplicate count  : "+ dubContact);
+
         //Name
         List<Duplicate> nameList = new ArrayList<>(names);
         for (int i = 0; i < names.size(); i++) {
             if (!names.get(i).getMerged().equals(KEY.FALSE)) {
+                Log.e("HVV1312","Break : "+ phones.get(i).getName());
                 break;
             }
             for (int j = 0; j < nameList.size(); j++) {
@@ -181,13 +196,14 @@ public class ManageFragment extends Fragment {
                     //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
                     //trùng sdt
                     if (names.get(i).getName().equalsIgnoreCase(nameList.get(j).getName())) {
-                        Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
                         if (!names.get(j).getTypeMer().equals("")) {
                             names.get(i).setTypeMer(names.get(j).getTypeMer());
+                            Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
                             break;
                         }
                         if (names.get(j).getTypeMer().equals("")) {
                             names.get(i).setTypeMer(names.get(i).getName());
+                            Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
                             break;
                         }
                     }
@@ -198,9 +214,11 @@ public class ManageFragment extends Fragment {
         ArrayList<String> idCheckIdN = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
             if (!names.get(i).getTypeMer().equals("")) {
+                Log.e("123", "loadDub: " + i + " : " + names.get(i).getContactID() + idCheckIdN);
                 if (!idCheckIdN.contains(names.get(i).getContactID())) {
                     idCheckIdN.add(names.get(i).getContactID());
                     idNames.add(names.get(i).getContactID());
+                    Log.e("123", "loadDub: " + idCheckIdN + " : " + idNames);
                 }
                 if (!idCheckName.contains(names.get(i).getTypeMer())) {
                     idCheckName.add(names.get(i).getTypeMer());
@@ -208,10 +226,12 @@ public class ManageFragment extends Fragment {
                 }
             }
         }
+
         //Phone
         List<Duplicate> phoneList = new ArrayList<>(phones);
         for (int i = 0; i < phones.size(); i++) {
             if (!phones.get(i).getMerged().equals(KEY.FALSE)) {
+                Log.e("HVV1312","Break : "+ phones.get(i).getName());
                 break;
             }
             for (int j = 0; j < phoneList.size(); j++) {
@@ -220,6 +240,7 @@ public class ManageFragment extends Fragment {
                     //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
                     //trùng sdt
                     if (phones.get(i).getName().equals(phoneList.get(j).getName())) {
+                        Log.e("HVV1312","Duplicate  : "+ phones.get(i).getName() + " and "+ phones.get(j).getName());
                         Log.e("123123", "loadDub: phone i " + phones.get(i).getTypeMer());
                         if (!phones.get(j).getTypeMer().equals("")) {
                             phones.get(i).setTypeMer(phones.get(j).getTypeMer());
@@ -239,9 +260,11 @@ public class ManageFragment extends Fragment {
         ArrayList<String> idCheckIdP = new ArrayList<>();
         for (int i = 0; i < phones.size(); i++) {
             if (!phones.get(i).getTypeMer().equals("")) {
+                Log.e("123", "loadDub: " + i + " : " + phones.get(i).getContactID() + idCheckIdP);
                 if (!idCheckIdP.contains(phones.get(i).getContactID())) {
                     idCheckIdP.add(phones.get(i).getContactID());
                     idPhones.add(phones.get(i).getContactID());
+                    Log.e("123", "loadDub: " + idCheckIdP + " : " + idPhones);
                 }
                 if (!idCheckPhone.contains(phones.get(i).getTypeMer())) {
                     idCheckPhone.add(phones.get(i).getTypeMer());
@@ -249,6 +272,8 @@ public class ManageFragment extends Fragment {
                 }
             }
         }
+        Log.e("HVV1312","Duplicate count  : "+ dubPhone);
+
         //Emails
         /*List<Duplicate> emailList = new ArrayList<>(emails);
         for (int i = 0; i < emails.size(); i++) {
@@ -282,30 +307,40 @@ public class ManageFragment extends Fragment {
         List<Duplicate> emailList = new ArrayList<>(emails);
         for (int i = 0; i < emails.size(); i++) {
             if (!emails.get(i).getMerged().equals(KEY.FALSE)) {
+                Log.e("HVV1312","Break : "+ emails.get(i).getName());
                 break;
             }
             for (int j = 0; j < emailList.size(); j++) {
+                //khác vị trí và khác id
                 if (i != j && !emails.get(i).getContactID().equals(emailList.get(j).getContactID())) {
+                    //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
+                    //trùng sdt
                     if (emails.get(i).getName().equals(emailList.get(j).getName())) {
+                        Log.e("HVV1312","Duplicate  : "+ emails.get(i).getName() + " and "+ emails.get(j).getName());
+                        Log.e("123123", "loadDub: phone i " + emails.get(i).getTypeMer());
                         if (!emails.get(j).getTypeMer().equals("")) {
                             emails.get(i).setTypeMer(emails.get(j).getTypeMer());
+                            Log.e("123123", "loadDub: phone i " + emails.get(i).getTypeMer());
                             break;
                         }
                         if (emails.get(j).getTypeMer().equals("")) {
                             emails.get(i).setTypeMer(emails.get(i).getName());
+                            Log.e("123123", "loadDub: phone i " + emails.get(i).getTypeMer());
                             break;
                         }
                     }
                 }
             }
         }
-        ArrayList<String> idCheckEmail = new ArrayList<>();
+        ArrayList<String> idCheckEmail= new ArrayList<>();
         ArrayList<String> idCheckIdE = new ArrayList<>();
         for (int i = 0; i < emails.size(); i++) {
             if (!emails.get(i).getTypeMer().equals("")) {
+                Log.e("123", "loadDub: " + i + " : " + emails.get(i).getContactID() + idCheckIdE);
                 if (!idCheckIdE.contains(emails.get(i).getContactID())) {
                     idCheckIdE.add(emails.get(i).getContactID());
                     idEmails.add(emails.get(i).getContactID());
+                    Log.e("123", "loadDub: " + idCheckIdE + " : " + idEmails);
                 }
                 if (!idCheckEmail.contains(emails.get(i).getTypeMer())) {
                     idCheckEmail.add(emails.get(i).getTypeMer());
@@ -313,12 +348,14 @@ public class ManageFragment extends Fragment {
                 }
             }
         }
+        Log.e("HVV1312","Duplicate count  : "+ dubPhone);
     }
 
 
     private BroadcastReceiver reloadFragmentManage = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e("hvv1312", "onReceive ");
             dubContact = 0;
             dubPhone = 0;
             dubEmail = 0;
@@ -333,6 +370,7 @@ public class ManageFragment extends Fragment {
             idEmails.clear();
             for (int i = 0; i < contactList.size(); i++) {
                 if (contactList.get(i).getFather().equals(KEY.TRUE)) {
+                    Log.e("HVV1312","break father");
                     break;
                 }
                 //addContact
@@ -350,28 +388,18 @@ public class ManageFragment extends Fragment {
                             contactList.get(i).getName(),
                             KEY.FALSE,KEY.FALSE, contactList.get(i).getPhones(), contactList.get(i).getEmails()));
                 }*/
-                //addName
-                if (contactList.get(i).getmName().equals(KEY.FALSE)) {
-                    names.add(new Duplicate(contactList.get(i).getIdTable(),
-                            contactList.get(i).getIdContact(),
-                            contactList.get(i).getName(),
-                            KEY.FALSE, "", null, null));
-                }
 
-                /*if (contactList.get(i).getmName().equals(KEY.FALSE) && contactList.get(i).gettName().equals(KEY.FALSE)) {
-                    names.add(new Duplicate(contactList.get(i).getIdTable(),
-                            contactList.get(i).getIdContact(),
-                            contactList.get(i).getName(),
-                            KEY.FALSE,KEY.FALSE, null, null));
-                }*/
                 //add phone
-
+               /* Log.e("HVV1312","0 Contact list size before Add phone 1 : "+contactList.size());*/
                 for (int j = 0; j < contactList.get(i).getPhones().size(); j++) {
+                   /* Log.e("HVV1312","1 execute phone :  "+ contactList.get(i).getPhones().get(j).getPhone());
+                    Log.e("HVV1312","1.1 getMphone :  "+ contactList.get(i).getPhones().get(j).getmPhone());*/
                     if (contactList.get(i).getPhones().get(j).getmPhone().equals(KEY.FALSE)) {
                         phones.add(new Duplicate(contactList.get(i).getPhones().get(j).getIdTable(),
                                 contactList.get(i).getPhones().get(j).getIdContact(),
                                 contactList.get(i).getPhones().get(j).getPhone(),
                                 KEY.FALSE, "", null, null));
+                        /*Log.e("HVV1312","2 Add phone "+contactList.get(i).getPhones().get(j).getPhone());*/
                     }
                 }
 
@@ -385,12 +413,29 @@ public class ManageFragment extends Fragment {
                     }
                 }
 
+
+                //addName
+                Log.e("HVV1312","0 Contact list size before Add phone 1 : "+contactList.size());
+                if (contactList.get(i).getmName().equals(KEY.FALSE)) {
+                    Log.e("HVV1312","1 execute phone :  "+ contactList.get(i).getName());
+                    Log.e("HVV1312","1.1 getMphone :  "+ contactList.get(i).getmName());
+                    names.add(new Duplicate(contactList.get(i).getIdTable(),
+                            contactList.get(i).getIdContact(),
+                            contactList.get(i).getName(),
+                            KEY.FALSE, "", null, null));
+                    Log.e("HVV1312","2 Add phone "+contactList.get(i).getName());
+                }
+
+                /*if (contactList.get(i).getmName().equals(KEY.FALSE) && contactList.get(i).gettName().equals(KEY.FALSE)) {
+                    names.add(new Duplicate(contactList.get(i).getIdTable(),
+                            contactList.get(i).getIdContact(),
+                            contactList.get(i).getName(),
+                            KEY.FALSE,KEY.FALSE, null, null));
+                }*/
+
             }
+            Log.e("hvv1312", "3 list phone size : " + phones.size());
             loadDub();
-            Log.e("123", "onReceive: " + idContacts);
-            Log.e("123", "onReceive: " + idNames);
-            Log.e("123", "onReceive: " + idPhones);
-            Log.e("123", "onReceive: " + idEmails);
             setTextFragment();
         }
     };

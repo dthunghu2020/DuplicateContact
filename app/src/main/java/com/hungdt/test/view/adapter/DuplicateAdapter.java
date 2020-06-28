@@ -96,7 +96,6 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
                     }
                 }
                 break;
-
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +104,7 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
                 intent.putExtra(KEY.DUP, type);
                 ArrayList<String> id = new ArrayList<>();
                 for (int i = 0; i < contactBums.size(); i++) {
-                    if (contactBums.get(i).getBum() == typeList.get(position)&&!id.contains(contactBums.get(i).getIdContact())) {
+                    if (contactBums.get(i).getBum().equals(typeList.get(position)) &&!id.contains(contactBums.get(i).getIdContact())) {
                         id.add(contactBums.get(i).getIdContact());
                     }
                 }

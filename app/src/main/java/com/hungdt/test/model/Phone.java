@@ -6,14 +6,14 @@ public class Phone implements Serializable {
     private String idTable;
     private String idContact;
     private String phone;
-    private String typeMerger;
+    private String tPhone;
     private String mPhone;
 
-    public Phone(String idTable, String idContact, String phone, String typeMerger, String mPhone) {
+    public Phone(String idTable, String idContact, String phone, String tPhone, String mPhone) {
         this.idTable = idTable;
         this.idContact = idContact;
         this.phone = phone;
-        this.typeMerger = typeMerger;
+        this.tPhone = tPhone;
         this.mPhone = mPhone;
     }
 
@@ -49,11 +49,11 @@ public class Phone implements Serializable {
         this.mPhone = mPhone;
     }
 
-    public String getTypeMerger() {
-        return typeMerger;
+    public String gettPhone() {
+        return tPhone;
     }
 
-    public void setTypeMerger(String typeMerger) {
-        this.typeMerger = typeMerger;
+    public void settPhone(String tPhone) {
+        this.tPhone = tPhone;
     }
 }

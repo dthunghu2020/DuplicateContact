@@ -240,13 +240,14 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         protected Void doInBackground(Void... voids) {
             contactList.clear();
             //readAccountContactsxx();
-            if (DBHelper.getInstance(MainActivity.this).getAllContact().size() == 0) {
-                readAccountContacts();
+            int count = DBHelper.getInstance(MainActivity.this).getAllContact().size();
+            Log.e("123", "count: " + count);
+            if (count == 0) {
+               readAccountContacts();
             } else {
                 contactList.addAll(DBHelper.getInstance(MainActivity.this).getAllContact());
                 Collections.sort(contactList);
             }
-            Log.e("123", "doInBackground: " + contactList.size());
             return null;
         }
 

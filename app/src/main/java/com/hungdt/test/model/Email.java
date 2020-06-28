@@ -6,14 +6,14 @@ public class Email implements Serializable {
     private String idTable;
     private String idContact;
     private String email;
-    private String typeMerger;
+    private String tEmail;
     private String mEmail;
 
-    public Email(String idTable, String idContact, String email, String typeMerger, String mEmail) {
+    public Email(String idTable, String idContact, String email, String tEmail, String mEmail) {
         this.idTable = idTable;
         this.idContact = idContact;
         this.email = email;
-        this.typeMerger = typeMerger;
+        this.tEmail = tEmail;
         this.mEmail = mEmail;
     }
 
@@ -49,12 +49,12 @@ public class Email implements Serializable {
         this.mEmail = mEmail;
     }
 
-    public String getTypeMerger() {
-        return typeMerger;
+    public String gettEmail() {
+        return tEmail;
     }
 
-    public void setTypeMerger(String typeMerger) {
-        this.typeMerger = typeMerger;
+    public void settEmail(String tEmail) {
+        this.tEmail = tEmail;
     }
 }
 
