@@ -2,26 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center"
     android:orientation="vertical"
+    android:background="@color/appColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <TextView
-
         android:textStyle="bold"
-        android:textSize="25sp"
-        android:textColor="@color/appColor"
+        android:textSize="26sp"
+        android:textColor="@color/white"
         android:text="Permission Needed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <ImageView
         android:layout_marginTop="@dimen/_10sdp"
         android:src="@drawable/img_vip1"
-        android:layout_width="@dimen/_86sdp"
-        android:layout_height="@dimen/_86sdp"/>
+        android:layout_width="@dimen/_84sdp"
+        android:layout_height="@dimen/_84sdp"/>
     <TextView
         android:layout_marginTop="@dimen/_10sdp"
+        android:textColor="@color/white"
+        android:textStyle="italic"
         android:text="To serve your best user experience\nWe need permissions from:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -32,13 +34,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_2sdp"
         android:text="- READ_CONTACTS\n- WRITE_CONTACTS\n- SEND_SMS\n- CALL_PHONE"
-        android:textColor="@color/black" />
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/btnSet"
         android:text="ALLOW"
-        android:textColor="@color/white"
-        android:background="@drawable/shape_button"
+        android:background="@drawable/shape_conner_white"
         android:layout_marginStart="@dimen/_40sdp"
         android:layout_marginEnd="@dimen/_40sdp"
         android:layout_marginTop="@dimen/_20sdp"

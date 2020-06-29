@@ -9,14 +9,14 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        android:background="@color/appColor"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/appColor"
         app:headerLayout="@layout/header"
+        app:itemHorizontalPadding="@dimen/_36sdp"
+        app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
-       app:itemIconTint="@color/white"
-        app:itemHorizontalPadding="@dimen/_30sdp"
         app:menu="@menu/main_menu" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,14 +89,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.tabs.TabLayout
-            android:layout_marginTop="@dimen/_5sdp"
             android:id="@+id/tabBar"
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@color/white"
             app:layout_constraintTop_toBottomOf="@+id/lnNative"
             app:tabGravity="fill"
-            app:tabMode="scrollable">
+            app:tabMode="auto">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tabContacts"

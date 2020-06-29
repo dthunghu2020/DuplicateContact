@@ -6,15 +6,15 @@ public class Phone implements Serializable {
     private String idTable;
     private String idContact;
     private String phone;
-    private String tPhone;
-    private String mPhone;
+    //private String tPhone;
+    //private String mPhone;
 
-    public Phone(String idTable, String idContact, String phone, String tPhone, String mPhone) {
+    public Phone(String idTable, String idContact, String phone) {
         this.idTable = idTable;
         this.idContact = idContact;
         this.phone = phone;
-        this.tPhone = tPhone;
-        this.mPhone = mPhone;
+        //this.tPhone = tPhone;
+        //this.mPhone = mPhone;
     }
 
     public String getIdTable() {
@@ -40,7 +40,7 @@ public class Phone implements Serializable {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
+/*
     public String getmPhone() {
         return mPhone;
     }
@@ -55,5 +55,5 @@ public class Phone implements Serializable {
 
     public void settPhone(String tPhone) {
         this.tPhone = tPhone;
-    }
+    }*/
 }

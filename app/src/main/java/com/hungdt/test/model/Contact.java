@@ -10,15 +10,15 @@ public class Contact implements Serializable, Comparable<Contact> {
     private String idContact;
     private String name;
     private String image;
-    private String tContact;
-    private String tName;
+    //private String tContact;
+    //private String tName;
     /*private String tPhone;
     private String tEmail;*/
-    private String mContact;
-    private String mName;
+    //private String mContact;
+    //private String mName;
     /*private String mPhone;
     private String mEmail;*/
-    private String father;
+    //private String father;
     private String deleted;
     private List<Phone> phones;
     private List<Account> accounts;
@@ -26,16 +26,16 @@ public class Contact implements Serializable, Comparable<Contact> {
     private boolean isTicked = false;
     private int type = 0;
 
-    public Contact(String idTable, String idContact, String name, String image, String tContact, String tName, String mContact, String mName, String father, String deleted, List<Phone> phones, List<Account> accounts, List<Email> emails) {
+    public Contact(String idTable, String idContact, String name, String image, String deleted, List<Phone> phones, List<Account> accounts, List<Email> emails) {
         this.idTable = idTable;
         this.idContact = idContact;
         this.name = name;
         this.image = image;
-        this.tContact = tContact;
-        this.tName = tName;
-        this.mContact = mContact;
-        this.mName = mName;
-        this.father = father;
+        //this.tContact = tContact;
+       //this.tName = tName;
+        //this.mContact = mContact;
+       // this.mName = mName;
+        //this.father = father;
         this.deleted = deleted;
         this.phones = phones;
         this.accounts = accounts;
@@ -122,7 +122,7 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.type = type;
     }
 
-    public String gettContact() {
+    /*public String gettContact() {
         return tContact;
     }
 
@@ -161,7 +161,7 @@ public class Contact implements Serializable, Comparable<Contact> {
 
     public void setmContact(String mContact) {
         this.mContact = mContact;
-    }
+    }*/
 
     @Override
     public int compareTo(Contact o) {

@@ -42,6 +42,7 @@ import java.util.List;
 public class DetailContactActivity extends AppCompatActivity {
 
     private ImageView imgContact, imgBack;
+    private EditText edtName;
     private Contact contact;
     private TextView txtAccountName, txtAccountNumber;
     private RecyclerView rcvPhone, rcvEmail, rcvAccount;
@@ -66,15 +67,19 @@ public class DetailContactActivity extends AppCompatActivity {
         switch (type) {
             case KEY.DETAIL:
                 contact = DBHelper.getInstance(this).getContact(intent.getStringExtra(KEY.ID));
+                txtAccountName.setText(contact.getName());
+                edtName.setVisibility(View.GONE);
                 break;
             case KEY.MERGER:
                 contact = (Contact) intent.getSerializableExtra(KEY.CONTACT);
+                assert contact != null;
+                edtName.setText(contact.getName());
+                txtAccountName.setVisibility(View.GONE);
                 break;
             default:
                 break;
         }
-        assert contact != null;
-        txtAccountName.setText(contact.getName());
+
         Glide.with(this)
                 .load(contact.getImage())
                 .error(R.drawable.ic_code)
@@ -101,19 +106,20 @@ public class DetailContactActivity extends AppCompatActivity {
             rcvPhone.setAdapter(phoneAdapter);
 
         }
-        imgContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewContact();
-            }
-        });
-        cvTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewContact();
-            }
-        });
-
+        if (type.equals(KEY.DETAIL)) {
+            imgContact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewContact();
+                }
+            });
+            cvTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewContact();
+                }
+            });
+        }
 
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +138,22 @@ public class DetailContactActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (type.equals(KEY.MERGER)) {
+            if (edtName.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please Enter Contact Name !", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(MergerDuplicateActivity.ACTION_UPDATE_NAME_CONTACT_MERGER);
+                intent.putExtra(KEY.RENAME, edtName.getText().toString());
+                sendBroadcast(intent);
+                super.onBackPressed();
+            }
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void initView() {
         imgContact = findViewById(R.id.imgContact);
         imgBack = findViewById(R.id.imgBack);
@@ -143,5 +165,6 @@ public class DetailContactActivity extends AppCompatActivity {
         clPhone = findViewById(R.id.clPhone);
         clEmail = findViewById(R.id.clEmail);
         cvTitle = findViewById(R.id.cvTitle);
+        edtName = findViewById(R.id.edtName);
     }
 }

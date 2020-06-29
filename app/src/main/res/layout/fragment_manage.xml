@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Duplicate File"
+            android:text="Duplicates"
             android:textColor="@color/appColor"
             android:textSize="20sp"
             android:textStyle="bold" />

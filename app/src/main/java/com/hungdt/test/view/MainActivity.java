@@ -126,16 +126,16 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
         arrayList = new ArrayList<>();
         viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
-        viewPageAdapter.add(new ManageFragment(), "Manager");
-        viewPageAdapter.add(new MergedFragment(), "Merged");
-        viewPageAdapter.add(new DeleteFragment(), "Delete");
         viewPageAdapter.add(new ContactFragment(), "Contact");
+        viewPageAdapter.add(new ManageFragment(), "Manager");
+        //viewPageAdapter.add(new MergedFragment(), "Merged");
+        viewPageAdapter.add(new DeleteFragment(), "Delete");
         viewPageAdapter.add(new VipFragment(), "Upgrade");
         viewPager.setAdapter(viewPageAdapter);
 
         viewPager.setOffscreenPageLimit(5);
         tabLayout.setupWithViewPager(viewPager);
-
+        tabLayout.getTabAt(1).select();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
             sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
             sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
-            sendBroadcast(new Intent(MergedFragment.ACTION_RELOAD_FRAGMENT_MERGED));
+            //sendBroadcast(new Intent(MergedFragment.ACTION_RELOAD_FRAGMENT_MERGED));
         }
     }
 
@@ -1011,9 +1011,11 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                         String data1 = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA1));
                         String mineType = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE));
                         if (mineType.equals("vnd.android.cursor.item/phone_v2")) {
-                            phones.add(new Phone("0", idContact, data1, KEY.FALSE, KEY.FALSE));
+                            phones.add(new Phone("0", idContact, data1));
+                           // phones.add(new Phone("0", idContact, data1, KEY.FALSE, KEY.FALSE));
                         } else if (mineType.equals("vnd.android.cursor.item/email_v2")) {
-                            emails.add(new Email("0", idContact, data1, KEY.FALSE, KEY.FALSE));
+                            emails.add(new Email("0", idContact, data1));
+                            //emails.add(new Email("0", idContact, data1, KEY.FALSE, KEY.FALSE));
                         }
                     }
 
@@ -1043,28 +1045,28 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 noEmail = true;
             }
 
-            contactList.add(new Contact("0", idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, phones, accounts, emails));
+            contactList.add(new Contact("0", idContact, name, image, KEY.FALSE, phones, accounts, emails));
             if (image != null) {
-                DBHelper.getInstance(this).addContact(idContact, name, image, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+                DBHelper.getInstance(this).addContact(idContact, name, image,  KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             } else {
-                DBHelper.getInstance(this).addContact(idContact, name, "image", KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+                DBHelper.getInstance(this).addContact(idContact, name, "image", KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             }
 
             String id = DBHelper.getInstance(this).getLastID();
             String idContact = DBHelper.getInstance(this).getLastContactID(id);
             if (!noPhone) {
                 for (int i = 0; i < phones.size(); i++) {
-                    DBHelper.getInstance(this).addPhone(idContact, phones.get(i).getPhone(), KEY.FALSE, KEY.FALSE);
+                    DBHelper.getInstance(this).addPhone(idContact, phones.get(i).getPhone(),KEY.FALSE);
                 }
             }
             if (!accounts.isEmpty()) {
                 for (int i = 0; i < accounts.size(); i++) {
-                    DBHelper.getInstance(this).addAccount(idContact, accounts.get(i).getAccountName(), accounts.get(i).getAccountType());
+                    DBHelper.getInstance(this).addAccount(idContact, accounts.get(i).getAccountName(), accounts.get(i).getAccountType(),KEY.FALSE);
                 }
             }
             if (!noEmail) {
                 for (int i = 0; i < emails.size(); i++) {
-                    DBHelper.getInstance(this).addEmail(idContact, emails.get(i).getEmail(), KEY.FALSE, KEY.FALSE);
+                    DBHelper.getInstance(this).addEmail(idContact, emails.get(i).getEmail(),KEY.FALSE);
                 }
             }
             image = null;

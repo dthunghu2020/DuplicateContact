@@ -167,7 +167,8 @@ public class ContactFragment extends Fragment {
                 @Override
                 public void onRewardedVideoAdClosed() {
                     if (rewardedVideoCompleted) {
-                        DBHelper.getInstance(getActivity()).deleteAllContact();
+                        DBHelper.getInstance(getActivity()).reloadContact();
+                       // DBHelper.getInstance(getActivity()).deleteAllContact();
                         new ReloadContact().execute();
                     }
                 }
@@ -267,7 +268,7 @@ public class ContactFragment extends Fragment {
                 ((MainActivity)getActivity()).readAccountContacts();
                 getActivity().sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
                 getActivity().sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
-                getActivity().sendBroadcast(new Intent(MergedFragment.ACTION_RELOAD_FRAGMENT_MERGED));
+                //getActivity().sendBroadcast(new Intent(MergedFragment.ACTION_RELOAD_FRAGMENT_MERGED));
             }else {
                 contactList.addAll(DBHelper.getInstance(getContext()).getAllContact());
                 Collections.sort(contactList);

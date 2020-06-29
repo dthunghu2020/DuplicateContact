@@ -68,9 +68,9 @@ public class MergedFragment extends Fragment {
             contacts.clear();
             //Collections.sort(contactList);
             for(int i = 0; i<contactList.size();i++){
-                if(contactList.get(i).getFather().equals(KEY.TRUE)){
+                /*if(contactList.get(i).getFather().equals(KEY.TRUE)){
                     contacts.add(contactList.get(i));
-                }
+                }*/
             }
             Log.e("hdt123", "onReceive: "+contacts.size() );
             if(contacts.size()!=0){
