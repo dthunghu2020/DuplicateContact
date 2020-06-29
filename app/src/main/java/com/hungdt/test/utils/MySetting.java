@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class MySetting {
-    public static final String MAX_LENGTH = "maxLength";
-    public static final String DATE = "date";
-    public static final String COUNT = "count";
+    public static final String GEMS = "gems";
     public static final String CONFIG_GG_FB = "dfhhddfhdf";
     public static final String CONFIG_MORE_GAME = "ssvbvbc";
     public static final String SETTINGS = "ggggdfgdfhfgs";
@@ -18,7 +16,7 @@ public class MySetting {
         SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(CONFIG_MORE_GAME, value);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getConfigMoregame(Context context) {
@@ -26,39 +24,15 @@ public class MySetting {
         return preferences.getString(CONFIG_MORE_GAME, "false");
     }
 
-    public static String getDate(Context context) {
+    public static int getGems(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-        return preferences.getString(DATE,"");
+        return preferences.getInt(GEMS, 0);
     }
 
-    public static void setDate(Context context,String date) {
+    public static void setGems(Context context, int count) {
         SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(DATE, date);
-        editor.apply();
-    }
-
-    public static int getCount(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-        return preferences.getInt(COUNT, 0);
-    }
-
-    public static void setCount(Context context, int count) {
-        SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(COUNT, count);
-        editor.apply();
-    }
-
-    public static int getMaxLength(Context context) {
-        SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-        return preferences.getInt(MAX_LENGTH, 10);
-    }
-
-    public static void setMaxLength(Context context, int maxLength) {
-        SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(MAX_LENGTH, maxLength);
+        editor.putInt(GEMS, count);
         editor.apply();
     }
 

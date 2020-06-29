@@ -68,6 +68,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
@@ -76,21 +77,22 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     private ViewPager viewPager;
     private TabItem tabContacts, tabManager, tabMerged, tabDelete, tabVIP;
 
+    private TextView txtGems;
     private ImageView imgMenu, imgRemoveAds, imgGift;
     private ArrayList<String> arrayList = new ArrayList<>();
     private ViewPageAdapter viewPageAdapter;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    final Calendar calendar = Calendar.getInstance();
     private BillingProcessor bp;
     private RewardedVideoAd videoAds;
     private boolean readyToPurchase = false;
     private boolean rewardedVideoCompleted = false;
     private LoadingDialog loadingDialog;
-    private boolean isDailyReward = false;
     public static InterstitialAd ggInterstitialAd;
     public static com.facebook.ads.InterstitialAd fbInterstitialAd;
 
+    private  Random rd = new Random();
+    int gems;
     private String idContact;
     private String name;
     private String image;
@@ -116,16 +118,18 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         //readAccountContacts();
         initInterstitialAd();
         View hView = navigationView.getHeaderView(0);
+        txtGems = hView.findViewById(R.id.txtGems);
+        txtGems.setText("x "+MySetting.getGems(MainActivity.this));
         if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
             Ads.initNativeGg((LinearLayout) hView.findViewById(R.id.lnNative), this, true, true);
         }
 
         arrayList = new ArrayList<>();
         viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
-        viewPageAdapter.add(new ContactFragment(), "Contact");
         viewPageAdapter.add(new ManageFragment(), "Manager");
         viewPageAdapter.add(new MergedFragment(), "Merged");
         viewPageAdapter.add(new DeleteFragment(), "Delete");
+        viewPageAdapter.add(new ContactFragment(), "Contact");
         viewPageAdapter.add(new VipFragment(), "Upgrade");
         viewPager.setAdapter(viewPageAdapter);
 
@@ -243,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             int count = DBHelper.getInstance(MainActivity.this).getAllContact().size();
             Log.e("123", "count: " + count);
             if (count == 0) {
-               readAccountContacts();
+                readAccountContacts();
             } else {
                 contactList.addAll(DBHelper.getInstance(MainActivity.this).getAllContact());
                 Collections.sort(contactList);
@@ -436,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         Button btnBack = view.findViewById(R.id.btnBack);
         TextView txtTitle = view.findViewById(R.id.txtTitle);
         TextView txtBody = view.findViewById(R.id.txtBody);
-        txtBody.setText("Would you like to see a video ads\nto get maximum free 10 gem ?");
+        txtBody.setText("Would you like to see a video ads\nto get maximum free 5 gem ?");
         txtTitle.setText("Daily Reward!");
 
 
@@ -465,11 +469,13 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
     private void loadVideoAds() {
         if (Helper.isConnectedInternet(this)) {
+            gems = rd.nextInt(5)+1;
             videoAds = MobileAds.getRewardedVideoAdInstance(this);
             videoAds.setRewardedVideoAdListener(new RewardedVideoAdListener() {
                 @Override
                 public void onRewarded(RewardItem reward) {
-                    MySetting.setMaxLength(MainActivity.this, MySetting.getMaxLength(MainActivity.this) + 3);
+                    MySetting.setGems(MainActivity.this, MySetting.getGems(MainActivity.this) + gems);
+                    txtGems.setText("x "+MySetting.getGems(MainActivity.this));
                     rewardedVideoCompleted = true;
                 }
 
@@ -480,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 @Override
                 public void onRewardedVideoAdClosed() {
                     if (rewardedVideoCompleted) {
-                        //openRewardSuccessDialog(false);
+                        openRewardSuccessDialog(gems);
                     }
                 }
 
@@ -564,6 +570,20 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         }
     }
 
+    private void openRewardSuccessDialog(int gem) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.reward_success_dialog);
+        TextView txtGemRewarded = dialog.findViewById(R.id.txtGemRewarded);
+        txtGemRewarded.setText("x "+gem);
+        dialog.findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
 
     private void initView() {
         tabLayout = findViewById(R.id.tabBar);
@@ -969,6 +989,12 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 String account = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_NAME));
                 String accountType = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts.ACCOUNT_TYPE));
                 //readDataXXX(idContact)
+                if (accountType == null) {
+                    accountType = "Device";
+                }
+                if (account == null) {
+                    account = "Device";
+                }
                 accounts.add(new Account(account, accountType));
                 String[] projectionx = {
                         ContactsContract.Data.RAW_CONTACT_ID,
@@ -980,7 +1006,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
                 Cursor cursorData = getContentResolver().query(ContactsContract.Data.CONTENT_URI, projectionx, selectionx, null, null);
                 while (cursorData != null && cursorData.moveToNext()) {
-                    if (accountType.contains("xiaomi") || accountType.contains("google") || accountType.contains("pcsc") ||
+                    if (accountType.contains("xiaomi") || accountType.contains("google") || accountType.contains("pcsc") || accountType.contains("Device") ||
                             accountType.contains("phone") || accountType.contains("Phone") || accountType.contains("PHONE") || accountType.contains("Sim") || accountType.contains("sim") || accountType.contains("SIM")) {
                         String data1 = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.DATA1));
                         String mineType = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE));

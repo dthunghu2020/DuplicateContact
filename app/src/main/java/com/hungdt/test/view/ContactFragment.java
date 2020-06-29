@@ -157,7 +157,6 @@ public class ContactFragment extends Fragment {
             videoAds.setRewardedVideoAdListener(new RewardedVideoAdListener() {
                 @Override
                 public void onRewarded(RewardItem reward) {
-                    //MySetting.setMaxLength(getActivity(), MySetting.getMaxLength(getActivity()) + 3);
                     rewardedVideoCompleted = true;
                 }
 
@@ -170,7 +169,6 @@ public class ContactFragment extends Fragment {
                     if (rewardedVideoCompleted) {
                         DBHelper.getInstance(getActivity()).deleteAllContact();
                         new ReloadContact().execute();
-                       //todo
                     }
                 }
 

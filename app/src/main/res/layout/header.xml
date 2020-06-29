@@ -7,28 +7,50 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_marginTop="@dimen/_25sdp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_120sdp"
-        android:src="@drawable/img_scan"
-        android:orientation="vertical" />
+        android:layout_height="@dimen/_112sdp"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:orientation="vertical"
+        android:src="@drawable/img_scan" />
+
     <TextView
-        android:layout_marginBottom="@dimen/_6sdp"
-        android:layout_marginTop="@dimen/_6sdp"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:textColor="@color/white"
-        android:text="Contact Manager"
-        android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
+        android:gravity="center_horizontal"
+        android:text="Contact Manager"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:src="@drawable/gem" />
+
+        <TextView
+            android:id="@+id/txtGems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:text="GEMS"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/lnNative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_2sdp"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:orientation="vertical" />
 
 
 </LinearLayout>

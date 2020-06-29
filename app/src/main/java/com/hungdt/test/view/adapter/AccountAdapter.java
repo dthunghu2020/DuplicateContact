@@ -37,29 +37,21 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountH
     public void onBindViewHolder(@NonNull AccountHolder holder, final int position) {
         holder.imgSMS.setVisibility(View.GONE);
         holder.txtPhone.setText(accounts.get(position).getAccountName());
-        switch (accounts.get(position).getAccountType()) {
-            case "vnd.sec.contact.phone":
-            case "vnd.sec.contact.sim":
-            case "vnd.sec.contact.sim2":;
-                holder.imgCall.setImageResource(R.drawable.ic_id);
-                break;
-            case "com.google.android.apps.tachyon":
-                holder.imgCall.setImageResource(R.drawable.duo);
-                break;
-            case "com.zing.zalo":
-                holder.imgCall.setImageResource(R.drawable.zalo);
-                break;
-            case "com.google":
-                holder.imgCall.setImageResource(R.drawable.google);
-                break;
-            default:
-                holder.imgCall.setImageResource(R.drawable.ic_code);
-                break;
-
+        if(accounts.get(position).getAccountType().equals("vnd.sec.contact.phone")||
+                accounts.get(position).getAccountType().equals("vnd.sec.contact.sim")||
+                        accounts.get(position).getAccountType().equals("vnd.sec.contact.sim2")||
+                accounts.get(position).getAccountType().equals("Device")){
+            holder.imgCall.setImageResource(R.drawable.ic_id);
+        }else if(  accounts.get(position).getAccountType().equals("com.google.android.apps.tachyon")){
+            holder.imgCall.setImageResource(R.drawable.duo);
+        }else if ( accounts.get(position).getAccountType().equals("com.zing.zalo")){
+            holder.imgCall.setImageResource(R.drawable.zalo);
+        }else if (accounts.get(position).getAccountType().equals("com.google")){
+            holder.imgCall.setImageResource(R.drawable.google);
+        }else {
+            holder.imgCall.setImageResource(R.drawable.ic_code);
         }
-
     }
-
 
     @Override
     public int getItemCount() {

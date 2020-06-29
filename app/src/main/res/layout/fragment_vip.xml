@@ -21,8 +21,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="@dimen/_140sdp"
-                    android:layout_height="@dimen/_140sdp"
+                    android:layout_width="@dimen/_136sdp"
+                    android:layout_height="@dimen/_136sdp"
                     android:src="@drawable/img_nav_bar" />
 
                 <LinearLayout
@@ -36,7 +36,7 @@
                         android:layout_height="wrap_content"
                         android:text="Contacts Manager"
                         android:textColor="@color/text_title_color"
-                        android:textSize="24sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -50,7 +50,7 @@
                         android:paddingBottom="@dimen/_4sdp"
                         android:text="PRO"
                         android:textColor="@color/white"
-                        android:textSize="22sp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -68,7 +68,7 @@
                         android:paddingEnd="@dimen/_45sdp"
                         android:paddingBottom="@dimen/_2sdp"
                         android:text="UPGRADE TO VIP USER"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         android:textColor="@color/white" />
                 </LinearLayout>
@@ -77,7 +77,7 @@
                     android:id="@+id/txtMoney"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_4sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:text="$9,99/month"
                     android:textColor="@color/black"
                     android:textSize="12sp" />
@@ -85,7 +85,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:padding="@dimen/_6sdp">
 
                     <ImageView
