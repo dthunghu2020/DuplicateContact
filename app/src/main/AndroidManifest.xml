@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-permission android:name="com.android.vending.BILLING" />
-
+    <!--android:name="android.support.multidex.MultiDexApplication"-->
     <application
         android:name=".EnableMultiDex"
         android:allowBackup="true"
@@ -69,6 +69,7 @@
         <activity android:name=".view.DuplicateActivity" />
         <activity android:name=".view.MergerDuplicateActivity" />
         <activity android:name=".view.WaitingActivity" />
+        <activity android:name=".view.RestoreActivity" />
     </application>
 
 

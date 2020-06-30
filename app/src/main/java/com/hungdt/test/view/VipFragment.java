@@ -3,10 +3,15 @@ package com.hungdt.test.view;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +32,15 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
     private boolean readyToPurchase = false;
     private Button btnVip;
     TextView txtMoney;
+    LinearLayout lnRateApp, lnClose;
+    TextView tvExit;
 
+    ImageView imgStarLight1, imgStarLight2, imgStarLight3, imgStarLight4, imgStarLight5;
+    boolean isFromMain = false;
+    boolean isEnableClick = true;
+    boolean isRate = true;
+
+    CountDownTimer timer;
     public VipFragment() {
     }
 
@@ -41,7 +54,8 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Helper.setColorStatusBar(getActivity(), R.color.status_bar);
-        Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
+        Ads.initNativeGgFb((LinearLayout) view.findViewById(R.id.lnNative), getActivity(), true);
+        //Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
 
         billingProcessor = BillingProcessor.newBillingProcessor(getLayoutInflater().getContext().getApplicationContext(), getString(R.string.BASE64),this); // doesn't bind
         billingProcessor.initialize();
@@ -65,6 +79,271 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
             btnVip.setVisibility(View.GONE);
             txtMoney.setVisibility(View.GONE);
         }
+
+
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        //Ads.initNativeGgFb((LinearLayout)findViewById(R.id.lnNative), this, true);
+
+        try {
+            if (getActivity().getIntent().hasExtra("isRate")) {
+                isRate = getActivity().getIntent().getBooleanExtra("isRate", true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (getActivity().getIntent().hasExtra("isExit")) {
+                isFromMain = getActivity().getIntent().getBooleanExtra("isExit", false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            initView(view);
+            if (!isFromMain) setData();
+            click();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        if (billingProcessor != null) {
+            billingProcessor.release();
+        }
+        try {
+            if (timer != null) {
+                timer.cancel();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
+    }
+
+    private void click() {
+        imgStarLight1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isEnableClick) {
+                    try {
+                        if (timer != null) {
+                            timer.cancel();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    isEnableClick = false;
+                    MySetting.putRateApp(getContext(), 1);
+                    setData();
+                    try {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Helper.feedback(getContext());
+                                //finish();
+                                isEnableClick = true;
+                            }
+                        }, 1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        imgStarLight2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isEnableClick) {
+                    try {
+                        if (timer != null) {
+                            timer.cancel();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    isEnableClick = false;
+                    MySetting.putRateApp(getContext(), 2);
+                    setData();
+                    try {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Helper.feedback(getContext());
+                                //finish();
+                                isEnableClick = true;
+                            }
+                        }, 1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        imgStarLight3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isEnableClick) {
+                    try {
+                        if (timer != null) {
+                            timer.cancel();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    isEnableClick = false;
+                    MySetting.putRateApp(getContext(), 3);
+                    setData();
+                    try {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Helper.feedback(getContext());
+                               // finish();
+                                isEnableClick = true;
+                            }
+                        }, 1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        imgStarLight4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isEnableClick) {
+                    try {
+                        if (timer != null) {
+                            timer.cancel();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    isEnableClick = false;
+                    MySetting.putRateApp(getContext(), 4);
+                    setData();
+                    try {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Helper.callPlayStore(getContext(), getActivity().getPackageName());
+                                //finish();
+                                isEnableClick = true;
+                            }
+                        }, 1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        imgStarLight5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isEnableClick) {
+                    try {
+                        if (timer != null) {
+                            timer.cancel();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    isEnableClick = false;
+                    MySetting.putRateApp(getContext(), 5);
+                    setData();
+                    try {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Helper.callPlayStore(getContext(), getActivity().getPackageName());
+                                //finish();
+                                isEnableClick = true;
+                            }
+                        }, 1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void setData() {
+        if (MySetting.isRateApp(getContext()) == 0) {
+            imgStarLight1.setImageResource(R.drawable.ic_like_off);
+            imgStarLight2.setImageResource(R.drawable.ic_like_off);
+            imgStarLight3.setImageResource(R.drawable.ic_like_off);
+            imgStarLight4.setImageResource(R.drawable.ic_like_off);
+            imgStarLight5.setImageResource(R.drawable.ic_like_off);
+        } else if (MySetting.isRateApp(getContext()) == 1) {
+            imgStarLight1.setImageResource(R.drawable.ic_like_on);
+            imgStarLight2.setImageResource(R.drawable.ic_like_off);
+            imgStarLight3.setImageResource(R.drawable.ic_like_off);
+            imgStarLight4.setImageResource(R.drawable.ic_like_off);
+            imgStarLight5.setImageResource(R.drawable.ic_like_off);
+        } else if (MySetting.isRateApp(getContext()) == 2) {
+            imgStarLight1.setImageResource(R.drawable.ic_like_on);
+            imgStarLight2.setImageResource(R.drawable.ic_like_on);
+            imgStarLight3.setImageResource(R.drawable.ic_like_off);
+            imgStarLight4.setImageResource(R.drawable.ic_like_off);
+            imgStarLight5.setImageResource(R.drawable.ic_like_off);
+        } else if (MySetting.isRateApp(getContext()) == 3) {
+            imgStarLight1.setImageResource(R.drawable.ic_like_on);
+            imgStarLight2.setImageResource(R.drawable.ic_like_on);
+            imgStarLight3.setImageResource(R.drawable.ic_like_on);
+            imgStarLight4.setImageResource(R.drawable.ic_like_off);
+            imgStarLight5.setImageResource(R.drawable.ic_like_off);
+        } else if (MySetting.isRateApp(getContext()) == 4) {
+            imgStarLight1.setImageResource(R.drawable.ic_like_on);
+            imgStarLight2.setImageResource(R.drawable.ic_like_on);
+            imgStarLight3.setImageResource(R.drawable.ic_like_on);
+            imgStarLight4.setImageResource(R.drawable.ic_like_on);
+            imgStarLight5.setImageResource(R.drawable.ic_like_off);
+        } else if (MySetting.isRateApp(getContext()) == 5) {
+            imgStarLight1.setImageResource(R.drawable.ic_like_on);
+            imgStarLight2.setImageResource(R.drawable.ic_like_on);
+            imgStarLight3.setImageResource(R.drawable.ic_like_on);
+            imgStarLight4.setImageResource(R.drawable.ic_like_on);
+            imgStarLight5.setImageResource(R.drawable.ic_like_on);
+        }
+
+
+    }
+
+    private void initView(View view) {
+        lnRateApp =  view.findViewById(R.id.lnDialogRateApp);
+        imgStarLight1 =  view.findViewById(R.id.imgStarLight1Rate);
+        imgStarLight2 = view.findViewById(R.id.imgStarLight2Rate);
+        imgStarLight3 =  view.findViewById(R.id.imgStarLight3Rate);
+        imgStarLight4 =  view.findViewById(R.id.imgStarLight4Rate);
+        imgStarLight5 =  view.findViewById(R.id.imgStarLight5Rate);
+        lnClose =  view.findViewById(R.id.lnExitRateApp);
+        tvExit =  view.findViewById(R.id.tvExitRateApp);
+        tvExit.setVisibility(View.GONE);
+        lnClose =  view.findViewById(R.id.lnExitRateApp);
+        tvExit =  view.findViewById(R.id.tvExitRateApp);
+        tvExit.setVisibility(View.GONE);
+
+        if (isFromMain) {
+            tvExit.setVisibility(View.VISIBLE);
+        }
+        click();
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -73,13 +352,7 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
         }
     }
 
-    @Override
-    public void onDestroy() {
-        if (billingProcessor != null) {
-            billingProcessor.release();
-        }
-        super.onDestroy();
-    }
+
 
     @Override
     public void onProductPurchased(@Nullable  String productId, TransactionDetails details) {

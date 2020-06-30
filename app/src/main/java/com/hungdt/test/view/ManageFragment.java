@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
-import com.hungdt.test.model.Contact;
 import com.hungdt.test.model.Duplicate;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
@@ -27,7 +26,6 @@ import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static com.hungdt.test.view.MainActivity.contactList;
 import static com.hungdt.test.view.MainActivity.showInterstitial;
@@ -42,14 +40,12 @@ public class ManageFragment extends Fragment {
     private ArrayList<String> idNames = new ArrayList<>();
     private ArrayList<String> idPhones = new ArrayList<>();
     private ArrayList<String> idEmails = new ArrayList<>();
-    private ConstraintLayout clDupContact, clDupPhone, clDupEmail, clSimilarName;
+    private ConstraintLayout clDupContact, clDupPhone, clDupEmail, clSimilarName, clBackup;
     private TextView txtDupContact, txtDupPhone, txtDupEmail, txtSimilarName;
     private int dubContact = 0;
     private int dubPhone = 0;
     private int dubEmail = 0;
     private int dubName = 0;
-    private int type;
-    private Random rd;
 
     public ManageFragment() {
     }
@@ -69,8 +65,6 @@ public class ManageFragment extends Fragment {
 
         IntentFilter intentFilter = new IntentFilter(ACTION_RELOAD_FRAGMENT_MANAGE);
         getActivity().registerReceiver(reloadFragmentManage, intentFilter);
-
-        rd = new Random();
 
         clDupContact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,6 +108,14 @@ public class ManageFragment extends Fragment {
             }
         });
 
+        clBackup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), RestoreActivity.class);
+                startActivity(intent);
+                showInter();
+            }
+        });
     }
 
     private void showInter() {
@@ -444,6 +446,7 @@ public class ManageFragment extends Fragment {
         clDupContact = view.findViewById(R.id.clDupContact);
         clDupPhone = view.findViewById(R.id.clDupPhone);
         clDupEmail = view.findViewById(R.id.clDupEmail);
+        clBackup = view.findViewById(R.id.clBackup);
         clSimilarName = view.findViewById(R.id.clSimilarName);
         txtDupContact = view.findViewById(R.id.txtDupContact);
         txtDupPhone = view.findViewById(R.id.txtDupPhone);

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 public class MySetting {
     public static final String GEMS = "gems";
+    public static final String FIRST_TIME = "first";
     public static final String CONFIG_GG_FB = "dfhhddfhdf";
     public static final String CONFIG_MORE_GAME = "ssvbvbc";
     public static final String SETTINGS = "ggggdfgdfhfgs";
@@ -23,6 +24,20 @@ public class MySetting {
         SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
         return preferences.getString(CONFIG_MORE_GAME, "false");
     }
+
+
+    public static boolean firstTime(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        return preferences.getBoolean(FIRST_TIME,true);
+    }
+
+    public static void setFirstTime(Context context, boolean isFirst) {
+        SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(FIRST_TIME, isFirst);
+        editor.apply();
+    }
+
 
     public static int getGems(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);

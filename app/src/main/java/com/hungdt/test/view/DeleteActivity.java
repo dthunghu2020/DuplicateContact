@@ -28,7 +28,7 @@ import com.hungdt.test.database.DBHelper;
 import com.hungdt.test.model.Contact;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
-import com.hungdt.test.view.adapter.DeleteAdapter;
+import com.hungdt.test.view.adapter.SelectAdapter;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class DeleteActivity extends AppCompatActivity {
     private LinearLayout llDelete, llButtonDelete,llEmpty;
     private RecyclerView rcvDelete;
     private List<Contact> contacts = new ArrayList<>();
-    private DeleteAdapter deleteAdapter;
+    private SelectAdapter deleteAdapter;
     private String type;
 
     @SuppressLint("SetTextI18n")
@@ -64,17 +64,11 @@ public class DeleteActivity extends AppCompatActivity {
         if(contacts.size()!=0){
             llEmpty.setVisibility(View.GONE);
         }else {
-            switch (type) {
-                case "noName":
-                case "noPhone":
-                case "noEmail":
-                    txtEmpty.setText("No Contact");
-                    break;
-                default:
-                    break;
-            }
+            txtEmpty.setText("No Contact");
+            cbAll.setVisibility(View.GONE);
+            llDelete.setVisibility(View.GONE);
         }
-        deleteAdapter = new DeleteAdapter(this, contacts);
+        deleteAdapter = new SelectAdapter(this, contacts,KEY.DELETE);
         rcvDelete.setLayoutManager(new LinearLayoutManager(this));
         rcvDelete.setAdapter(deleteAdapter);
 
@@ -99,10 +93,6 @@ public class DeleteActivity extends AppCompatActivity {
             }
         });
 
-        if (contacts.size() == 0) {
-            llDelete.setVisibility(View.GONE);
-        }
-
         llButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,9 +110,7 @@ public class DeleteActivity extends AppCompatActivity {
                     }else {
                         Toast.makeText(DeleteActivity.this, "No contact to delete!!!", Toast.LENGTH_SHORT).show();
                     }
-
                 }
-
             }
         });
     }
@@ -180,13 +168,21 @@ public class DeleteActivity extends AppCompatActivity {
                         } catch (RemoteException | OperationApplicationException e) {
                             e.printStackTrace();
                         }
-                        DBHelper.getInstance(DeleteActivity.this).deleteContact(contacts.get(i).getIdContact());
+                        DBHelper.getInstance(DeleteActivity.this).updateDisableContact(contacts.get(i).getIdContact());
                         contactList.remove(contacts.get(i));
                     }
                 }
                 contacts.clear();
                 getContactFromDB();
                 deleteAdapter.notifyDataSetChanged();
+                if(contacts.size()!=0){
+                    llEmpty.setVisibility(View.GONE);
+                }else {
+                    llEmpty.setVisibility(View.VISIBLE);
+                    txtEmpty.setText("No Contact");
+                    cbAll.setVisibility(View.GONE);
+                    llDelete.setVisibility(View.GONE);
+                }
                 sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
                 sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
                 sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
@@ -195,7 +191,6 @@ public class DeleteActivity extends AppCompatActivity {
                 else if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))
                     UnityAds.show(DeleteActivity.this, getString(R.string.INTER_UNI));
                     Toast.makeText(DeleteActivity.this, "Delete Success!!!", Toast.LENGTH_SHORT).show();
-
                 dialog.dismiss();
             }
         });

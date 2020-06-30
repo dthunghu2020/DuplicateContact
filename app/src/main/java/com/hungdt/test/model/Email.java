@@ -6,15 +6,11 @@ public class Email implements Serializable {
     private String idTable;
     private String idContact;
     private String email;
-    //private String tEmail;
-    //private String mEmail;
 
     public Email(String idTable, String idContact, String email) {
         this.idTable = idTable;
         this.idContact = idContact;
         this.email = email;
-      /*  this.tEmail = tEmail;
-        this.mEmail = mEmail;*/
     }
 
     public String getIdTable() {
@@ -40,21 +36,5 @@ public class Email implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
-   /* public String getmEmail() {
-        return mEmail;
-    }
-
-    public void setmEmail(String mEmail) {
-        this.mEmail = mEmail;
-    }
-
-    public String gettEmail() {
-        return tEmail;
-    }
-
-    public void settEmail(String tEmail) {
-        this.tEmail = tEmail;
-    }*/
 }
 

@@ -2,6 +2,7 @@ package com.hungdt.test.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,7 +11,9 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,8 +52,10 @@ public class DetailContactActivity extends AppCompatActivity {
     private PhoneAdapter phoneAdapter;
     private EmailAdapter emailAdapter;
     private AccountAdapter accountAdapter;
-    private ConstraintLayout clPhone, clEmail;
+    private Button btnEditName;
+    private ConstraintLayout clPhone, clEmail, clEditName;
     private CardView cvTitle;
+    private boolean changeName = false;
 
     private String type;
 
@@ -65,18 +70,22 @@ public class DetailContactActivity extends AppCompatActivity {
         type = intent.getStringExtra(KEY.TYPE);
         assert type != null;
         switch (type) {
+            case KEY.BACKUP:
+                contact = DBHelper.getInstance(this).getContactBackUp(intent.getStringExtra(KEY.ID));
+                Log.e("222", "onCreate: "+contact.getEmails().size()+contact.getAccounts().size()+contact.getPhones().size());
+                txtAccountName.setText(contact.getName());
+                clEditName.setVisibility(View.GONE);
+                break;
             case KEY.DETAIL:
                 contact = DBHelper.getInstance(this).getContact(intent.getStringExtra(KEY.ID));
                 txtAccountName.setText(contact.getName());
-                edtName.setVisibility(View.GONE);
+                clEditName.setVisibility(View.GONE);
                 break;
             case KEY.MERGER:
                 contact = (Contact) intent.getSerializableExtra(KEY.CONTACT);
                 assert contact != null;
                 edtName.setText(contact.getName());
                 txtAccountName.setVisibility(View.GONE);
-                break;
-            default:
                 break;
         }
 
@@ -85,7 +94,7 @@ public class DetailContactActivity extends AppCompatActivity {
                 .error(R.drawable.ic_code)
                 .into(imgContact);
 
-
+        Log.e("222", "getAccounts: "+  contact.getAccounts().size());
         accountAdapter = new AccountAdapter(this, contact.getAccounts());
         rcvAccount.setLayoutManager(new LinearLayoutManager(this));
         rcvAccount.setAdapter(accountAdapter);
@@ -93,6 +102,7 @@ public class DetailContactActivity extends AppCompatActivity {
         if (contact.getEmails().size() == 0) {
             clEmail.setVisibility(View.GONE);
         } else {
+            Log.e("222", "getEmails: "+  contact.getEmails().size());
             emailAdapter = new EmailAdapter(this, contact.getEmails());
             rcvEmail.setLayoutManager(new LinearLayoutManager(this));
             rcvEmail.setAdapter(emailAdapter);
@@ -100,6 +110,7 @@ public class DetailContactActivity extends AppCompatActivity {
         if (contact.getPhones().size() == 0) {
             clPhone.setVisibility(View.GONE);
         } else {
+            Log.e("222", "getPhones: "+  contact.getPhones().size());
             txtAccountNumber.setText(contact.getPhones().get(0).getPhone());
             phoneAdapter = new PhoneAdapter(this, contact.getPhones());
             rcvPhone.setLayoutManager(new LinearLayoutManager(this));
@@ -128,6 +139,18 @@ public class DetailContactActivity extends AppCompatActivity {
             }
         });
 
+        btnEditName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edtName.getText().toString().isEmpty()) {
+                    Toast.makeText(DetailContactActivity.this, "Please Enter Contact Name !", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DetailContactActivity.this, "Change Name Success !", Toast.LENGTH_SHORT).show();
+                    changeName = true;
+                }
+            }
+        });
+
     }
 
     private void viewContact() {
@@ -141,17 +164,24 @@ public class DetailContactActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (type.equals(KEY.MERGER)) {
-            if (edtName.getText().toString().isEmpty()) {
-                Toast.makeText(this, "Please Enter Contact Name !", Toast.LENGTH_SHORT).show();
-            } else {
+            if (changeName) {
                 Intent intent = new Intent(MergerDuplicateActivity.ACTION_UPDATE_NAME_CONTACT_MERGER);
                 intent.putExtra(KEY.RENAME, edtName.getText().toString());
                 sendBroadcast(intent);
-                super.onBackPressed();
             }
-        } else {
-            super.onBackPressed();
         }
+        super.onBackPressed();
+
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (getCurrentFocus() != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     private void initView() {
@@ -166,5 +196,7 @@ public class DetailContactActivity extends AppCompatActivity {
         clEmail = findViewById(R.id.clEmail);
         cvTitle = findViewById(R.id.cvTitle);
         edtName = findViewById(R.id.edtName);
+        btnEditName = findViewById(R.id.btnEditName);
+        clEditName = findViewById(R.id.clEditName);
     }
 }

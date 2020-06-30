@@ -10,15 +10,6 @@ public class Contact implements Serializable, Comparable<Contact> {
     private String idContact;
     private String name;
     private String image;
-    //private String tContact;
-    //private String tName;
-    /*private String tPhone;
-    private String tEmail;*/
-    //private String mContact;
-    //private String mName;
-    /*private String mPhone;
-    private String mEmail;*/
-    //private String father;
     private String deleted;
     private List<Phone> phones;
     private List<Account> accounts;
@@ -31,11 +22,6 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.idContact = idContact;
         this.name = name;
         this.image = image;
-        //this.tContact = tContact;
-       //this.tName = tName;
-        //this.mContact = mContact;
-       // this.mName = mName;
-        //this.father = father;
         this.deleted = deleted;
         this.phones = phones;
         this.accounts = accounts;

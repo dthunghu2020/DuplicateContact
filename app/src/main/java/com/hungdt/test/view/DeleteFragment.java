@@ -48,7 +48,7 @@ public class DeleteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         initView(view);
-        Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
+        Ads.initNativeGgFb((LinearLayout) view.findViewById(R.id.lnNative), getActivity(), true);
 
         clNoName.setOnClickListener(new View.OnClickListener() {
             @Override

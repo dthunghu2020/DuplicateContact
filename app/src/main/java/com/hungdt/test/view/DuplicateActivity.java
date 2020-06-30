@@ -55,7 +55,6 @@ public class DuplicateActivity extends AppCompatActivity {
     private List<String> idContact = new ArrayList<>();
     private ArrayList<String> typeList = new ArrayList<>();
     public static final String ACTION_FINISH_ACTIVITY = "finishDuplicateActivity";
-    private Random rd = new Random();
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -73,7 +72,7 @@ public class DuplicateActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         type = intent.getStringExtra(KEY.DUP);
-        idContact.addAll(Objects.requireNonNull(intent.getStringArrayListExtra(KEY.LIST_ID)));
+        idContact.addAll(intent.getStringArrayListExtra(KEY.LIST_ID));
         Log.e("111111", "onCreate: dup " + type + idContact);
         for (int i = 0; i < idContact.size(); i++) {
             for (int j = 0; j < contactList.size(); j++) {

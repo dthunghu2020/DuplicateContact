@@ -121,8 +121,6 @@ public class AskPermissionActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
-        //Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 

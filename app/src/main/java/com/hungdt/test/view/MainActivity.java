@@ -64,11 +64,9 @@ import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
@@ -90,9 +88,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     private LoadingDialog loadingDialog;
     public static InterstitialAd ggInterstitialAd;
     public static com.facebook.ads.InterstitialAd fbInterstitialAd;
-
-    private  Random rd = new Random();
-    int gems;
     private String idContact;
     private String name;
     private String image;
@@ -119,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         initInterstitialAd();
         View hView = navigationView.getHeaderView(0);
         txtGems = hView.findViewById(R.id.txtGems);
-        txtGems.setText("x "+MySetting.getGems(MainActivity.this));
+        txtGems.setText("x " + MySetting.getGems(MainActivity.this));
         if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
             Ads.initNativeGg((LinearLayout) hView.findViewById(R.id.lnNative), this, true, true);
         }
@@ -128,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
         viewPageAdapter.add(new ContactFragment(), "Contact");
         viewPageAdapter.add(new ManageFragment(), "Manager");
-        //viewPageAdapter.add(new MergedFragment(), "Merged");
         viewPageAdapter.add(new DeleteFragment(), "Delete");
         viewPageAdapter.add(new VipFragment(), "Upgrade");
         viewPager.setAdapter(viewPageAdapter);
@@ -250,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 readAccountContacts();
             } else {
                 contactList.addAll(DBHelper.getInstance(MainActivity.this).getAllContact());
-                Collections.sort(contactList);
             }
             return null;
         }
@@ -258,11 +251,16 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            loadingDialog.dismissDialog();
             sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
             sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
             sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
-            //sendBroadcast(new Intent(MergedFragment.ACTION_RELOAD_FRAGMENT_MERGED));
+            loadingDialog.dismissDialog();
+            if (MySetting.firstTime(MainActivity.this)) {
+                MySetting.setFirstTime(MainActivity.this, false);
+                MySetting.setGems(MainActivity.this, 10);
+                txtGems.setText("x " + MySetting.getGems(MainActivity.this));
+                openRewardSuccessDialog(true);
+            }
         }
     }
 
@@ -440,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         Button btnBack = view.findViewById(R.id.btnBack);
         TextView txtTitle = view.findViewById(R.id.txtTitle);
         TextView txtBody = view.findViewById(R.id.txtBody);
-        txtBody.setText("Would you like to see a video ads\nto get maximum free 5 gem ?");
+        txtBody.setText("Do you want to watch video ads \nto get free 5 gem?");
         txtTitle.setText("Daily Reward!");
 
 
@@ -463,19 +461,18 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         builder.setView(view);
         builder.setCancelable(false);
         morePlaceDialog = builder.create();
-        Objects.requireNonNull(morePlaceDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        morePlaceDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         morePlaceDialog.show();
     }
 
     private void loadVideoAds() {
         if (Helper.isConnectedInternet(this)) {
-            gems = rd.nextInt(5)+1;
             videoAds = MobileAds.getRewardedVideoAdInstance(this);
             videoAds.setRewardedVideoAdListener(new RewardedVideoAdListener() {
                 @Override
                 public void onRewarded(RewardItem reward) {
-                    MySetting.setGems(MainActivity.this, MySetting.getGems(MainActivity.this) + gems);
-                    txtGems.setText("x "+MySetting.getGems(MainActivity.this));
+                    MySetting.setGems(MainActivity.this, MySetting.getGems(MainActivity.this) + 5);
+                    txtGems.setText("x " + MySetting.getGems(MainActivity.this));
                     rewardedVideoCompleted = true;
                 }
 
@@ -486,7 +483,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 @Override
                 public void onRewardedVideoAdClosed() {
                     if (rewardedVideoCompleted) {
-                        openRewardSuccessDialog(gems);
+                        openRewardSuccessDialog(false);
                     }
                 }
 
@@ -542,7 +539,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             try {
                 progressDialog = new ProgressDialog(this);
                 progressDialog.setIcon(R.drawable.app_icon);
-                progressDialog.setMessage("Please wait, the Ad is loaded...");
+                progressDialog.setMessage("Please wait, the Ad is loading...");
                 progressDialog.setCancelable(false);
                 progressDialog.show();
             } catch (Exception e) {
@@ -570,18 +567,25 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         }
     }
 
-    private void openRewardSuccessDialog(int gem) {
+    private void openRewardSuccessDialog(boolean firstTime) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.reward_success_dialog);
+        TextView txtTitle = dialog.findViewById(R.id.txtTitle);
         TextView txtGemRewarded = dialog.findViewById(R.id.txtGemRewarded);
-        txtGemRewarded.setText("x "+gem);
+        if(firstTime){
+            txtTitle.setText("Gift For New Members");
+            txtGemRewarded.setText("x 10");
+        }else {
+            txtGemRewarded.setText("x 5");
+        }
+
         dialog.findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+       dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 
@@ -1012,7 +1016,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                         String mineType = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE));
                         if (mineType.equals("vnd.android.cursor.item/phone_v2")) {
                             phones.add(new Phone("0", idContact, data1));
-                           // phones.add(new Phone("0", idContact, data1, KEY.FALSE, KEY.FALSE));
+                            // phones.add(new Phone("0", idContact, data1, KEY.FALSE, KEY.FALSE));
                         } else if (mineType.equals("vnd.android.cursor.item/email_v2")) {
                             emails.add(new Email("0", idContact, data1));
                             //emails.add(new Email("0", idContact, data1, KEY.FALSE, KEY.FALSE));
@@ -1047,7 +1051,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
             contactList.add(new Contact("0", idContact, name, image, KEY.FALSE, phones, accounts, emails));
             if (image != null) {
-                DBHelper.getInstance(this).addContact(idContact, name, image,  KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
+                DBHelper.getInstance(this).addContact(idContact, name, image, KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             } else {
                 DBHelper.getInstance(this).addContact(idContact, name, "image", KEY.FALSE, String.valueOf(noName), String.valueOf(noPhone), String.valueOf(noEmail));
             }
@@ -1056,17 +1060,17 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             String idContact = DBHelper.getInstance(this).getLastContactID(id);
             if (!noPhone) {
                 for (int i = 0; i < phones.size(); i++) {
-                    DBHelper.getInstance(this).addPhone(idContact, phones.get(i).getPhone(),KEY.FALSE);
+                    DBHelper.getInstance(this).addPhone(idContact, phones.get(i).getPhone(), KEY.FALSE);
                 }
             }
             if (!accounts.isEmpty()) {
                 for (int i = 0; i < accounts.size(); i++) {
-                    DBHelper.getInstance(this).addAccount(idContact, accounts.get(i).getAccountName(), accounts.get(i).getAccountType(),KEY.FALSE);
+                    DBHelper.getInstance(this).addAccount(idContact, accounts.get(i).getAccountName(), accounts.get(i).getAccountType(), KEY.FALSE);
                 }
             }
             if (!noEmail) {
                 for (int i = 0; i < emails.size(); i++) {
-                    DBHelper.getInstance(this).addEmail(idContact, emails.get(i).getEmail(),KEY.FALSE);
+                    DBHelper.getInstance(this).addEmail(idContact, emails.get(i).getEmail(), KEY.FALSE);
                 }
             }
             image = null;

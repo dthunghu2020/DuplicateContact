@@ -12,5 +12,5 @@ public interface KEY {
     String MERGER = "merger";
     String CONTACT = "contact";
     String RENAME  = "rename";
-
+    String BACKUP = "backup";
 }

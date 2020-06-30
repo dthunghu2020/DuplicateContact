@@ -75,11 +75,38 @@
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/edtName"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center" />
+                    android:id="@+id/clEditName"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:id="@+id/btnEditName"
+                        android:textColor="@color/white"
+                        android:layout_width="@dimen/_48sdp"
+                        android:layout_height="@dimen/_26sdp"
+                        android:background="@drawable/shape_button"
+                        android:text="Save"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:id="@+id/edtName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btnEditName"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </FrameLayout>
 
             <TextView
