@@ -31,8 +31,10 @@ public class SplashActivity extends AppCompatActivity {
             } else {
                Intent intent = new Intent(SplashActivity.this, AskPermissionActivity.class);
                startActivity(intent);
-
             }
+        }else {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
         }
         new Handler().postDelayed(new Runnable() {
             @Override

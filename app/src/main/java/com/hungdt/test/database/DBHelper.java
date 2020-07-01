@@ -603,6 +603,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void reloadContact() {
+        Log.e("111", "reloadContact: " );
         SQLiteDatabase db = instance.getWritableDatabase();
         db.delete(TABLE_CONTACT, COLUMN_DELETED + "='" + KEY.FALSE + "'", new String[]{});
         db.close();

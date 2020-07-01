@@ -31,7 +31,7 @@ public class Helper {
         i.setType("text/plain");
         i.putExtra(Intent.EXTRA_SUBJECT, context.getString(applicationNameId));
         String text = "";
-        String link = context.getString(R.string.EMAIL_DEVELOPER) + context.getPackageName();
+        String link = context.getString(R.string.PLAY_STORE_APP_URL) + context.getPackageName();
         i.putExtra(Intent.EXTRA_TEXT, text + " " + link);
         context.startActivity(Intent.createChooser(i, "Share Appp"));
     }
@@ -52,11 +52,11 @@ public class Helper {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
         try {
             assert manager != null;
-            if (Objects.requireNonNull(manager.getActiveNetworkInfo()).getType() == ConnectivityManager.TYPE_WIFI) {
+            if (manager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI) {
                 isConnectedWifi = (manager.getActiveNetworkInfo() != null && manager.getActiveNetworkInfo()
                         .isConnected());
             }
-            if (Objects.requireNonNull(manager.getActiveNetworkInfo()).getType() == ConnectivityManager.TYPE_MOBILE) {
+            if (manager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_MOBILE) {
                 isConnected3G = (manager.getActiveNetworkInfo() != null && manager.getActiveNetworkInfo()
                         .isConnected());
             }

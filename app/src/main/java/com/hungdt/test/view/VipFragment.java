@@ -61,6 +61,13 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
                 } else {
                     Toast.makeText(getLayoutInflater().getContext().getApplicationContext(), "Unable to initiate purchase", Toast.LENGTH_SHORT).show();
                 }
+                btnVip.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        btnVip.setEnabled(true);
+                    }
+                },1500);
             }
         });
 

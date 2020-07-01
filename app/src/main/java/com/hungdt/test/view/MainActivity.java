@@ -3,7 +3,10 @@ package com.hungdt.test.view;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -71,12 +74,12 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
     public static List<Contact> contactList = new ArrayList<>();
+    public static final String ACTION_UPDATE_GEM = "Update GEM";
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
     private TextView txtGems;
     private ImageView imgMenu, imgRemoveAds, imgGift;
-    private ArrayList<String> arrayList = new ArrayList<>();
     private ViewPageAdapter viewPageAdapter;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -108,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             e.printStackTrace();
         }
         initView();
-
         //readAccountContacts();
         initInterstitialAd();
         View hView = navigationView.getHeaderView(0);
@@ -117,8 +119,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
             Ads.initNativeGg((LinearLayout) hView.findViewById(R.id.lnNative), this, true, true);
         }
-
-        arrayList = new ArrayList<>();
         viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager());
         viewPageAdapter.add(new ContactFragment(), "Contact");
         viewPageAdapter.add(new ManageFragment(), "Manager");
@@ -145,6 +145,9 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
             }
         });
+
+        IntentFilter intentFilter = new IntentFilter(ACTION_UPDATE_GEM);
+        registerReceiver(broadCastUpdateGEM, intentFilter);
 
         imgRemoveAds.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,12 +258,19 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             loadingDialog.dismissDialog();
             if (MySetting.firstTime(MainActivity.this)) {
                 MySetting.setFirstTime(MainActivity.this, false);
-                MySetting.setGems(MainActivity.this, 10);
+                MySetting.setGems(MainActivity.this, 20);
                 txtGems.setText("x " + MySetting.getGems(MainActivity.this));
                 openRewardSuccessDialog(true);
             }
         }
     }
+
+    private BroadcastReceiver broadCastUpdateGEM = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            txtGems.setText("x " + MySetting.getGems(MainActivity.this));
+        }
+    };
 
     private void initInterstitialAd() {
         initUnityInterstitialAd();
@@ -570,10 +580,10 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         dialog.setContentView(R.layout.reward_success_dialog);
         TextView txtTitle = dialog.findViewById(R.id.txtTitle);
         TextView txtGemRewarded = dialog.findViewById(R.id.txtGemRewarded);
-        if(firstTime){
+        if (firstTime) {
             txtTitle.setText("Gift For New Members");
-            txtGemRewarded.setText("x 10");
-        }else {
+            txtGemRewarded.setText("x 20");
+        } else {
             txtGemRewarded.setText("x 5");
         }
 
@@ -583,7 +593,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                 dialog.dismiss();
             }
         });
-       dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 
@@ -926,6 +936,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     }*/
 
     public void readAccountContacts() {
+        Log.e("111", " Main readAccountContacts: ");
         contactList.clear();
         String[] projections = {
                 ContactsContract.Contacts._ID,
@@ -1176,6 +1187,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         if (bp != null) {
             bp.release();
         }
+        unregisterReceiver(broadCastUpdateGEM);
     }
 
 

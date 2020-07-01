@@ -58,17 +58,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.AskPermissionActivity" />
-        <activity android:name=".view.MainActivity" />
-        <activity android:name=".view.DetailContactActivity" />
-        <activity android:name=".view.RateAppActivity" />
-        <activity android:name=".view.PolicyActivity" />
-        <activity android:name=".view.MoreAppActivity" />
-        <activity android:name=".view.DeleteActivity" />
-        <activity android:name=".view.DuplicateActivity" />
-        <activity android:name=".view.MergerDuplicateActivity" />
-        <activity android:name=".view.WaitingActivity" />
-        <activity android:name=".view.RestoreActivity" />
+        <activity
+            android:name=".view.AskPermissionActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.MainActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.DetailContactActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.RateAppActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.PolicyActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.MoreAppActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.DeleteActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.DuplicateActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.MergerDuplicateActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.WaitingActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".view.RestoreActivity"
+            android:launchMode="singleTask" />
     </application>
 
 

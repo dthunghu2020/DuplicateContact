@@ -72,7 +72,7 @@ public class ContactFragment extends Fragment {
     private RecyclerView rcvContactView;
     private LinearLayout llButtonMerger;
     private LoadingDialog loadingDialog;
-    public static final String ACTION_UPDATE_LIST_CONTACT= "Update Contact";
+    public static final String ACTION_UPDATE_LIST_CONTACT = "Update Contact";
 
     public ContactFragment() {
     }
@@ -94,7 +94,15 @@ public class ContactFragment extends Fragment {
         llButtonMerger.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openReloadContactDialog();
+                if (Helper.isConnectedInternet(getActivity())){
+                    openReloadContactDialog();
+                }else {
+                    if(MySetting.getGems(getContext())>0){
+                        openReloadContactGemDialog();
+                    }else {
+                        Toast.makeText(getContext(), "Your GEM is not enough!!!", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
@@ -104,9 +112,45 @@ public class ContactFragment extends Fragment {
         rcvContactView.setAdapter(contactAdapter);
 
         IntentFilter intentFilter = new IntentFilter(ACTION_UPDATE_LIST_CONTACT);
-        getLayoutInflater().getContext().registerReceiver(broadCastUpdate,intentFilter);
+        getLayoutInflater().getContext().registerReceiver(broadCastUpdate, intentFilter);
 
     }
+
+    private void openReloadContactGemDialog() {
+        final Dialog dialog = new Dialog(getLayoutInflater().getContext());
+        dialog.setContentView(R.layout.dialog_qs_yes_no);
+
+        Button btnYes = dialog.findViewById(R.id.btnYes);
+        Button btnNo = dialog.findViewById(R.id.btnNo);
+        TextView txtTitleToolBar = dialog.findViewById(R.id.txtTitleToolBar);
+        TextView txtBody = dialog.findViewById(R.id.txtBody);
+
+        txtTitleToolBar.setText("Reload contact");
+        txtBody.setText("Use 5 GEM to reload all contacts");
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MySetting.setGems(getContext(),MySetting.getGems(getContext())-5);
+                getContext().sendBroadcast(new Intent(MainActivity.ACTION_UPDATE_GEM));
+                DBHelper.getInstance(getActivity()).reloadContact();
+                new ReloadContact().execute();
+                Toast.makeText(getContext(), "Your GEM is "+MySetting.getGems(getContext())+" !!!", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
     private BroadcastReceiver broadCastUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -141,7 +185,7 @@ public class ContactFragment extends Fragment {
             }
         });
 
-       dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
     }
@@ -252,23 +296,26 @@ public class ContactFragment extends Fragment {
             Toast.makeText(getActivity(), "Please check your internet connection!!!", Toast.LENGTH_SHORT).show();
         }
     }
+
     private class ReloadContact extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Log.e("111", "onPreExecute: ");
             loadingDialog = new LoadingDialog(getActivity());
             loadingDialog.startLoadingDialog();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
+            Log.e("111", "doInBackground: ");
             contactList.clear();
-            if(DBHelper.getInstance(getContext()).getAllContact().size()==0){
-                ((MainActivity)getActivity()).readAccountContacts();
+            if (DBHelper.getInstance(getContext()).getAllContact().size() == 0) {
+                ((MainActivity) getActivity()).readAccountContacts();
                 getActivity().sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
                 getActivity().sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
-            }else {
+            } else {
                 contactList.addAll(DBHelper.getInstance(getContext()).getAllContact());
             }
             return null;
@@ -276,12 +323,12 @@ public class ContactFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            Log.e("111", "onPostExecute: ");
             super.onPostExecute(aVoid);
             contactAdapter.notifyDataSetChanged();
             loadingDialog.dismissDialog();
         }
     }
-
 
 
     @Override

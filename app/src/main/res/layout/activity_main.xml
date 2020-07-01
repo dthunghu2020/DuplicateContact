@@ -14,7 +14,7 @@
         android:layout_gravity="start"
         android:background="@color/appColor"
         app:headerLayout="@layout/header"
-        app:itemHorizontalPadding="@dimen/_36sdp"
+        app:itemHorizontalPadding="@dimen/_20sdp"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:menu="@menu/main_menu" />
