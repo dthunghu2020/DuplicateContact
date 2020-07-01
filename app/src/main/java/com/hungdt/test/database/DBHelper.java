@@ -177,7 +177,6 @@ public class DBHelper extends SQLiteOpenHelper {
         database.close();
     }
 
-
     public List<Contact> getAllContact() {
         SQLiteDatabase db = instance.getWritableDatabase();
         Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
@@ -467,29 +466,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return contacts;
     }
 
-    public Contact getDuplicateContact(String idContact) {
-        SQLiteDatabase db = instance.getWritableDatabase();
-        Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT), null);
-        Contact contacts = null;
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                if (cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)).equals(idContact)) {
-                    contacts = (new Contact(cursor.getString(cursor.getColumnIndex(COLUMN_ID_TABLE_CONTACT)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_ID)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_NAME)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_CONTACT_IMAGE)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_DELETED)),
-                            getPhone(idContact), getAccount(idContact), getEmail(idContact)));
-                }
-                cursor.moveToNext();
-            }
-        }
-        cursor.close();
-        db.close();
-
-        return contacts;
-    }
-
     public List<Phone> getPhone(String contactID) {
         SQLiteDatabase db = instance.getWritableDatabase();
         Cursor cursor = db.rawQuery(String.format("SELECT * FROM '%s';", TABLE_CONTACT_PHONE), null);
@@ -551,51 +527,39 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    public void deleteAllContact() {
+    /*public void deleteAllContact() {
         SQLiteDatabase db = instance.getWritableDatabase();
         db.execSQL("delete from " + TABLE_CONTACT);
         db.execSQL("delete from " + TABLE_CONTACT_PHONE);
         db.execSQL("delete from " + TABLE_CONTACT_EMAIL);
         db.execSQL("delete from " + TABLE_CONTACT_ACCOUNT);
         db.close();
-    }
+    }*/
 
-    public void updateBackupContact(String idContact) {
+    public void deleteBackupContact(String idContact) {
         SQLiteDatabase db = instance.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED, KEY.FALSE);
-        db.update(TABLE_CONTACT, values, COLUMN_CONTACT_ID + "='" + idContact + "'", null);
+        db.delete(TABLE_CONTACT, COLUMN_CONTACT_ID + "='" + idContact + "'", new String[]{});
         db.close();
-        updateBackupPhone(idContact);
-        updateBackupAccount(idContact);
-        updateBackupEmail(idContact);
+        deleteBackupPhone(idContact);
+        deleteBackupAccount(idContact);
+        deleteBackupEmail(idContact);
     }
 
-    private void updateBackupPhone(String idContact) {
+    private void deleteBackupPhone(String idContact) {
         SQLiteDatabase db = instance.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED_PHONE, KEY.FALSE);
-        db.update(TABLE_CONTACT_PHONE, values, COLUMN_ID_CONTACT_PHONE + "='" + idContact + "'", null);
+        db.delete(TABLE_CONTACT_PHONE, COLUMN_ID_CONTACT_PHONE + "='" + idContact + "'", new String[]{});
         db.close();
     }
 
-    private void updateBackupAccount(String idContact) {
+    private void deleteBackupAccount(String idContact) {
         SQLiteDatabase db = instance.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED_ACCOUNT, KEY.FALSE);
-        db.update(TABLE_CONTACT_ACCOUNT, values, COLUMN_ID_CONTACT_ACCOUNT + "='" + idContact + "'", null);
+        db.delete(TABLE_CONTACT_ACCOUNT, COLUMN_ID_CONTACT_ACCOUNT + "='" + idContact + "'", new String[]{});
         db.close();
     }
 
-    private void updateBackupEmail(String idContact) {
+    private void deleteBackupEmail(String idContact) {
         SQLiteDatabase db = instance.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED_EMAIL, KEY.FALSE);
-        db.update(TABLE_CONTACT_EMAIL, values, COLUMN_ID_CONTACT_EMAIL + "='" + idContact + "'", null);
+        db.delete(TABLE_CONTACT_EMAIL, COLUMN_ID_CONTACT_EMAIL + "='" + idContact + "'", new String[]{});
         db.close();
     }
 
@@ -640,8 +604,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void reloadContact() {
         SQLiteDatabase db = instance.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED, KEY.FALSE);
         db.delete(TABLE_CONTACT, COLUMN_DELETED + "='" + KEY.FALSE + "'", new String[]{});
         db.close();
         reloadPhone();
@@ -651,24 +613,18 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private void reloadPhone() {
         SQLiteDatabase db = instance.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED_PHONE, KEY.FALSE);
         db.delete(TABLE_CONTACT_PHONE, COLUMN_DELETED_PHONE + "='" + KEY.FALSE + "'", new String[]{});
         db.close();
     }
 
     private void reloadAccount() {
         SQLiteDatabase db = instance.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED_PHONE, KEY.FALSE);
         db.delete(TABLE_CONTACT_ACCOUNT, COLUMN_DELETED_ACCOUNT + "='" + KEY.FALSE + "'", new String[]{});
         db.close();
     }
 
     private void reloadEmail() {
         SQLiteDatabase db = instance.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_DELETED_PHONE, KEY.FALSE);
         db.delete(TABLE_CONTACT_EMAIL, COLUMN_DELETED_EMAIL + "='" + KEY.FALSE + "'", new String[]{});
         db.close();
     }

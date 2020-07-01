@@ -45,10 +45,6 @@ public class DuplicateActivity extends AppCompatActivity {
     private LinearLayout llDelete, llEmpty;
     private RecyclerView rcvList;
     private List<Contact> listContacts = new ArrayList<>();
-    private List<Duplicate> names = new ArrayList<>();
-    private List<Duplicate> phones = new ArrayList<>();
-    private List<Duplicate> emails = new ArrayList<>();
-    private List<Duplicate> contacts = new ArrayList<>();
     private List<ContactBum> contactBums = new ArrayList<>();
     private DuplicateAdapter duplicateAdapter;
     private String type;
@@ -73,7 +69,6 @@ public class DuplicateActivity extends AppCompatActivity {
         Intent intent = getIntent();
         type = intent.getStringExtra(KEY.DUP);
         idContact.addAll(intent.getStringArrayListExtra(KEY.LIST_ID));
-        Log.e("111111", "onCreate: dup " + type + idContact);
         for (int i = 0; i < idContact.size(); i++) {
             for (int j = 0; j < contactList.size(); j++) {
                 if (idContact.get(i).equals(contactList.get(j).getIdContact())) {
@@ -125,15 +120,12 @@ public class DuplicateActivity extends AppCompatActivity {
                     }
 
                 }
-                Log.e("123", "onCreate: bumC " + bumC);
                 for (int i = 0; i < contactBums.size(); i++) {
-                    Log.e("123", "before: " + contactBums.get(i).getBum());
                     for (int j = 0; j < bumC.size(); j++) {
                         if (contactBums.get(i).getName().equals(bumC.get(j))) {
                             contactBums.get(i).setBum(bumC.get(j));
                         }
                     }
-                    Log.e("123", "apter: " + contactBums.get(i).getBum());
                 }
                 break;
             case "name":
@@ -159,15 +151,12 @@ public class DuplicateActivity extends AppCompatActivity {
                     }
 
                 }
-                Log.e("123", "onCreate: bumN " + bumN);
                 for (int i = 0; i < contactBums.size(); i++) {
-                    Log.e("123", "before: " + contactBums.get(i).getBum());
                     for (int j = 0; j < bumN.size(); j++) {
                         if (contactBums.get(i).getName().equalsIgnoreCase(bumN.get(j))) {
                             contactBums.get(i).setBum(bumN.get(j));
                         }
                     }
-                    Log.e("123", "apter: " + contactBums.get(i).getBum());
                 }
                 break;
             case "phone":
@@ -195,15 +184,12 @@ public class DuplicateActivity extends AppCompatActivity {
                     }
 
                 }
-                Log.e("123", "onCreate: bumP " + bumP);
                 for (int i = 0; i < contactBums.size(); i++) {
-                    Log.e("123", "before: " + contactBums.get(i).getBum());
                     for (int j = 0; j < bumP.size(); j++) {
                         if (contactBums.get(i).getName().equals(bumP.get(j))) {
                             contactBums.get(i).setBum(bumP.get(j));
                         }
                     }
-                    Log.e("123", "apter: " + contactBums.get(i).getBum());
                 }
                 break;
             case "email":
@@ -231,15 +217,12 @@ public class DuplicateActivity extends AppCompatActivity {
                     }
 
                 }
-                Log.e("123", "onCreate: bumP " + bumE);
                 for (int i = 0; i < contactBums.size(); i++) {
-                    Log.e("123", "before: " + contactBums.get(i).getBum());
                     for (int j = 0; j < bumE.size(); j++) {
                         if (contactBums.get(i).getName().equals(bumE.get(j))) {
                             contactBums.get(i).setBum(bumE.get(j));
                         }
                     }
-                    Log.e("123", "apter: " + contactBums.get(i).getBum());
                 }
                 break;
         }
@@ -252,7 +235,6 @@ public class DuplicateActivity extends AppCompatActivity {
         contactBums.clear();
         contactBums.addAll(contacts);
         for (int i = 0; i < contactBums.size(); i++) {
-            Log.e("123", "onCreate: contactbum" + contactBums.get(i).getName() + " /" + contactBums.get(i).getBum());
             if (!typeList.contains(contactBums.get(i).getBum())) {
                 typeList.add(contactBums.get(i).getBum());
             }
@@ -276,7 +258,6 @@ public class DuplicateActivity extends AppCompatActivity {
     private BroadcastReceiver broadCastUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
             finish();
         }
     };
@@ -285,143 +266,6 @@ public class DuplicateActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (broadCastUpdate != null) unregisterReceiver(broadCastUpdate);
-    }
-
-    private void setTypeContact() {
-        switch (type) {
-            case "contact":
-
-                List<Duplicate> contactList = new ArrayList<>(contacts);
-                for (int i = 0; i < contacts.size(); i++) {
-                    if (!contacts.get(i).getMerged().equals(KEY.FALSE)) {
-                        break;
-                    }
-                    for (int j = 0; j < contactList.size(); j++) {
-                        if (i != j && !contacts.get(i).getContactID().equals(contactList.get(j).getContactID())) {
-                            if (contacts.get(i).getName().equals(contactList.get(j).getName()) &&
-                                    contacts.get(i).getPhone().equals(contacts.get(j).getPhone()) &&
-                                    contacts.get(i).getEmail().equals(contacts.get(j).getEmail())) {
-                                if (!contacts.get(j).getTypeMer().isEmpty()) {
-                                    contacts.get(i).setTypeMer(contacts.get(j).getTypeMer());
-                                    break;
-                                }
-                                if (contacts.get(j).getTypeMer().isEmpty()) {
-                                    contacts.get(i).setTypeMer(contacts.get(i).getName());
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                for (int i = 0; i < contacts.size(); i++) {
-                    if (!typeList.contains(contacts.get(i).getTypeMer())) {
-                        typeList.add(contacts.get(i).getTypeMer());
-                    }
-                }
-                break;
-            case "name":
-                List<Duplicate> nameList = new ArrayList<>(names);
-                for (int i = 0; i < names.size(); i++) {
-                    if (!names.get(i).getMerged().equals(KEY.FALSE)) {
-                        break;
-                    }
-                    for (int j = 0; j < nameList.size(); j++) {
-                        //khác vị trí và khác id
-                        if (i != j && !names.get(i).getContactID().equals(nameList.get(j).getContactID())) {
-                            //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
-
-                            if (names.get(i).getName().equalsIgnoreCase(nameList.get(j).getName())) {
-                                Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
-                                if (!names.get(j).getTypeMer().isEmpty()) {
-                                    names.get(i).setTypeMer(names.get(j).getTypeMer());
-                                    Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
-                                    break;
-                                }
-                                if (names.get(j).getTypeMer().isEmpty()) {
-                                    names.get(i).setTypeMer(names.get(i).getName());
-                                    Log.e("123123", "loadDub: phone i " + names.get(i).getTypeMer());
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                for (int i = 0; i < names.size(); i++) {
-                    if (!typeList.contains(names.get(i).getTypeMer())) {
-                        typeList.add(names.get(i).getTypeMer());
-                    }
-                }
-                break;
-            case "phone":
-                List<Duplicate> phoneList = new ArrayList<>(phones);
-                for (int i = 0; i < phones.size(); i++) {
-                    if (!phones.get(i).getMerged().equals(KEY.FALSE)) {
-                        break;
-                    }
-                    for (int j = 0; j < phoneList.size(); j++) {
-                        //khác vị trí và khác id
-                        if (i != j && !phones.get(i).getContactID().equals(phoneList.get(j).getContactID())) {
-                            //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
-                            //trùng sdt
-                            if (phones.get(i).getName().equals(phoneList.get(j).getName())) {
-                                Log.e("123123", "loadDub: phone i " + phones.get(i).getTypeMer());
-                                if (!phones.get(j).getTypeMer().isEmpty()) {
-                                    phones.get(i).setTypeMer(phones.get(j).getTypeMer());
-                                    Log.e("123123", "loadDub: phone i " + phones.get(i).getTypeMer());
-                                    break;
-                                }
-                                if (phones.get(j).getTypeMer().isEmpty()) {
-                                    phones.get(i).setTypeMer(phones.get(i).getName());
-                                    Log.e("123123", "loadDub: phone i " + phones.get(i).getTypeMer());
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                for (int i = 0; i < phones.size(); i++) {
-                    if (!typeList.contains(phones.get(i).getTypeMer())) {
-                        typeList.add(phones.get(i).getTypeMer());
-                    }
-                }
-                break;
-            case "email":
-                List<Duplicate> emailList = new ArrayList<>(emails);
-                for (int i = 0; i < emails.size(); i++) {
-                    if (!emails.get(i).getMerged().equals(KEY.FALSE)) {
-                        break;
-                    }
-                    for (int j = 0; j < emailList.size(); j++) {
-                        //khác vị trí và khác id
-                        if (i != j && !emails.get(i).getContactID().equals(emailList.get(j).getContactID())) {
-                            //if (phones.get(i).getName().equalsIgnoreCase(phoneList.get(j).getName()) && Integer.parseInt(phones.get(i).getContactID()) != Integer.parseInt(phoneList.get(j).getContactID())) {
-                            //trùng sdt
-                            if (emails.get(i).getName().equals(emailList.get(j).getName())) {
-                                if (!emails.get(j).getTypeMer().isEmpty()) {
-                                    emails.get(i).setTypeMer(emails.get(j).getTypeMer());
-                                    break;
-                                }
-                                if (emails.get(j).getTypeMer().isEmpty()) {
-                                    emails.get(i).setTypeMer(emails.get(i).getName());
-                                    Log.e("123123", "loadDub: phone i " + emails.get(i).getTypeMer());
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                for (int i = 0; i < emails.size(); i++) {
-                    if (!typeList.contains(emails.get(i).getTypeMer())) {
-                        typeList.add(emails.get(i).getTypeMer());
-                    }
-                }
-                break;
-            default:
-                break;
-
-        }
-
-
     }
 
     private void initView() {

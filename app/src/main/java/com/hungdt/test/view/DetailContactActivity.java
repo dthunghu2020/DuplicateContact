@@ -72,7 +72,6 @@ public class DetailContactActivity extends AppCompatActivity {
         switch (type) {
             case KEY.BACKUP:
                 contact = DBHelper.getInstance(this).getContactBackUp(intent.getStringExtra(KEY.ID));
-                Log.e("222", "onCreate: "+contact.getEmails().size()+contact.getAccounts().size()+contact.getPhones().size());
                 txtAccountName.setText(contact.getName());
                 clEditName.setVisibility(View.GONE);
                 break;
@@ -94,7 +93,6 @@ public class DetailContactActivity extends AppCompatActivity {
                 .error(R.drawable.ic_code)
                 .into(imgContact);
 
-        Log.e("222", "getAccounts: "+  contact.getAccounts().size());
         accountAdapter = new AccountAdapter(this, contact.getAccounts());
         rcvAccount.setLayoutManager(new LinearLayoutManager(this));
         rcvAccount.setAdapter(accountAdapter);
@@ -102,7 +100,6 @@ public class DetailContactActivity extends AppCompatActivity {
         if (contact.getEmails().size() == 0) {
             clEmail.setVisibility(View.GONE);
         } else {
-            Log.e("222", "getEmails: "+  contact.getEmails().size());
             emailAdapter = new EmailAdapter(this, contact.getEmails());
             rcvEmail.setLayoutManager(new LinearLayoutManager(this));
             rcvEmail.setAdapter(emailAdapter);
@@ -110,7 +107,6 @@ public class DetailContactActivity extends AppCompatActivity {
         if (contact.getPhones().size() == 0) {
             clPhone.setVisibility(View.GONE);
         } else {
-            Log.e("222", "getPhones: "+  contact.getPhones().size());
             txtAccountNumber.setText(contact.getPhones().get(0).getPhone());
             phoneAdapter = new PhoneAdapter(this, contact.getPhones());
             rcvPhone.setLayoutManager(new LinearLayoutManager(this));

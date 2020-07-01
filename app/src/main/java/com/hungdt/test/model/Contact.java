@@ -108,47 +108,6 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.type = type;
     }
 
-    /*public String gettContact() {
-        return tContact;
-    }
-
-    public void settContact(String tContact) {
-        this.tContact = tContact;
-    }
-
-    public String gettName() {
-        return tName;
-    }
-
-    public void settName(String tName) {
-        this.tName = tName;
-    }
-
-    public String getFather() {
-        return father;
-    }
-
-    public void setFather(String father) {
-        this.father = father;
-    }
-
-    public String getmName() {
-        return mName;
-    }
-
-    public void setmName(String mName) {
-        this.mName = mName;
-    }
-
-
-    public String getmContact() {
-        return mContact;
-    }
-
-    public void setmContact(String mContact) {
-        this.mContact = mContact;
-    }*/
-
     @Override
     public int compareTo(Contact o) {
         return this.name.compareTo(o.name);

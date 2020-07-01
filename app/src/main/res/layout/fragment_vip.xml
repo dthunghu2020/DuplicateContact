@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/llBanner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/llBanner"
+        app:layout_constraintTop_toTopOf="parent">
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -20,8 +22,13 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="@dimen/_136sdp"
-                    android:layout_height="@dimen/_136sdp"
+                    android:layout_width="@dimen/_180sdp"
+                    android:layout_height="@dimen/_140sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_25sdp"
+                    android:padding="10dp"
                     android:src="@drawable/img_nav_bar" />
 
                 <LinearLayout
@@ -55,8 +62,9 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:paddingBottom="@dimen/_2sdp"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/_2sdp">
+
                     <Button
                         android:id="@+id/btnVip"
                         android:layout_width="wrap_content"
@@ -67,9 +75,9 @@
                         android:paddingEnd="@dimen/_45sdp"
                         android:paddingBottom="@dimen/_2sdp"
                         android:text="UPGRADE TO VIP USER"
+                        android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <TextView
@@ -99,11 +107,11 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:layout_marginTop="@dimen/_2sdp"
                         android:id="@+id/txtTitleVip3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
                         android:text="Remove Ads"
                         android:textColor="@color/black"
                         android:textSize="14sp"
@@ -150,6 +158,7 @@
                          app:layout_constraintStart_toEndOf="@+id/imgVip1"
                          app:layout_constraintTop_toBottomOf="@+id/txtTitleVip1" />-->
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -180,12 +189,13 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
-                    android:padding="@dimen/_6sdp"
-                    >
+                    android:padding="@dimen/_6sdp">
+
                     <ImageView
                         android:id="@+id/imgVip5"
                         android:layout_width="@dimen/_24sdp"
@@ -210,141 +220,18 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-                <LinearLayout
-                    android:id="@+id/lnNative"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_8sdp"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    android:layout_marginEnd="@dimen/_8sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"
-                    android:orientation="vertical"
-                    app:layout_constraintTop_toTopOf="parent"/>
-                <LinearLayout
-                    android:id="@+id/lnDialogRateApp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end">
-
-                            <LinearLayout
-                                android:id="@+id/lnExitRateApp"
-                                android:foreground="?android:attr/selectableItemBackground"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:layout_margin="5dp"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-                            </LinearLayout>
-                        </FrameLayout>
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:textColor="@color/appColor"
-                            android:id="@+id/tv1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="10dp"
-                            android:gravity="center"
-                            android:maxWidth="350dp"
-                            android:minWidth="320dp"
-                            android:padding="5dp"
-                            android:text="DO YOU LOVE THIS APP"
-                            android:textAllCaps="true"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:gravity="center"
-                            android:maxWidth="350dp"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:text="Let me know your satisfaction"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="10dp"
-                            android:paddingRight="10dp"
-                            android:paddingBottom="30dp">
-
-                            <ImageView
-                                android:id="@+id/imgStarLight1Rate"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:layout_marginEnd="5dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_like_off" />
-
-                            <ImageView
-                                android:id="@+id/imgStarLight2Rate"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:layout_marginEnd="5dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_like_off" />
-
-                            <ImageView
-                                android:id="@+id/imgStarLight3Rate"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:layout_marginEnd="5dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_like_off" />
-
-                            <ImageView
-                                android:id="@+id/imgStarLight4Rate"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:layout_marginEnd="5dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_like_off" />
-
-                            <ImageView
-                                android:id="@+id/imgStarLight5Rate"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:layout_marginEnd="5dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/ic_like_off" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>
     </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/llBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

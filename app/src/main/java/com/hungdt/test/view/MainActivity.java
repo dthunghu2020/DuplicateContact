@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
     public static List<Contact> contactList = new ArrayList<>();
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TabItem tabContacts, tabManager, tabMerged, tabDelete, tabVIP;
 
     private TextView txtGems;
     private ImageView imgMenu, imgRemoveAds, imgGift;
@@ -239,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             contactList.clear();
             //readAccountContactsxx();
             int count = DBHelper.getInstance(MainActivity.this).getAllContact().size();
-            Log.e("123", "count: " + count);
             if (count == 0) {
                 readAccountContacts();
             } else {
@@ -591,11 +589,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
 
     private void initView() {
         tabLayout = findViewById(R.id.tabBar);
-        tabContacts = findViewById(R.id.tabContacts);
-        tabManager = findViewById(R.id.tabManager);
-        tabMerged = findViewById(R.id.tabMerged);
-        tabDelete = findViewById(R.id.tabDelete);
-        tabVIP = findViewById(R.id.tabVIP);
         viewPager = findViewById(R.id.viewPager);
         imgMenu = findViewById(R.id.imgMenu);
         imgRemoveAds = findViewById(R.id.imgRemoveAds);
@@ -615,39 +608,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             e.printStackTrace();
         }
     }
-
-    /*public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case (PICK_CONTACT):
-                if (resultCode == Activity.RESULT_OK) {
-
-                    Uri contactData = data.getData();
-                    Cursor c = managedQuery(contactData, null, null, null, null);
-                    if (c.moveToFirst()) {
-
-
-                        String id = c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
-
-                        String hasPhone = c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
-
-                        if (hasPhone.equalsIgnoreCase("1")) {
-                            Cursor phones = getContentResolver().query(
-                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
-                                    null, null);
-                            phones.moveToFirst();
-                            Log.i("ABC", "number is:" + phones.getString(phones.getColumnIndex("data1")));
-                        }
-                        String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                        Log.i("ABC", "Name is" + name);
-
-                    }
-                }
-                break;
-        }
-
-    }*/
 
 
     /*private void getContact() {
@@ -984,9 +944,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                     ContactsContract.RawContacts.ACCOUNT_NAME,
                     ContactsContract.RawContacts.ACCOUNT_TYPE
             };
-            //val stringZalo =
             String selection = ContactsContract.RawContacts.CONTACT_ID + " = " + idContact;
-            //val selection = "${ContactsContract.RawContacts._ID} = $idContact";
             Cursor cursorAccount = getContentResolver().query(ContactsContract.RawContacts.CONTENT_URI, projection2, selection, null, null, null);
             while (cursorAccount != null && cursorAccount.moveToNext()) {
                 String idRawContract = cursorAccount.getString(cursorAccount.getColumnIndex(ContactsContract.RawContacts._ID));
@@ -1016,10 +974,8 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
                         String mineType = cursorData.getString(cursorData.getColumnIndex(ContactsContract.Data.MIMETYPE));
                         if (mineType.equals("vnd.android.cursor.item/phone_v2")) {
                             phones.add(new Phone("0", idContact, data1));
-                            // phones.add(new Phone("0", idContact, data1, KEY.FALSE, KEY.FALSE));
                         } else if (mineType.equals("vnd.android.cursor.item/email_v2")) {
                             emails.add(new Email("0", idContact, data1));
-                            //emails.add(new Email("0", idContact, data1, KEY.FALSE, KEY.FALSE));
                         }
                     }
 
@@ -1034,7 +990,6 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             boolean noEmail = false;
             if (phones.isEmpty()) {
                 noPhone = true;
-                Log.i("TAG", "readAccountContacts: " + name);
             }
             if (phones.size() == 1) {
                 if (name.equals(phones.get(0).getPhone())) {
@@ -1087,6 +1042,7 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
         Collections.sort(contactList);
     }
 
+    //Check data Phone Book
     private void readAccountContactsxx() {
         String[] projections = {
                 ContactsContract.Contacts._ID,

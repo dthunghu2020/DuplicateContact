@@ -45,10 +45,8 @@ import com.hungdt.test.view.adapter.SelectAdapter;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static com.hungdt.test.view.MainActivity.contactList;
 import static com.hungdt.test.view.MainActivity.showInterstitial;
 
 public class RestoreActivity extends AppCompatActivity {
@@ -124,21 +122,21 @@ public class RestoreActivity extends AppCompatActivity {
                                 if (contacts.get(i).isTicked()) {
                                     contacts.get(i).setDeleted(KEY.FALSE);
                                     //add list
-                                    contactList.add(contacts.get(i));
+                                    //contactList.add(contacts.get(i));
                                     //Update DB
-                                    DBHelper.getInstance(RestoreActivity.this).updateBackupContact(contacts.get(i).getIdContact());
+                                    DBHelper.getInstance(RestoreActivity.this).deleteBackupContact(contacts.get(i).getIdContact());
                                     //Add new contact to phone book.
                                     addNewContact(contacts.get(i));
                                     contactSave.add(contacts.get(i));
                                 }
                             }
-                            Collections.sort(contactList);
+                            //Collections.sort(contactList);
                             contacts.removeAll(contactSave);
                             backupAdapter.notifyDataSetChanged();
                             sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
                             sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
                             sendBroadcast(new Intent(DeleteFragment.ACTION_UPDATE_DELETE_FRAGMENT));
-                            Toast.makeText(RestoreActivity.this, "Backup Success!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RestoreActivity.this, "Backup Success!\n You can check on your phone book!!!", Toast.LENGTH_SHORT).show();
                             if (ContactConfig.getInstance().getConfig().getBoolean("config_on")) {
                                 if (!showInterstitial()) {
                                     if (UnityAds.isInitialized() && UnityAds.isReady(getString(R.string.INTER_UNI)))

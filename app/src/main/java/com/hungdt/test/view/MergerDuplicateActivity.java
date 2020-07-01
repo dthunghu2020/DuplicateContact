@@ -61,7 +61,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
     private List<Contact> contacts = new ArrayList<>();
     private Contact contactMerger;
     private ImageView imgContact, imgBack;
-    private TextView txtContactName, txtMerger, txtTitle;
+    private TextView txtContactName, txtMerger;
     private RecyclerView rcvDupContact;
     private ConstraintLayout clContactMerger;
     private DuplicateContactAdapter dupContactAdapter;
@@ -73,8 +73,6 @@ public class MergerDuplicateActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_merger_duplicate);
-
-        txtTitle = findViewById(R.id.txtTitle);
         txtMerger = findViewById(R.id.txtMerger);
         rcvDupContact = findViewById(R.id.rcvDupContact);
         imgContact = findViewById(R.id.imgContact);
@@ -95,9 +93,9 @@ public class MergerDuplicateActivity extends AppCompatActivity {
         registerReceiver(renameContactMerger, intentFilter);
 
 
-        //txtTitle.setVisibility(View.GONE);
+
         idContact.addAll(intent.getStringArrayListExtra(KEY.LIST_ID));
-        //Lấy list contact giống
+        //Add dub list
         for (int i = 0; i < contactList.size(); i++) {
             if (idContact.contains(contactList.get(i).getIdContact())) {
                 contacts.add(contactList.get(i));
@@ -109,7 +107,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
             listPhones.addAll(contacts.get(i).getPhones());
             listEmails.addAll(contacts.get(i).getEmails());
         }
-        //Lấy list phone
+        //Add List Phone
         ArrayList<String> listPhoneNumber = new ArrayList<>();
         for (int i = 0; i < listPhones.size(); i++) {
             if (!listPhoneNumber.contains(listPhones.get(i).getPhone())) {
@@ -117,8 +115,8 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                 listPhoneMer.add(listPhones.get(i));
             }
         }
-        Log.e("hvv1312", "onCreate: " + listPhoneNumber);
-        //Lấy list email
+
+        //Add List Email
         ArrayList<String> listEmailName = new ArrayList<>();
         for (int i = 0; i < listEmails.size(); i++) {
 
@@ -127,8 +125,8 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                 listEmailMer.add(listEmails.get(i));
             }
         }
-        Log.e("hvv1312", "onCreate: " + listEmailName);
-        //tạo contact mới
+
+        //Load dub value
         switch (type) {
             case "contact":
             case "name":
@@ -172,8 +170,8 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                 }
                 break;
         }
+        //create contact merger
         contactMerger = new Contact("0", String.valueOf(number), contacts.get(0).getName(), "image", KEY.FALSE, listPhoneMer, Collections.singletonList(contacts.get(0).getAccounts().get(0)), listEmailMer);
-
 
         imgContact.setImageResource(R.drawable.ic_code);
 
@@ -243,8 +241,8 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                     DBHelper.getInstance(MergerDuplicateActivity.this).updateDisableContact(contacts.get(i).getIdContact());
                 }
                 // Add new contact to db
-                //add to list
-                contactList.add(new Contact("idTable", String.valueOf(number), contactMerger.getName(), contactMerger.getImage(), KEY.FALSE, listPhoneMer, contactMerger.getAccounts(), listEmailMer));
+               /* //add to list
+                //contactList.add(new Contact("idTable", String.valueOf(number), contactMerger.getName(), contactMerger.getImage(), KEY.FALSE, listPhoneMer, contactMerger.getAccounts(), listEmailMer));
                 Collections.sort(contactList);
                 //Add new to db
                 DBHelper.getInstance(MergerDuplicateActivity.this).addContact(contactMerger.getIdContact(), contactMerger.getName(), contactMerger.getImage(), KEY.FALSE, KEY.FALSE, KEY.FALSE, KEY.FALSE);
@@ -260,7 +258,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
                         DBHelper.getInstance(MergerDuplicateActivity.this).addEmail(idContact, listEmailMer.get(i).getEmail(), KEY.FALSE);
                     }
                 }
-                DBHelper.getInstance(MergerDuplicateActivity.this).addAccount(idContact, contacts.get(0).getAccounts().get(0).getAccountName(), contacts.get(0).getAccounts().get(0).getAccountType(), KEY.FALSE);
+                DBHelper.getInstance(MergerDuplicateActivity.this).addAccount(idContact, contacts.get(0).getAccounts().get(0).getAccountName(), contacts.get(0).getAccounts().get(0).getAccountType(), KEY.FALSE);*/
                 addNewContactPhoneBook();
                 sendBroadcast(new Intent(ContactFragment.ACTION_UPDATE_LIST_CONTACT));
                 sendBroadcast(new Intent(ManageFragment.ACTION_RELOAD_FRAGMENT_MANAGE));
@@ -286,7 +284,7 @@ public class MergerDuplicateActivity extends AppCompatActivity {
             }
         });
 
-       dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 
@@ -348,4 +346,9 @@ public class MergerDuplicateActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(renameContactMerger);
+        super.onDestroy();
+    }
 }

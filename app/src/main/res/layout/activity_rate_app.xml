@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="230dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/img_nav_bar"
+                    android:background="@drawable/rate"
                     android:padding="10dp" />
 
                 <FrameLayout

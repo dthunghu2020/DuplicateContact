@@ -169,7 +169,6 @@ public class ContactFragment extends Fragment {
                 public void onRewardedVideoAdClosed() {
                     if (rewardedVideoCompleted) {
                         DBHelper.getInstance(getActivity()).reloadContact();
-                       // DBHelper.getInstance(getActivity()).deleteAllContact();
                         new ReloadContact().execute();
                     }
                 }
