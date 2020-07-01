@@ -221,12 +221,33 @@
                     android:orientation="vertical"
                     app:layout_constraintTop_toTopOf="parent"/>
                 <LinearLayout
-                    android:layout_marginTop="@dimen/_2sdp"
                     android:id="@+id/lnDialogRateApp"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:visibility="visible">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end">
+
+                            <LinearLayout
+                                android:id="@+id/lnExitRateApp"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_margin="5dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+                            </LinearLayout>
+                        </FrameLayout>
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -236,6 +257,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:textColor="@color/appColor"
                             android:id="@+id/tv1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -247,8 +269,7 @@
                             android:maxWidth="350dp"
                             android:minWidth="320dp"
                             android:padding="5dp"
-                            android:textColor="@color/appColor"
-                            android:text="Do you love this app"
+                            android:text="DO YOU LOVE THIS APP"
                             android:textAllCaps="true"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -263,7 +284,7 @@
                             android:maxWidth="350dp"
                             android:paddingLeft="20dp"
                             android:paddingRight="20dp"
-                            android:text="Let us know your satisfaction"
+                            android:text="Let me know your satisfaction"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
 
@@ -282,45 +303,46 @@
                                 android:id="@+id/imgStarLight1Rate"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginEnd="5dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/ic_star_un_selected" />
+                                android:src="@drawable/ic_like_off" />
 
                             <ImageView
                                 android:id="@+id/imgStarLight2Rate"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginEnd="5dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/ic_star_un_selected" />
+                                android:src="@drawable/ic_like_off" />
 
                             <ImageView
                                 android:id="@+id/imgStarLight3Rate"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginEnd="5dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/ic_star_un_selected" />
+                                android:src="@drawable/ic_like_off" />
 
                             <ImageView
                                 android:id="@+id/imgStarLight4Rate"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginEnd="5dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/ic_star_un_selected" />
+                                android:src="@drawable/ic_like_off" />
 
                             <ImageView
                                 android:id="@+id/imgStarLight5Rate"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginEnd="5dp"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/ic_star_un_selected" />
+                                android:src="@drawable/ic_like_off" />
                         </LinearLayout>
 
                     </LinearLayout>
                 </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
     </FrameLayout>

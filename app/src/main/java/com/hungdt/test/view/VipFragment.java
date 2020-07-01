@@ -41,23 +41,23 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
     boolean isRate = true;
 
     CountDownTimer timer;
+
     public VipFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_vip,container,false);
+        return inflater.inflate(R.layout.fragment_vip, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Helper.setColorStatusBar(getActivity(), R.color.status_bar);
         Ads.initNativeGgFb((LinearLayout) view.findViewById(R.id.lnNative), getActivity(), true);
         //Ads.initBanner(((LinearLayout) view.findViewById(R.id.llBanner)), getActivity(), true);
 
-        billingProcessor = BillingProcessor.newBillingProcessor(getLayoutInflater().getContext().getApplicationContext(), getString(R.string.BASE64),this); // doesn't bind
+        billingProcessor = BillingProcessor.newBillingProcessor(getLayoutInflater().getContext().getApplicationContext(), getString(R.string.BASE64), this); // doesn't bind
         billingProcessor.initialize();
 
         btnVip = view.findViewById(R.id.btnVip);
@@ -75,14 +75,10 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
         });
 
 
-        if(MySetting.isSubscription(getLayoutInflater().getContext())){
+        if (MySetting.isSubscription(getLayoutInflater().getContext())) {
             btnVip.setVisibility(View.GONE);
             txtMoney.setVisibility(View.GONE);
         }
-
-
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //Ads.initNativeGgFb((LinearLayout)findViewById(R.id.lnNative), this, true);
 
@@ -101,22 +97,17 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
             e.printStackTrace();
         }
 
-        try {
-            initView(view);
-            if (!isFromMain) setData();
-            click();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        initView(view);
+        setData();
+        click();
 
 
     }
 
     @Override
     public void onDestroy() {
-        if (billingProcessor != null) {
-            billingProcessor.release();
-        }
+        super.onDestroy();
         try {
             if (timer != null) {
                 timer.cancel();
@@ -124,7 +115,6 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
         } catch (Exception e) {
             e.printStackTrace();
         }
-        super.onDestroy();
     }
 
     private void click() {
@@ -148,7 +138,6 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
                             @Override
                             public void run() {
                                 Helper.feedback(getContext());
-                                //finish();
                                 isEnableClick = true;
                             }
                         }, 1000);
@@ -179,7 +168,6 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
                             @Override
                             public void run() {
                                 Helper.feedback(getContext());
-                                //finish();
                                 isEnableClick = true;
                             }
                         }, 1000);
@@ -210,7 +198,6 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
                             @Override
                             public void run() {
                                 Helper.feedback(getContext());
-                               // finish();
                                 isEnableClick = true;
                             }
                         }, 1000);
@@ -240,8 +227,7 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Helper.callPlayStore(getContext(), getActivity().getPackageName());
-                                //finish();
+                                Helper.callPlayStore(getContext(), getContext().getPackageName());
                                 isEnableClick = true;
                             }
                         }, 1000);
@@ -271,8 +257,7 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Helper.callPlayStore(getContext(), getActivity().getPackageName());
-                                //finish();
+                                Helper.callPlayStore(getContext(), getContext().getPackageName());
                                 isEnableClick = true;
                             }
                         }, 1000);
@@ -282,6 +267,13 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
                 }
             }
         });
+
+      /*  lnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeActivity();
+            }
+        });*/
     }
 
     private void setData() {
@@ -326,25 +318,34 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
 
     }
 
-    private void initView(View view) {
-        lnRateApp =  view.findViewById(R.id.lnDialogRateApp);
-        imgStarLight1 =  view.findViewById(R.id.imgStarLight1Rate);
-        imgStarLight2 = view.findViewById(R.id.imgStarLight2Rate);
-        imgStarLight3 =  view.findViewById(R.id.imgStarLight3Rate);
-        imgStarLight4 =  view.findViewById(R.id.imgStarLight4Rate);
-        imgStarLight5 =  view.findViewById(R.id.imgStarLight5Rate);
-        lnClose =  view.findViewById(R.id.lnExitRateApp);
-        tvExit =  view.findViewById(R.id.tvExitRateApp);
-        tvExit.setVisibility(View.GONE);
-        lnClose =  view.findViewById(R.id.lnExitRateApp);
-        tvExit =  view.findViewById(R.id.tvExitRateApp);
-        tvExit.setVisibility(View.GONE);
-
-        if (isFromMain) {
-            tvExit.setVisibility(View.VISIBLE);
+   /* private void closeActivity() {
+        finish();
+        try {
+            if (isFromMain) {
+                sendBroadcast(new Intent("exitFromRateApp"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }*/
+
+   /* @Override
+    public void onBackPressed() {
+        if (isFromMain) super.onBackPressed();
+    }*/
+
+    private void initView(View view) {
+        lnRateApp = view.findViewById(R.id.lnDialogRateApp);
+        imgStarLight1 = view.findViewById(R.id.imgStarLight1Rate);
+        imgStarLight2 = view.findViewById(R.id.imgStarLight2Rate);
+        imgStarLight3 = view.findViewById(R.id.imgStarLight3Rate);
+        imgStarLight4 = view.findViewById(R.id.imgStarLight4Rate);
+        imgStarLight5 = view.findViewById(R.id.imgStarLight5Rate);
+        lnClose = view.findViewById(R.id.lnExitRateApp);
+
         click();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
@@ -353,9 +354,8 @@ public class VipFragment extends Fragment implements BillingProcessor.IBillingHa
     }
 
 
-
     @Override
-    public void onProductPurchased(@Nullable  String productId, TransactionDetails details) {
+    public void onProductPurchased(@Nullable String productId, TransactionDetails details) {
         try {
             Toast.makeText(getLayoutInflater().getContext(), "Thanks for your Purchased!", Toast.LENGTH_SHORT).show();
             MySetting.setSubscription(getLayoutInflater().getContext(), true);
