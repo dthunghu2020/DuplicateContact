@@ -49,7 +49,6 @@ import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.hungdt.test.ContactConfig;
 import com.hungdt.test.R;
@@ -63,13 +62,16 @@ import com.hungdt.test.utils.Helper;
 import com.hungdt.test.utils.KEY;
 import com.hungdt.test.utils.MySetting;
 import com.hungdt.test.view.adapter.ViewPageAdapter;
+import com.hungdt.test.view.fragment.ContactFragment;
+import com.hungdt.test.view.fragment.DeleteFragment;
+import com.hungdt.test.view.fragment.ManageFragment;
+import com.hungdt.test.view.fragment.VipFragment;
 import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements BillingProcessor.IBillingHandler {
@@ -172,6 +174,13 @@ public class MainActivity extends AppCompatActivity implements BillingProcessor.
             @Override
             public void onClick(View v) {
                 openVideoAdsDialog();
+                imgGift.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        imgGift.setEnabled(true);
+                    }
+                },1500);
             }
         });
 

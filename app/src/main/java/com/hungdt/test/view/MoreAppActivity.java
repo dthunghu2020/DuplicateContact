@@ -29,7 +29,13 @@ import java.util.ArrayList;
 
 public class MoreAppActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
+    private ImageView imgStarLight1, imgStarLight2, imgStarLight3, imgStarLight4, imgStarLight5;
+    private LinearLayout lnMoregame;
+    private RecyclerView rvListMoregame;
+    private TextView tvMoregame, tvHideMoregame;
+    private GameAdapter adapterMoregame;
+    private ArrayList<GameItem> listMoregame;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +43,9 @@ public class MoreAppActivity extends AppCompatActivity {
         Helper.setColorStatusBar(this, R.color.status_bar);
         initView();
         initMoregame();
-        Ads.initNativeGgFb((LinearLayout)findViewById(R.id.lnNative), this, false);
+        Ads.initNativeGgFb((LinearLayout) findViewById(R.id.lnNative), this, false);
     }
 
-    LinearLayout lnMoregame;
-    RecyclerView rvListMoregame;
-    TextView tvMoregame, tvHideMoregame;
-    GameAdapter adapterMoregame;
-    ArrayList<GameItem> listMoregame;
 
     private void initMoregame() {
         lnMoregame = findViewById(R.id.lnMoregame);
@@ -94,28 +95,26 @@ public class MoreAppActivity extends AppCompatActivity {
         tvHideMoregame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (tvHideMoregame.getText().toString().toLowerCase().equals("hide")){
+                if (tvHideMoregame.getText().toString().toLowerCase().equals("hide")) {
                     rvListMoregame.setVisibility(View.GONE);
                     tvHideMoregame.setText("Expand");
-                }else{
+                } else {
                     rvListMoregame.setVisibility(View.VISIBLE);
                     tvHideMoregame.setText("Hide");
                 }
 
             }
         });
+        findViewById(R.id.imgBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
 
-    ImageView imgStarLight1, imgStarLight2, imgStarLight3, imgStarLight4, imgStarLight5;
-    boolean isFromMain = false;
-
     private void initView() {
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Discovery");
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imgStarLight1 = (ImageView) findViewById(R.id.imgStarLight1Rate);
         imgStarLight2 = (ImageView) findViewById(R.id.imgStarLight2Rate);

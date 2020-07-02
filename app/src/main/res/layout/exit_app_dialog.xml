@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/appColor"
-        android:text="Are you sure to exit the application?"
+        android:text="Do you want to exit app?"
         android:textSize="22sp"
         android:textStyle="bold" />
 

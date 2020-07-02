@@ -62,6 +62,12 @@ public class RateAppActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        findViewById(R.id.imgBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeActivity();
+            }
+        });
 
     }
 
@@ -233,12 +239,12 @@ public class RateAppActivity extends AppCompatActivity {
             }
         });
 
-        lnClose.setOnClickListener(new View.OnClickListener() {
+        /*lnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeActivity();
             }
-        });
+        });*/
     }
 
     private void setData() {
@@ -296,7 +302,8 @@ public class RateAppActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (isFromMain) super.onBackPressed();
+        //if (isFromMain) super.onBackPressed();
+        closeActivity();
     }
 
     private void initView() {
@@ -306,16 +313,5 @@ public class RateAppActivity extends AppCompatActivity {
         imgStarLight3 =  findViewById(R.id.imgStarLight3Rate);
         imgStarLight4 =  findViewById(R.id.imgStarLight4Rate);
         imgStarLight5 =  findViewById(R.id.imgStarLight5Rate);
-        lnClose =  findViewById(R.id.lnExitRateApp);
-        tvExit =  findViewById(R.id.tvExitRateApp);
-        tvExit.setVisibility(View.GONE);
-        lnClose =  findViewById(R.id.lnExitRateApp);
-        tvExit =  findViewById(R.id.tvExitRateApp);
-        tvExit.setVisibility(View.GONE);
-
-        if (isFromMain) {
-            tvExit.setVisibility(View.VISIBLE);
-        }
-
     }
 }

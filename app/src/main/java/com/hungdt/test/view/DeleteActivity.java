@@ -29,12 +29,14 @@ import com.hungdt.test.model.Contact;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
 import com.hungdt.test.view.adapter.SelectAdapter;
+import com.hungdt.test.view.fragment.ContactFragment;
+import com.hungdt.test.view.fragment.DeleteFragment;
+import com.hungdt.test.view.fragment.ManageFragment;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static com.hungdt.test.view.MainActivity.contactList;
 

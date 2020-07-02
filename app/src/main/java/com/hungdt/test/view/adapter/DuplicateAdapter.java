@@ -46,13 +46,12 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull DuplicateHolder holder, final int position) {
-        Log.e("123", "onBindViewHolder: "+typeList );
-        List<String > names = new ArrayList<>();
+        List<String > idContacs = new ArrayList<>();
         switch (type) {
             case "contact":
                 for (int i = 0; i < contactBums.size(); i++) {
-                    if (contactBums.get(i).getBum().equals(typeList.get(position))&&!names.contains(contactBums.get(i).getNameContact())) {
-                        names.add(contactBums.get(i).getNameContact());
+                    if (contactBums.get(i).getBum().equals(typeList.get(position))&&!idContacs.contains(contactBums.get(i).getIdContact())) {
+                        idContacs.add(contactBums.get(i).getIdContact());
                         if (holder.txtContactDup.getText().equals("")) {
                             holder.txtContactDup.setText(contactBums.get(i).getNameContact());
                         } else {
@@ -64,8 +63,8 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
                 break;
             case "name":
                 for (int i = 0; i < contactBums.size(); i++) {
-                    if (contactBums.get(i).getBum().equals(typeList.get(position))&&!names.contains(contactBums.get(i).getNameContact())) {
-                        names.add(contactBums.get(i).getNameContact());
+                    if (contactBums.get(i).getBum().equals(typeList.get(position))&&!idContacs.contains(contactBums.get(i).getIdContact())) {
+                        idContacs.add(contactBums.get(i).getIdContact());
                         if (holder.txtContactDup.getText().equals("")) {
                             holder.txtContactDup.setText(contactBums.get(i).getNameContact());
                         } else {
@@ -77,8 +76,8 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
                 break;
             case "email":
                 for (int i = 0; i < contactBums.size(); i++) {
-                    if (contactBums.get(i).getBum().equals(typeList.get(position))&&!names.contains(contactBums.get(i).getNameContact())) {
-                        names.add(contactBums.get(i).getNameContact());
+                    if (contactBums.get(i).getBum().equals(typeList.get(position))&&!idContacs.contains(contactBums.get(i).getIdContact())) {
+                        idContacs.add(contactBums.get(i).getIdContact());
                         if (holder.txtContactDup.getText().equals("")) {
                             holder.txtContactDup.setText(contactBums.get(i).getNameContact());
                         } else {
@@ -90,8 +89,8 @@ public class DuplicateAdapter extends RecyclerView.Adapter<DuplicateAdapter.Dupl
                 break;
             case "phone":
                 for (int i = 0; i < contactBums.size(); i++) {
-                    if (contactBums.get(i).getBum().equals(typeList.get(position))&&!names.contains(contactBums.get(i).getNameContact())) {
-                        names.add(contactBums.get(i).getNameContact());
+                    if (contactBums.get(i).getBum().equals(typeList.get(position))&&!idContacs.contains(contactBums.get(i).getIdContact())) {
+                        idContacs.add(contactBums.get(i).getIdContact());
                         if (holder.txtContactDup.getText().equals("")) {
                             holder.txtContactDup.setText(contactBums.get(i).getNameContact());
                         } else {

@@ -1,6 +1,5 @@
 package com.hungdt.test.view;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentProviderOperation;
@@ -12,9 +11,9 @@ import android.content.OperationApplicationException;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,16 +36,15 @@ import com.hungdt.test.model.Phone;
 import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.KEY;
 import com.hungdt.test.view.adapter.DuplicateContactAdapter;
+import com.hungdt.test.view.fragment.ContactFragment;
+import com.hungdt.test.view.fragment.DeleteFragment;
+import com.hungdt.test.view.fragment.ManageFragment;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-
-import javax.net.ssl.ManagerFactoryParameters;
 
 import static com.hungdt.test.view.MainActivity.contactList;
 
@@ -91,7 +89,6 @@ public class MergerDuplicateActivity extends AppCompatActivity {
 
         IntentFilter intentFilter = new IntentFilter(ACTION_UPDATE_NAME_CONTACT_MERGER);
         registerReceiver(renameContactMerger, intentFilter);
-
 
 
         idContact.addAll(intent.getStringArrayListExtra(KEY.LIST_ID));
@@ -201,6 +198,13 @@ public class MergerDuplicateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openMergerDialog();
+                llButtonMerger.setEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        llButtonMerger.setEnabled(true);
+                    }
+                }, 1500);
             }
         });
     }

@@ -1,7 +1,9 @@
 package com.hungdt.test.view;
 
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +16,13 @@ public class PolicyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_policy);
         Helper.setColorStatusBar(this, R.color.status_bar);
+
+         findViewById(R.id.imgBack).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 onBackPressed();
+             }
+         });
 
         //Ads.initBanner(((LinearLayout)findViewById(R.id.lnNative)), this, true);
 

@@ -42,6 +42,9 @@ import com.hungdt.test.utils.Ads;
 import com.hungdt.test.utils.Helper;
 import com.hungdt.test.utils.KEY;
 import com.hungdt.test.view.adapter.SelectAdapter;
+import com.hungdt.test.view.fragment.ContactFragment;
+import com.hungdt.test.view.fragment.DeleteFragment;
+import com.hungdt.test.view.fragment.ManageFragment;
 import com.unity3d.ads.UnityAds;
 
 import java.util.ArrayList;
